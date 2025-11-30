@@ -1,0 +1,4 @@
+-- TRUNCATE TABLE education_students;
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE education_requesters;
+SET FOREIGN_KEY_CHECKS = 1;
