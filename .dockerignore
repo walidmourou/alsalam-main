@@ -1,0 +1,38 @@
+# Ignore node_modules and build artifacts
+
+node_modules
+dist
+build
+\*.log
+
+# Ignore vs code folder
+
+.vscode/
+
+# Ignore environment files
+
+.env
+.env.local
+.env.development
+.env.test
+.env.\* 
+
+# Ignore Docker-related files
+
+Dockerfile
+docker-compose.yml
+docker-compose.\*.yml
+
+# Ignore git files
+
+.git
+.gitignore
+
+# Ignore OS generated files
+
+.DS_Store
+Thumbs.db
+
+# Ignore Project specific files
+database/
+scripts/

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import pool from "@/lib/db";
 import type { Locale } from "@/i18n/config";
 import Link from "next/link";

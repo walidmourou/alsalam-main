@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 import HeroWithModal from "@/components/HeroWithModal";
