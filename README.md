@@ -40,4 +40,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ```sh
 docker build -t alsalam-main:test .
 docker run --rm --env-file ./env.local -p 3000:3000 alsalam-main:test
+docker tag alsalam-main:test walidmourou/alsalam-loerrach:v0.0.1
+docker login
+docker push walidmourou/alsalam-loerrach:v0.0.1
 ```
