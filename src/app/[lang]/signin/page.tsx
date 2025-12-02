@@ -146,9 +146,12 @@ export default function SignInPage() {
             <div className="mt-6 text-center">
               <p
                 className={`text-sm ${
-                  message.includes("error") || message.includes("Error")
-                    ? "text-red-600"
-                    : "text-green-600"
+                  message.includes("success") ||
+                  message.includes("Überprüfen") ||
+                  message.includes("تحقق") ||
+                  message.includes("Vérifiez")
+                    ? "text-green-600"
+                    : "text-red-600"
                 }`}
               >
                 {message}

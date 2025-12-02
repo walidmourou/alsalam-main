@@ -51,84 +51,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const connection = pool;
-
-    // Debug: Check database connection
-    console.log("Attempting database connection...");
-    try {
-      const [tables] = await connection.execute(
-        'SHOW TABLES LIKE "education_%"'
-      );
-      const tableRows = tables as any[];
-      console.log("Education tables found:", tableRows);
-      console.log("Number of education tables:", tableRows.length);
-
-      if (tableRows.length === 0) {
-        console.log("No education tables found, creating them...");
-
-        // Create education_requesters table
-        await connection.execute(`
-          CREATE TABLE IF NOT EXISTS education_requesters (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            education_id VARCHAR(50) UNIQUE,
-            first_name VARCHAR(100) NOT NULL,
-            last_name VARCHAR(100) NOT NULL,
-            address TEXT NOT NULL,
-            email VARCHAR(255) NOT NULL,
-            phone VARCHAR(50) NOT NULL,
-            responsible_first_name VARCHAR(100),
-            responsible_last_name VARCHAR(100),
-            responsible_address TEXT,
-            responsible_email VARCHAR(255),
-            responsible_phone VARCHAR(50),
-            consent_media_online BOOLEAN NOT NULL DEFAULT FALSE,
-            consent_media_print BOOLEAN NOT NULL DEFAULT FALSE,
-            consent_media_promotion BOOLEAN NOT NULL DEFAULT FALSE,
-            school_rules_accepted BOOLEAN NOT NULL DEFAULT FALSE,
-            sepa_account_holder VARCHAR(255) NOT NULL,
-            sepa_iban VARCHAR(34) NOT NULL,
-            sepa_bic VARCHAR(11),
-            sepa_bank VARCHAR(255) NOT NULL,
-            sepa_mandate BOOLEAN NOT NULL DEFAULT FALSE,
-            lang VARCHAR(2) NOT NULL DEFAULT 'de',
-            status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending',
-            confirmation_token VARCHAR(64) UNIQUE,
-            confirmed_at TIMESTAMP NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            INDEX idx_email (email),
-            INDEX idx_status (status),
-            INDEX idx_confirmation_token (confirmation_token),
-            INDEX idx_created_at (created_at)
-          ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
-        `);
-
-        // Create education_students table
-        await connection.execute(`
-          CREATE TABLE IF NOT EXISTS education_students (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            requester_id INT NOT NULL,
-            first_name VARCHAR(100) NOT NULL,
-            last_name VARCHAR(100) NOT NULL,
-            birth_date DATE NOT NULL,
-            estimated_level ENUM('preparatory','level1','level2','level3','level4') NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (requester_id) REFERENCES education_requesters(id) ON DELETE CASCADE,
-            INDEX idx_requester_id (requester_id),
-            INDEX idx_birth_date (birth_date)
-          ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
-        `);
-
-        console.log("Education tables created successfully in API");
-      }
-    } catch (dbError) {
-      console.error("Database connection error:", dbError);
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 }
-      );
-    }
-
     // Generate unique education ID
     const year = new Date().getFullYear();
     const educationId = `EDU${year}${Date.now().toString().slice(-6)}`;
@@ -137,7 +59,7 @@ export async function POST(request: NextRequest) {
     const confirmationToken = crypto.randomBytes(32).toString("hex");
 
     // Insert education requester
-    const [requesterResult] = await connection.execute(
+    const [requesterResult] = await pool.query(
       `INSERT INTO education_requesters (
         education_id, first_name, last_name, address, email, phone,
         responsible_first_name, responsible_last_name, responsible_address,
@@ -177,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // Insert students
     for (const child of children) {
-      await connection.execute(
+      await pool.query(
         `INSERT INTO education_students (
           requester_id, first_name, last_name, birth_date, estimated_level
         ) VALUES (?, ?, ?, ?, ?)`,

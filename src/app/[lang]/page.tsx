@@ -22,10 +22,10 @@ interface Article {
 }
 
 async function getArticles(): Promise<Article[]> {
-  const [rows] = await pool.execute(
+  const [result] = await pool.query(
     "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3"
   );
-  return rows as Article[];
+  return result as Article[];
 }
 
 export default async function Home({

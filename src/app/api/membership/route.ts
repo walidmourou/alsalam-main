@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       [validatedData.email]
     );
 
-    if (Array.isArray(existingMembers) && existingMembers.length > 0) {
+    if ((existingMembers as any[]).length > 0) {
       return NextResponse.json(
         { error: "This email is already registered" },
         { status: 400 }
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     const membershipId = `MEM${year}${Date.now().toString().slice(-6)}`;
 
     // Insert into database
-    const [result] = await pool.query(
+    await pool.query(
       `INSERT INTO memberships (
         membership_id, first_name, last_name, birth_date, gender, address, 
         email, phone, marital_status, sepa_account_holder, 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         validatedData.sepaIban,
         validatedData.sepaBic || null,
         validatedData.sepaBank,
-        validatedData.sepaMandate ? 1 : 0,
+        validatedData.sepaMandate,
         confirmationToken,
       ]
     );

@@ -17,7 +17,7 @@ export async function GET(
     }
 
     // Check token
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       "SELECT email FROM auth_tokens WHERE token = ? AND expires_at > NOW() AND used = FALSE",
       [token]
     );
@@ -31,7 +31,7 @@ export async function GET(
     const email = (rows as any[])[0].email;
 
     // Mark token as used
-    await pool.execute("UPDATE auth_tokens SET used = TRUE WHERE token = ?", [
+    await pool.query("UPDATE auth_tokens SET used = TRUE WHERE token = ?", [
       token,
     ]);
 

@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email exists in memberships table
-    const [membershipRows] = await pool.execute(
+    const [membershipRows] = await pool.query(
       "SELECT id, first_name, last_name FROM memberships WHERE email = ? AND status IN ('active', 'approved')",
       [email]
     );
 
     // Check if email exists in education_requesters table
-    const [educationRows] = await pool.execute(
+    const [educationRows] = await pool.query(
       "SELECT id, first_name, last_name FROM education_requesters WHERE email = ? AND status IN ('confirmed')",
       [email]
     );
@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     // Store token
-    await pool.execute(
-      "INSERT INTO auth_tokens (email, token, expires_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE token = VALUES(token), expires_at = VALUES(expires_at), used = FALSE",
+    await pool.query(
+      "INSERT INTO auth_tokens (email, token, expires_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), expires_at = VALUES(expires_at), used = FALSE",
       [email, token, expiresAt]
     );
 

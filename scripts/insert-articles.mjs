@@ -40,7 +40,7 @@ La prière du vendredi renforce la communauté et rappelle aux musulmans leurs d
 • تُؤدى بين الظهر والعصر
 
 تعزز صلاة الجمعة الروابط المجتمعية وتذكر المسلمين بواجباتهم الدينية. إنها وقت للتجديد الروحي والتعلم من القرآن والسنة.`,
-    image_url: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/jomoaa.png",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-01-15')
@@ -76,7 +76,7 @@ Le Ramadan est un temps de purification spirituelle, de prière et de charité.`
 • ليلة القدر هي أفضل ليالي رمضان
 
 رمضان وقت للتطهير الروحي والصلاة والصدقة والتقوى.`,
-    image_url: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/ramadan.png",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-01-20')
@@ -115,7 +115,7 @@ Le Hajj symbolise l'unité de tous les musulmans et leur soumission à Allah.`,
 • عيد الأضحى
 
 يرمز الحج لوحدة المسلمين وتسليمهم لله تعالى.`,
-    image_url: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/hajj.jpg",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-01-25')
@@ -151,7 +151,7 @@ La fête symbolise la générosité, le sacrifice et la communauté.`,
 • توزيع اللحم على المحتاجين
 
 يرمز العيد للكرم والتضحية والألفة المجتمعية.`,
-    image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/adha.png",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-02-01')
@@ -187,7 +187,7 @@ La fête célèbre l'accomplissement du jeûne du Ramadan et la purification spi
 • الحلويات والأطعمة الاحتفالية
 
 يحتفل العيد بإتمام صيام رمضان والتطهير الروحي.`,
-    image_url: "https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/fitr.png",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-02-05')
@@ -223,7 +223,7 @@ Zakat promeut la justice sociale et la solidarité dans la communauté musulmane
 • واجبة وتمرين روحي
 
 تعزز الزكاة العدالة الاجتماعية والتضامن في المجتمع المسلم.`,
-    image_url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=400&fit=crop&crop=center",
+    image_url: "/images/articles/zakat.png",
     status: 'published',
     author_id: 1,
     published_at: new Date('2025-02-10')

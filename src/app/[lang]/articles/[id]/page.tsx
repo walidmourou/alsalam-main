@@ -21,11 +21,11 @@ interface Article {
 }
 
 async function getArticle(id: number): Promise<Article | null> {
-  const [rows] = await pool.execute(
+  const [result] = await pool.query(
     "SELECT * FROM articles WHERE id = ? AND status = 'published'",
     [id]
   );
-  const articleRows = rows as Article[];
+  const articleRows = result as Article[];
   return articleRows.length > 0 ? articleRows[0] : null;
 }
 

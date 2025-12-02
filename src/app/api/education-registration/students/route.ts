@@ -22,7 +22,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verify the student belongs to the authenticated user and is not already deleted
-    const [studentRows] = await pool.execute(
+    const [studentRows] = await pool.query(
       `SELECT es.id FROM education_students es
        JOIN education_requesters er ON es.requester_id = er.id
        WHERE es.id = ? AND er.email = ? AND es.deleted_at IS NULL`,
@@ -37,7 +37,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Soft delete the student
-    await pool.execute(
+    await pool.query(
       "UPDATE education_students SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NULL",
       [studentId]
     );
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the requester ID for the authenticated user
-    const [requesterRows] = await pool.execute(
+    const [requesterRows] = await pool.query(
       "SELECT id FROM education_requesters WHERE email = ?",
       [authEmail]
     );
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     const requesterId = (requesterRows as any[])[0].id;
 
     // Insert the new student
-    const [result] = await pool.execute(
+    const [result] = await pool.query(
       `INSERT INTO education_students (
         requester_id, first_name, last_name, birth_date, estimated_level
       ) VALUES (?, ?, ?, ?, ?)`,

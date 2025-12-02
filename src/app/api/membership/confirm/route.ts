@@ -19,14 +19,14 @@ export async function GET(request: NextRequest) {
       [token]
     );
 
-    if (!Array.isArray(memberships) || memberships.length === 0) {
+    if ((memberships as any[]).length === 0) {
       return NextResponse.json(
         { error: "Invalid or expired confirmation token" },
         { status: 404 }
       );
     }
 
-    const membership = memberships[0] as {
+    const membership = (memberships as any[])[0] as {
       id: number;
       email: string;
       first_name: string;

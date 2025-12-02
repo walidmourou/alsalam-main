@@ -21,10 +21,10 @@ interface Article {
 }
 
 async function getAllArticles(): Promise<Article[]> {
-  const [rows] = await pool.execute(
+  const [result] = await pool.query(
     "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC"
   );
-  return rows as Article[];
+  return result as Article[];
 }
 
 interface ArticlesPageProps {

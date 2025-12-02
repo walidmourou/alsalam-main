@@ -12,7 +12,7 @@ export async function GET() {
     }
 
     // Check if user is a membership member (exclude soft-deleted)
-    const [membershipRows] = await pool.execute(
+    const [membershipRows] = await pool.query(
       "SELECT * FROM memberships WHERE email = ? AND deleted_at IS NULL",
       [authEmail]
     );
@@ -21,7 +21,7 @@ export async function GET() {
       const membership = (membershipRows as any[])[0];
 
       // Get associated education data for membership users
-      const [educationRows] = await pool.execute(
+      const [educationRows] = await pool.query(
         "SELECT * FROM education_requesters WHERE email = ? AND deleted_at IS NULL",
         [authEmail]
       );
@@ -33,7 +33,7 @@ export async function GET() {
         educationRequester = (educationRows as any[])[0];
 
         // Get associated students (excluding soft-deleted ones)
-        const [studentRows] = await pool.execute(
+        const [studentRows] = await pool.query(
           "SELECT * FROM education_students WHERE requester_id = ? AND deleted_at IS NULL",
           [educationRequester.id]
         );
@@ -49,7 +49,7 @@ export async function GET() {
     }
 
     // Check if user is an education requester (exclude soft-deleted)
-    const [educationRows] = await pool.execute(
+    const [educationRows] = await pool.query(
       "SELECT * FROM education_requesters WHERE email = ? AND deleted_at IS NULL",
       [authEmail]
     );
@@ -58,7 +58,7 @@ export async function GET() {
       const educationRequester = (educationRows as any[])[0];
 
       // Get associated students (excluding soft-deleted ones)
-      const [studentRows] = await pool.execute(
+      const [studentRows] = await pool.query(
         "SELECT * FROM education_students WHERE requester_id = ? AND deleted_at IS NULL",
         [educationRequester.id]
       );
@@ -67,7 +67,7 @@ export async function GET() {
         type: "education",
         membership: null,
         educationRequester,
-        students: studentRows,
+        students: studentRows as any[],
       });
     }
 
@@ -94,7 +94,7 @@ export async function PUT(request: NextRequest) {
 
     if (data.type === "membership") {
       // Update membership data
-      await pool.execute(
+      await pool.query(
         `UPDATE memberships SET
           first_name = ?, last_name = ?, birth_date = ?, gender = ?,
           address = ?, phone = ?, marital_status = ?,
@@ -118,7 +118,7 @@ export async function PUT(request: NextRequest) {
       );
     } else if (data.type === "education") {
       // Update education requester data
-      await pool.execute(
+      await pool.query(
         `UPDATE education_requesters SET
           first_name = ?, last_name = ?, address = ?, phone = ?,
           responsible_first_name = ?, responsible_last_name = ?,
@@ -151,20 +151,20 @@ export async function PUT(request: NextRequest) {
       // Update students if provided
       if (data.students && Array.isArray(data.students)) {
         // First, delete existing students
-        const [requesterRows] = await pool.execute(
+        const [requesterRows] = await pool.query(
           "SELECT id FROM education_requesters WHERE email = ?",
           [authEmail]
         );
         const requesterId = (requesterRows as any[])[0].id;
 
-        await pool.execute(
+        await pool.query(
           "DELETE FROM education_students WHERE requester_id = ?",
           [requesterId]
         );
 
         // Insert updated students
         for (const student of data.students) {
-          await pool.execute(
+          await pool.query(
             `INSERT INTO education_students (
               requester_id, first_name, last_name, birth_date, estimated_level
             ) VALUES (?, ?, ?, ?, ?)`,
