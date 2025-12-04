@@ -47,11 +47,22 @@ export async function POST(request: NextRequest) {
     );
 
     // Send email
-    const baseUrl =
-      process.env.BASE_URL ||
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      `https://${request.headers.get("host")}`;
+    // BASE_URL must be set in production environment
+    const baseUrl = process.env.BASE_URL;
+
+    if (!baseUrl) {
+      console.error("BASE_URL environment variable is not set!");
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
     const loginUrl = `${baseUrl}/${locale}/auth/verify?token=${token}`;
+
+    console.log("Generating magic link:");
+    console.log("- BASE_URL:", baseUrl);
+    console.log("- Login URL:", loginUrl);
 
     await sendMagicLink(email, locale, loginUrl);
 

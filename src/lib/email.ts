@@ -24,9 +24,7 @@ export async function sendMembershipConfirmation(
       ar: "تأكيد التسجيل - AL-SALAM E.V.",
     }[lang] || "Confirm Membership Registration - AL-SALAM E.V.";
 
-  const confirmationUrl = `${
-    process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
-  }/api/membership/confirm?token=${confirmationToken}`;
+  const confirmationUrl = `${process.env.BASE_URL}/api/membership/confirm?token=${confirmationToken}`;
 
   const htmlContent =
     {
