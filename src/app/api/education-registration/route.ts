@@ -122,9 +122,7 @@ export async function POST(request: NextRequest) {
           ? "تأكيد التسجيل في التعليم - جمعية السلام"
           : "Confirmer l'inscription éducation - AL-SALAM E.V.";
 
-      const confirmationUrl = `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/education-registration/confirm?token=${confirmationToken}`;
+      const confirmationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/education-registration/confirm?token=${confirmationToken}`;
 
       const html =
         lang === "de"

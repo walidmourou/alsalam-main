@@ -24,17 +24,7 @@ export async function sendMembershipConfirmation(
       ar: "تأكيد التسجيل - AL-SALAM E.V.",
     }[lang] || "Confirm Membership Registration - AL-SALAM E.V.";
 
-  const confirmationUrl = `${
-    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-  }/api/membership/confirm?token=${confirmationToken}`;
-
-  console.log("Sending confirmation email:");
-  console.log("- To:", email);
-  console.log("- From:", process.env.FROM_EMAIL);
-  console.log("- Subject:", subject);
-  console.log("- Confirmation URL:", confirmationUrl);
-  console.log("- SMTP Host:", process.env.SMTP_HOST);
-  console.log("- SMTP User:", process.env.SMTP_USER);
+  const confirmationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/membership/confirm?token=${confirmationToken}`;
 
   const htmlContent =
     {
