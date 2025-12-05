@@ -165,7 +165,7 @@ export default function EducationRegistrationForm({
   }
 
   return (
-    <div className="space-y-6">
+    <div id="registration-form" className="space-y-6">
       {/* Registration Button */}
       {!showForm && (
         <div className="bg-gradient-to-r from-primary-green to-primary-purple text-white rounded-xl p-8 text-center">

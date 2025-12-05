@@ -24,10 +24,13 @@
     "heroSubtitle": "Entdecken Sie unsere vielfältigen Angebote für die muslimische Gemeinschaft in Lörrach",
     "dailyPrayers": "Tägliche Gebete",
     "prayersDesc": "Gemeinsame Gebete in einer friedlichen Atmosphäre",
+    "prayersButton": "Gebetszeiten anzeigen",
     "quranLessons": "Koran-Unterricht",
     "lessonsDesc": "Lernen Sie den Koran mit qualifizierten Lehrern",
+    "lessonsButton": "Anmelden",
     "community": "Gemeinschaft",
-    "communityDesc": "Ein Ort der Begegnung für alle Muslime"
+    "communityDesc": "Ein Ort der Begegnung für alle Muslime",
+    "communityButton": "Unterstützen"
   },
   "footer": {
     "footerText": "Ein Ort der Begegnung, des Gebets und des Lernens",

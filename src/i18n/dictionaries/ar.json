@@ -24,10 +24,13 @@
     "heroSubtitle": "اكتشف خدماتنا المتنوعة للجالية المسلمة في لوراخ",
     "dailyPrayers": "الصلوات اليومية",
     "prayersDesc": "صلوات جماعية في أجواء روحانية",
+    "prayersButton": "عرض المواقيت",
     "quranLessons": "دروس القرآن",
     "lessonsDesc": "تعلم القرآن مع معلمين مؤهلين",
+    "lessonsButton": "التسجيل",
     "community": "المجتمع",
-    "communityDesc": "مكان للقاء جميع المسلمين"
+    "communityDesc": "مكان للقاء جميع المسلمين",
+    "communityButton": "ادعمنا"
   },
   "footer": {
     "footerText": "مكان للقاء والصلاة والتعلم",

@@ -24,10 +24,13 @@
     "heroSubtitle": "Découvrez nos diverses offres pour la communauté musulmane à Lörrach",
     "dailyPrayers": "Prières quotidiennes",
     "prayersDesc": "Prières en commun dans une atmosphère paisible",
+    "prayersButton": "Voir les horaires",
     "quranLessons": "Leçons du Coran",
     "lessonsDesc": "Apprenez le Coran avec des enseignants qualifiés",
+    "lessonsButton": "S'inscrire",
     "community": "Communauté",
-    "communityDesc": "Un lieu de rencontre pour tous les musulmans"
+    "communityDesc": "Un lieu de rencontre pour tous les musulmans",
+    "communityButton": "Nous soutenir"
   },
   "footer": {
     "footerText": "Un lieu de rencontre, de prière et d'apprentissage",
