@@ -93,6 +93,22 @@ export default function Footer({ locale, translations: t }: FooterProps) {
                   {getTranslation("footer.educationPage") || "Education"}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={`/${locale}/privacy-policy`}
+                  className="text-gray-600 hover:text-[#009245] transition-colors"
+                >
+                  {getTranslation("nav.privacyPolicy") || "Privacy Policy"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/cookie-policy`}
+                  className="text-gray-600 hover:text-[#009245] transition-colors"
+                >
+                  {getTranslation("nav.cookiePolicy") || "Cookie Policy"}
+                </Link>
+              </li>
             </ul>
           </div>
 

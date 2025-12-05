@@ -313,6 +313,8 @@ export default function EducationRegistrationForm({
                     value={formData.requesterFirstName}
                     onChange={handleChange}
                     required
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -332,6 +334,8 @@ export default function EducationRegistrationForm({
                     value={formData.requesterLastName}
                     onChange={handleChange}
                     required
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -351,6 +355,8 @@ export default function EducationRegistrationForm({
                     onChange={handleChange}
                     required
                     rows={3}
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -389,6 +395,8 @@ export default function EducationRegistrationForm({
                     value={formData.requesterPhone}
                     onChange={handleChange}
                     required
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -418,6 +426,8 @@ export default function EducationRegistrationForm({
                     name="responsibleFirstName"
                     value={formData.responsibleFirstName}
                     onChange={handleChange}
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
@@ -435,6 +445,8 @@ export default function EducationRegistrationForm({
                     name="responsibleLastName"
                     value={formData.responsibleLastName}
                     onChange={handleChange}
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
@@ -452,6 +464,8 @@ export default function EducationRegistrationForm({
                     value={formData.responsibleAddress}
                     onChange={handleChange}
                     rows={3}
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
@@ -486,6 +500,8 @@ export default function EducationRegistrationForm({
                     name="responsiblePhone"
                     value={formData.responsiblePhone}
                     onChange={handleChange}
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
@@ -576,6 +592,8 @@ export default function EducationRegistrationForm({
                           updateChild(child.id, "firstName", e.target.value)
                         }
                         required
+                        dir="ltr"
+                        lang="de"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
                     </div>
@@ -596,6 +614,8 @@ export default function EducationRegistrationForm({
                           updateChild(child.id, "lastName", e.target.value)
                         }
                         required
+                        dir="ltr"
+                        lang="de"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
                     </div>
@@ -896,6 +916,8 @@ export default function EducationRegistrationForm({
                     value={formData.sepaAccountHolder}
                     onChange={handleChange}
                     required
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   />
                 </div>
@@ -944,6 +966,8 @@ export default function EducationRegistrationForm({
                     value={formData.sepaBank}
                     onChange={handleChange}
                     required
+                    dir="ltr"
+                    lang="de"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   />
                 </div>

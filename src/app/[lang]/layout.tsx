@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CookieConsent from "@/components/CookieConsent";
 import { OrganizationSchema } from "@/components/OrganizationSchema";
 import { LangSetter } from "@/components/LangSetter";
 import { locales, localeDirections, type Locale } from "@/i18n/config";
@@ -62,6 +63,7 @@ export default async function LocaleLayout({
       <Header locale={lang as Locale} dictionary={dictionary} />
       <main className="min-h-screen bg-white">{children}</main>
       <Footer locale={lang as Locale} translations={dictionary} />
+      <CookieConsent locale={lang as Locale} translations={dictionary} />
     </>
   );
 }

@@ -208,6 +208,8 @@ export default function MembershipForm({
                       value={formData.firstName}
                       onChange={handleChange}
                       required
+                      dir="ltr"
+                      lang="de"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
@@ -222,6 +224,8 @@ export default function MembershipForm({
                       value={formData.lastName}
                       onChange={handleChange}
                       required
+                      dir="ltr"
+                      lang="de"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
@@ -292,6 +296,8 @@ export default function MembershipForm({
                       onChange={handleChange}
                       required
                       rows={3}
+                      dir="ltr"
+                      lang="de"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                       placeholder={t.addressPlaceholder}
                     />
@@ -323,6 +329,8 @@ export default function MembershipForm({
                         value={formData.phone}
                         onChange={handleChange}
                         required
+                        dir="ltr"
+                        lang="de"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                         placeholder="+49 / +33 / +41"
                       />
@@ -348,6 +356,8 @@ export default function MembershipForm({
                       value={formData.sepaAccountHolder}
                       onChange={handleChange}
                       required
+                      dir="ltr"
+                      lang="de"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
@@ -393,6 +403,8 @@ export default function MembershipForm({
                       value={formData.sepaBank}
                       onChange={handleChange}
                       required
+                      dir="ltr"
+                      lang="de"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     />
                   </div>

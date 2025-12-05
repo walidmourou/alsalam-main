@@ -36,8 +36,9 @@ export async function GET(
     ]);
 
     // Set cookie for authentication
+    const baseUrl = process.env.BASE_URL || new URL(request.url).origin;
     const response = NextResponse.redirect(
-      new URL(`/${lang}/profile`, request.url)
+      new URL(`/${lang}/profile`, baseUrl)
     );
     response.cookies.set("auth_email", email, {
       httpOnly: true,
