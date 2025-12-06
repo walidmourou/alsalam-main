@@ -231,7 +231,10 @@ export default async function SupportPage({
                   <p className="text-xs text-gray-600 mb-1">
                     {dictionary.support.accountHolder}
                   </p>
-                  <p className="text-sm font-semibold text-primary-purple">
+                  <p
+                    className="text-sm font-semibold text-primary-purple"
+                    dir="ltr"
+                  >
                     AL-SALAM E.V.
                   </p>
                 </div>
@@ -289,8 +292,19 @@ export default async function SupportPage({
                   </p>
                 </div>
 
+                <div className="bg-accent-purple-light p-3 rounded flex flex-col items-center">
+                  <p className="text-xs text-gray-600 mb-2">
+                    {dictionary.support.paypalQR}
+                  </p>
+                  <img
+                    src="/images/paypal_qrcode.png"
+                    alt="PayPal QR Code"
+                    className="w-48 h-48 object-contain"
+                  />
+                </div>
+
                 <a
-                  href="https://www.paypal.com/paypalme/alsalamev"
+                  href="https://www.paypal.com/paypalme/alsalam575"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 bg-primary-purple text-white px-4 py-2.5 rounded-lg font-semibold hover:bg-primary-purple/90 transition-colors shadow-md text-sm"

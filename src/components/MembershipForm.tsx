@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
+import StatutesModal from "@/components/StatutesModal";
 
 interface MembershipFormProps {
   locale: Locale;
@@ -26,12 +27,14 @@ export default function MembershipForm({
     sepaBic: "",
     sepaBank: "",
     sepaMandate: false,
+    statutesAccepted: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [statutesModalOpen, setStatutesModalOpen] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -82,6 +85,7 @@ export default function MembershipForm({
         sepaBic: "",
         sepaBank: "",
         sepaMandate: false,
+        statutesAccepted: false,
       });
     } catch (err: any) {
       setError(err.message || "An error occurred");
@@ -424,6 +428,29 @@ export default function MembershipForm({
                       </span>
                     </label>
                   </div>
+
+                  <div className="bg-white p-4 rounded border border-gray-200">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="statutesAccepted"
+                        checked={formData.statutesAccepted}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 w-5 h-5 text-primary-purple border-gray-300 rounded focus:ring-2 focus:ring-primary-purple"
+                      />
+                      <span className="text-sm text-gray-700">
+                        {t.statutesAcceptance}{" "}
+                        <button
+                          type="button"
+                          onClick={() => setStatutesModalOpen(true)}
+                          className="text-primary-purple underline hover:text-primary-purple/80"
+                        >
+                          ({t.readStatutes})
+                        </button>
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -479,6 +506,13 @@ export default function MembershipForm({
             </form>
           </div>
         )}
+
+        <StatutesModal
+          isOpen={statutesModalOpen}
+          onClose={() => setStatutesModalOpen(false)}
+          locale={locale}
+          title={t.statutesTitle}
+        />
       </div>
     </div>
   );
