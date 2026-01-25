@@ -63,20 +63,20 @@ export default function ProfilePage() {
         locale === "de"
           ? "Profil"
           : locale === "ar"
-          ? "الملف الشخصي"
-          : "Profil",
+            ? "الملف الشخصي"
+            : "Profil",
       memberBadge:
         locale === "de"
           ? "Vereinsmitglied"
           : locale === "ar"
-          ? "عضو الجمعية"
-          : "Membre de l'association",
+            ? "عضو الجمعية"
+            : "Membre de l'association",
       educationBadge:
         locale === "de"
           ? "Bildungsantragsteller"
           : locale === "ar"
-          ? "مقدم طلب التعليم"
-          : "Demandeur d'éducation",
+            ? "مقدم طلب التعليم"
+            : "Demandeur d'éducation",
       edit:
         locale === "de" ? "Bearbeiten" : locale === "ar" ? "تعديل" : "Modifier",
       cancel:
@@ -85,84 +85,84 @@ export default function ProfilePage() {
         locale === "de"
           ? "Änderungen speichern"
           : locale === "ar"
-          ? "حفظ التغييرات"
-          : "Enregistrer les modifications",
+            ? "حفظ التغييرات"
+            : "Enregistrer les modifications",
       logout:
         locale === "de"
           ? "Abmelden"
           : locale === "ar"
-          ? "تسجيل الخروج"
-          : "Se déconnecter",
+            ? "تسجيل الخروج"
+            : "Se déconnecter",
       updateSuccess:
         locale === "de"
           ? "Profil erfolgreich aktualisiert"
           : locale === "ar"
-          ? "تم تحديث الملف الشخصي بنجاح"
-          : "Profil mis à jour avec succès",
+            ? "تم تحديث الملف الشخصي بنجاح"
+            : "Profil mis à jour avec succès",
       registerChildren:
         locale === "de"
           ? "Kinder für Bildung anmelden"
           : locale === "ar"
-          ? "تسجيل الأطفال في التعليم"
-          : "Inscrire les enfants à l'éducation",
+            ? "تسجيل الأطفال في التعليم"
+            : "Inscrire les enfants à l'éducation",
       accountSettings:
         locale === "de"
           ? "Kontoeinstellungen"
           : locale === "ar"
-          ? "إعدادات الحساب"
-          : "Paramètres du compte",
+            ? "إعدادات الحساب"
+            : "Paramètres du compte",
       cancelRequest:
         locale === "de"
           ? "Antrag stornieren"
           : locale === "ar"
-          ? "إلغاء الطلب"
-          : "Annuler la demande",
+            ? "إلغاء الطلب"
+            : "Annuler la demande",
       cancelDescription:
         locale === "de"
           ? "Stornieren Sie Ihre Mitgliedschaft oder Bildungsanfrage. Diese Aktion kann nicht rückgängig gemacht werden."
           : locale === "ar"
-          ? "قم بإلغاء عضويتك أو طلب التعليم. لا يمكن التراجع عن هذا الإجراء."
-          : "Annulez votre adhésion ou demande d'éducation. Cette action ne peut pas être annulée.",
+            ? "قم بإلغاء عضويتك أو طلب التعليم. لا يمكن التراجع عن هذا الإجراء."
+            : "Annulez votre adhésion ou demande d'éducation. Cette action ne peut pas être annulée.",
       cancelStudentEducation:
         locale === "de"
           ? "Bildungsanmeldung stornieren"
           : locale === "ar"
-          ? "إلغاء التسجيل في التعليم"
-          : "Annuler l'inscription éducative",
+            ? "إلغاء التسجيل في التعليم"
+            : "Annuler l'inscription éducative",
       cancelStudentConfirm:
         locale === "de"
           ? "Sind Sie sicher, dass Sie die Bildungsanmeldung für dieses Kind stornieren möchten? Diese Aktion kann nicht rückgängig gemacht werden."
           : locale === "ar"
-          ? "هل أنت متأكد من أنك تريد إلغاء التسجيل في التعليم لهذا الطفل؟ لا يمكن التراجع عن هذا الإجراء."
-          : "Êtes-vous sûr de vouloir annuler l'inscription éducative de cet enfant ? Cette action ne peut pas être annulée.",
+            ? "هل أنت متأكد من أنك تريد إلغاء التسجيل في التعليم لهذا الطفل؟ لا يمكن التراجع عن هذا الإجراء."
+            : "Êtes-vous sûr de vouloir annuler l'inscription éducative de cet enfant ? Cette action ne peut pas être annulée.",
       addNewChild:
         locale === "de"
           ? "Neues Kind hinzufügen"
           : locale === "ar"
-          ? "إضافة طفل جديد"
-          : "Ajouter un nouvel enfant",
+            ? "إضافة طفل جديد"
+            : "Ajouter un nouvel enfant",
       noChildrenRegistered:
         locale === "de"
           ? "Keine Kinder registriert. Fügen Sie ein neues Kind hinzu."
           : locale === "ar"
-          ? "لا يوجد أطفال مسجلون. أضف طفلاً جديداً."
-          : "Aucun enfant enregistré. Ajoutez un nouvel enfant.",
+            ? "لا يوجد أطفال مسجلون. أضف طفلاً جديداً."
+            : "Aucun enfant enregistré. Ajoutez un nouvel enfant.",
     },
     support: {
       firstName:
         locale === "de"
           ? "Vorname"
           : locale === "ar"
-          ? "الاسم الأول"
-          : "Prénom",
+            ? "الاسم الأول"
+            : "Prénom",
       lastName:
         locale === "de" ? "Nachname" : locale === "ar" ? "الاسم الأخير" : "Nom",
       birthDate:
         locale === "de"
           ? "Geburtsdatum"
           : locale === "ar"
-          ? "تاريخ الميلاد"
-          : "Date de naissance",
+            ? "تاريخ الميلاد"
+            : "Date de naissance",
       gender:
         locale === "de" ? "Geschlecht" : locale === "ar" ? "الجنس" : "Genre",
       male: locale === "de" ? "Männlich" : locale === "ar" ? "ذكر" : "Masculin",
@@ -172,34 +172,34 @@ export default function ProfilePage() {
         locale === "de"
           ? "E-Mail"
           : locale === "ar"
-          ? "البريد الإلكتروني"
-          : "E-mail",
+            ? "البريد الإلكتروني"
+            : "E-mail",
       phone:
         locale === "de"
           ? "Telefonnummer"
           : locale === "ar"
-          ? "رقم الهاتف"
-          : "Numéro de téléphone",
+            ? "رقم الهاتف"
+            : "Numéro de téléphone",
       maritalStatus:
         locale === "de"
           ? "Familienstand"
           : locale === "ar"
-          ? "الحالة الاجتماعية"
-          : "État civil",
+            ? "الحالة الاجتماعية"
+            : "État civil",
       single:
         locale === "de" ? "Ledig" : locale === "ar" ? "أعزب" : "Célibataire",
       married:
         locale === "de"
           ? "Verheiratet"
           : locale === "ar"
-          ? "متزوج"
-          : "Marié(e)",
+            ? "متزوج"
+            : "Marié(e)",
       divorced:
         locale === "de"
           ? "Geschieden"
           : locale === "ar"
-          ? "مطلق"
-          : "Divorcé(e)",
+            ? "مطلق"
+            : "Divorcé(e)",
       widowed:
         locale === "de" ? "Verwitwet" : locale === "ar" ? "أرمل" : "Veuf/Veuve",
       address:
@@ -208,200 +208,200 @@ export default function ProfilePage() {
         locale === "de"
           ? "Straße, Hausnummer, PLZ, Stadt"
           : locale === "ar"
-          ? "الشارع، رقم المنزل، الرمز البريدي، المدينة"
-          : "Rue, numéro, code postal, ville",
+            ? "الشارع، رقم المنزل، الرمز البريدي، المدينة"
+            : "Rue, numéro, code postal, ville",
       accountHolder:
         locale === "de"
           ? "Kontoinhaber"
           : locale === "ar"
-          ? "صاحب الحساب"
-          : "Titulaire du compte",
+            ? "صاحب الحساب"
+            : "Titulaire du compte",
       iban:
         locale === "de"
           ? "IBAN"
           : locale === "ar"
-          ? "رقم الحساب الدولي"
-          : "IBAN",
+            ? "رقم الحساب الدولي"
+            : "IBAN",
       bic: locale === "de" ? "BIC" : locale === "ar" ? "رمز البنك" : "BIC",
       bank: locale === "de" ? "Bank" : locale === "ar" ? "البنك" : "Banque",
       submitting:
         locale === "de"
           ? "Wird gesendet..."
           : locale === "ar"
-          ? "جارٍ الإرسال..."
-          : "Envoi en cours...",
+            ? "جارٍ الإرسال..."
+            : "Envoi en cours...",
     },
     education: {
       requesterInfo:
         locale === "de"
           ? "Antragsteller Informationen"
           : locale === "ar"
-          ? "معلومات مقدم الطلب"
-          : "Informations du demandeur",
+            ? "معلومات مقدم الطلب"
+            : "Informations du demandeur",
       responsiblePerson:
         locale === "de"
           ? "Verantwortliche Person"
           : locale === "ar"
-          ? "الشخص المسؤول"
-          : "Personne responsable",
+            ? "الشخص المسؤول"
+            : "Personne responsable",
       children:
         locale === "de" ? "Kinder" : locale === "ar" ? "الأطفال" : "Enfants",
       addChild:
         locale === "de"
           ? "Kind hinzufügen"
           : locale === "ar"
-          ? "إضافة طفل"
-          : "Ajouter un enfant",
+            ? "إضافة طفل"
+            : "Ajouter un enfant",
       removeChild:
         locale === "de" ? "Entfernen" : locale === "ar" ? "إزالة" : "Supprimer",
       estimatedLevel:
         locale === "de"
           ? "Geschätztes Niveau"
           : locale === "ar"
-          ? "المستوى المقدر"
-          : "Niveau estimé",
+            ? "المستوى المقدر"
+            : "Niveau estimé",
       preparatory:
         locale === "de"
           ? "Vorbereitung"
           : locale === "ar"
-          ? "تحضيري"
-          : "Préparatoire",
+            ? "تحضيري"
+            : "Préparatoire",
       level1:
         locale === "de"
           ? "Niveau 1"
           : locale === "ar"
-          ? "المستوى 1"
-          : "Niveau 1",
+            ? "المستوى 1"
+            : "Niveau 1",
       level2:
         locale === "de"
           ? "Niveau 2"
           : locale === "ar"
-          ? "المستوى 2"
-          : "Niveau 2",
+            ? "المستوى 2"
+            : "Niveau 2",
       level3:
         locale === "de"
           ? "Niveau 3"
           : locale === "ar"
-          ? "المستوى 3"
-          : "Niveau 3",
+            ? "المستوى 3"
+            : "Niveau 3",
       level4:
         locale === "de"
           ? "Niveau 4"
           : locale === "ar"
-          ? "المستوى 4"
-          : "Niveau 4",
+            ? "المستوى 4"
+            : "Niveau 4",
       educationId:
         locale === "de"
           ? "Bildungs-ID"
           : locale === "ar"
-          ? "معرف التعليم"
-          : "ID Éducation",
+            ? "معرف التعليم"
+            : "ID Éducation",
       status:
         locale === "de" ? "Status" : locale === "ar" ? "الحالة" : "Statut",
       consentTitle:
         locale === "de"
           ? "Einverständniserklärung zur Foto- und Videoaufnahme von Kindern"
           : locale === "ar"
-          ? "موافقة على التصوير والفيديو للأطفال"
-          : "Consentement pour la photographie et la vidéographie des enfants",
+            ? "موافقة على التصوير والفيديو للأطفال"
+            : "Consentement pour la photographie et la vidéographie des enfants",
       consentDescription:
         locale === "de"
           ? "An die Eltern und Erziehungsberechtigten, hiermit autorisiere(n) ich/wir Al-Salam e.V., Fotos und Videos der Vereinsaktivitäten für folgende Zwecke zu erstellen und zeitlich unbegrenzt zu veröffentlichen:"
           : locale === "ar"
-          ? "إلى الآباء وأولياء الأمور، بهذا أمنح/نمنح جمعية السلام إذناً بإنشاء صور وفيديوهات لأنشطة الجمعية للأغراض التالية ونشرها دون قيود زمنية:"
-          : "Aux parents et tuteurs, par la présente, je/nous autorise/ns Al-Salam e.V. à créer et publier sans limitation temporelle des photos et vidéos associatives pour ces raisons :",
+            ? "إلى الآباء وأولياء الأمور، بهذا أمنح/نمنح جمعية السلام إذناً بإنشاء صور وفيديوهات لأنشطة الجمعية للأغراض التالية ونشرها دون قيود زمنية:"
+            : "Aux parents et tuteurs, par la présente, je/nous autorise/ns Al-Salam e.V. à créer et publier sans limitation temporelle des photos et vidéos associatives pour ces raisons :",
       consentOnline:
         locale === "de"
           ? "Unsere Online-Kanäle (Website, Soziale Medien)"
           : locale === "ar"
-          ? "قنواتنا عبر الإنترنت (الموقع الإلكتروني، وسائل التواصل الاجتماعي)"
-          : "Nos canaux en ligne (site web, réseaux sociaux)",
+            ? "قنواتنا عبر الإنترنت (الموقع الإلكتروني، وسائل التواصل الاجتماعي)"
+            : "Nos canaux en ligne (site web, réseaux sociaux)",
       consentPrint:
         locale === "de"
           ? "Printmedien (Tageszeitungen, Broschüren)"
           : locale === "ar"
-          ? "الوسائط المطبوعة (الصحف اليومية، الكتيبات)"
-          : "Médias imprimés (journaux quotidiens, brochures)",
+            ? "الوسائط المطبوعة (الصحف اليومية، الكتيبات)"
+            : "Médias imprimés (journaux quotidiens, brochures)",
       consentPromotion:
         locale === "de"
           ? "Mitgliederwerbung und Veranstaltungsankündigungen"
           : locale === "ar"
-          ? "الترويج للأعضاء وإعلانات الفعاليات"
-          : "Promotion des membres et annonces d'événements",
+            ? "الترويج للأعضاء وإعلانات الفعاليات"
+            : "Promotion des membres et annonces d'événements",
       consentNote:
         locale === "de"
           ? "Diese Bilder können erkennbare Aufnahmen Ihrer Kinder im Rahmen der Vereinsaktivitäten enthalten."
           : locale === "ar"
-          ? "قد تحتوي هذه الصور على صور معترف بها لأطفالكم في إطار أنشطة الجمعية."
-          : "Ces images reconnaissables de vos enfants peuvent être utilisées dans le cadre des activités du club.",
+            ? "قد تحتوي هذه الصور على صور معترف بها لأطفالكم في إطار أنشطة الجمعية."
+            : "Ces images reconnaissables de vos enfants peuvent être utilisées dans le cadre des activités du club.",
       consentConfirm:
         locale === "de"
           ? "Wir bestätigen:"
           : locale === "ar"
-          ? "نحن نؤكد:"
-          : "Nous confirmons :",
+            ? "نحن نؤكد:"
+            : "Nous confirmons :",
       consentDiscussed:
         locale === "de"
           ? "Die Veröffentlichung wurde mit den Kindern besprochen."
           : locale === "ar"
-          ? "تم مناقشة النشر مع الأطفال."
-          : "La publication a été discutée avec les enfants.",
+            ? "تم مناقشة النشر مع الأطفال."
+            : "La publication a été discutée avec les enfants.",
       consentInformed:
         locale === "de"
           ? "Die Kinder wurden über die Online-Veröffentlichung informiert."
           : locale === "ar"
-          ? "تم إبلاغ الأطفال بالنشر عبر الإنترنت."
-          : "Les enfants ont été informés de la publication en ligne.",
+            ? "تم إبلاغ الأطفال بالنشر عبر الإنترنت."
+            : "Les enfants ont été informés de la publication en ligne.",
       consentRights:
         locale === "de"
           ? "Ihre Rechte nach EU-DSGVO bleiben gewahrt (Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch, Beschwerde)"
           : locale === "ar"
-          ? "حقوقكم بموجب اللائحة العامة لحماية البيانات في الاتحاد الأوروبي (الوصول، التصحيح، الحذف، تقييد المعالجة، الاعتراض، الشكوى) محفوظة"
-          : "Vos droits selon le RGPD de l'UE sont préservés (accès, rectification, effacement, limitation du traitement, opposition, réclamation)",
+            ? "حقوقكم بموجب اللائحة العامة لحماية البيانات في الاتحاد الأوروبي (الوصول، التصحيح، الحذف، تقييد المعالجة، الاعتراض، الشكوى) محفوظة"
+            : "Vos droits selon le RGPD de l'UE sont préservés (accès, rectification, effacement, limitation du traitement, opposition, réclamation)",
       consentValidity:
         locale === "de"
           ? "Gültigkeit: Diese Einwilligung tritt mit der Einreichung dieses Formulars in Kraft."
           : locale === "ar"
-          ? "الصلاحية: يسري هذا الموافقة عند تقديم هذا النموذج."
-          : "Validité : Ce consentement prend effet à la soumission de ce formulaire.",
+            ? "الصلاحية: يسري هذا الموافقة عند تقديم هذا النموذج."
+            : "Validité : Ce consentement prend effet à la soumission de ce formulaire.",
     },
     cancelMembership: {
       title:
         locale === "de"
           ? "Mitgliedschaft kündigen"
           : locale === "ar"
-          ? "إلغاء العضوية"
-          : "Annuler l'adhésion",
+            ? "إلغاء العضوية"
+            : "Annuler l'adhésion",
       titleEducation:
         locale === "de"
           ? "Bildungsantrag stornieren"
           : locale === "ar"
-          ? "إلغاء طلب التعليم"
-          : "Annuler la demande d'éducation",
+            ? "إلغاء طلب التعليم"
+            : "Annuler la demande d'éducation",
       sorry:
         locale === "de"
           ? "Es tut uns leid, dass Sie gehen möchten."
           : locale === "ar"
-          ? "نأسف لأنك تريد المغادرة."
-          : "Nous sommes désolés de vous voir partir.",
+            ? "نأسف لأنك تريد المغادرة."
+            : "Nous sommes désolés de vous voir partir.",
       review:
         locale === "de"
           ? "Bitte überprüfen Sie Ihre Entscheidung."
           : locale === "ar"
-          ? "يرجى مراجعة قرارك."
-          : "Veuillez examiner votre décision.",
+            ? "يرجى مراجعة قرارك."
+            : "Veuillez examiner votre décision.",
       confirm:
         locale === "de"
           ? "Ich bestätige, dass ich meine Mitgliedschaft/Bildungsantrag stornieren möchte."
           : locale === "ar"
-          ? "أؤكد أنني أريد إلغاء عضويتي/طلب التعليم."
-          : "Je confirme que je souhaite annuler mon adhésion/demande d'éducation.",
+            ? "أؤكد أنني أريد إلغاء عضويتي/طلب التعليم."
+            : "Je confirme que je souhaite annuler mon adhésion/demande d'éducation.",
       buttonConfirm:
         locale === "de"
           ? "Kündigung bestätigen"
           : locale === "ar"
-          ? "تأكيد الإلغاء"
-          : "Confirmer l'annulation",
+            ? "تأكيد الإلغاء"
+            : "Confirmer l'annulation",
     },
   };
   const [membership, setMembership] = useState<MembershipData | null>(null);
@@ -409,8 +409,9 @@ export default function ProfilePage() {
     useState<EducationRequesterData | null>(null);
   const [students, setStudents] = useState<StudentData[]>([]);
   const [userType, setUserType] = useState<"membership" | "education" | null>(
-    null
+    null,
   );
+  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -468,6 +469,8 @@ export default function ProfilePage() {
       }
     } catch (error) {
       setMessage("Error loading profile data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -494,7 +497,7 @@ export default function ProfilePage() {
 
       if (response.ok) {
         setMessage(
-          dictionary.profile?.updateSuccess || "Profile updated successfully"
+          dictionary.profile?.updateSuccess || "Profile updated successfully",
         );
         setIsEditing(false);
         fetchProfileData(); // Refresh data
@@ -533,8 +536,8 @@ export default function ProfilePage() {
           locale === "de"
             ? "Kündigungsantrag eingereicht. Sie werden abgemeldet."
             : locale === "ar"
-            ? "تم تقديم طلب الإلغاء. سيتم تسجيل خروجك."
-            : "Cancellation request submitted. You will be logged out."
+              ? "تم تقديم طلب الإلغاء. سيتم تسجيل خروجك."
+              : "Cancellation request submitted. You will be logged out.",
         );
         setTimeout(() => {
           handleLogout();
@@ -571,7 +574,7 @@ export default function ProfilePage() {
   const updateStudent = (
     index: number,
     field: keyof StudentData,
-    value: string
+    value: string,
   ) => {
     const updatedStudents = [...students];
     updatedStudents[index] = { ...updatedStudents[index], [field]: value };
@@ -625,7 +628,7 @@ export default function ProfilePage() {
 
       if (response.ok) {
         setMessage(
-          "Children registered for education successfully. Please check your email for confirmation."
+          "Children registered for education successfully. Please check your email for confirmation.",
         );
         setStudents([]);
       } else {
@@ -650,7 +653,7 @@ export default function ProfilePage() {
         `/api/education-registration/students?studentId=${studentId}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (response.ok) {
@@ -658,8 +661,8 @@ export default function ProfilePage() {
           locale === "de"
             ? "Bildungsanmeldung für dieses Kind wurde erfolgreich storniert."
             : locale === "ar"
-            ? "تم إلغاء التسجيل في التعليم لهذا الطفل بنجاح."
-            : "L'inscription éducative de cet enfant a été annulée avec succès."
+              ? "تم إلغاء التسجيل في التعليم لهذا الطفل بنجاح."
+              : "L'inscription éducative de cet enfant a été annulée avec succès.",
         );
         fetchProfileData(); // Refresh data
         setCancelStudentId(null);
@@ -685,8 +688,8 @@ export default function ProfilePage() {
         locale === "de"
           ? "Bitte füllen Sie alle Felder aus."
           : locale === "ar"
-          ? "يرجى ملء جميع الحقول."
-          : "Veuillez remplir tous les champs."
+            ? "يرجى ملء جميع الحقول."
+            : "Veuillez remplir tous les champs.",
       );
       return;
     }
@@ -708,8 +711,8 @@ export default function ProfilePage() {
           locale === "de"
             ? "Neues Kind erfolgreich hinzugefügt."
             : locale === "ar"
-            ? "تم إضافة الطفل الجديد بنجاح."
-            : "Nouvel enfant ajouté avec succès."
+              ? "تم إضافة الطفل الجديد بنجاح."
+              : "Nouvel enfant ajouté avec succès.",
         );
         setNewChild({
           first_name: "",
@@ -730,12 +733,45 @@ export default function ProfilePage() {
     }
   };
 
-  if (!userType) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-green mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userType) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {locale === "de"
+              ? "Kein Profil gefunden"
+              : locale === "ar"
+                ? "لم يتم العثور على ملف شخصي"
+                : "No Profile Found"}
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {locale === "de"
+              ? "Sie haben noch keine Mitgliedschaft oder Bildungsregistrierung."
+              : locale === "ar"
+                ? "ليس لديك عضوية أو تسجيل تعليمي بعد."
+                : "You don't have a membership or education registration yet."}
+          </p>
+          <button
+            onClick={() => router.push(`/${locale}`)}
+            className="px-4 py-2 bg-primary-green text-white rounded-md hover:bg-primary-green/90"
+          >
+            {locale === "de"
+              ? "Zur Startseite"
+              : locale === "ar"
+                ? "العودة للصفحة الرئيسية"
+                : "Go to Homepage"}
+          </button>
         </div>
       </div>
     );
@@ -816,8 +852,8 @@ export default function ProfilePage() {
                   {locale === "de"
                     ? "Persönliche Informationen"
                     : locale === "ar"
-                    ? "المعلومات الشخصية"
-                    : "Personal Information"}
+                      ? "المعلومات الشخصية"
+                      : "Personal Information"}
                 </button>
                 <button
                   onClick={() => setActiveTab("banking")}
@@ -830,8 +866,8 @@ export default function ProfilePage() {
                   {locale === "de"
                     ? "Bankverbindung"
                     : locale === "ar"
-                    ? "البيانات المصرفية"
-                    : "Banking"}
+                      ? "البيانات المصرفية"
+                      : "Banking"}
                 </button>
                 <button
                   onClick={() => setActiveTab("children")}
@@ -855,8 +891,8 @@ export default function ProfilePage() {
                     {locale === "de"
                       ? "Einverständnis"
                       : locale === "ar"
-                      ? "الموافقة"
-                      : "Consent"}
+                        ? "الموافقة"
+                        : "Consent"}
                   </button>
                 )}
                 <button
@@ -870,8 +906,8 @@ export default function ProfilePage() {
                   {locale === "de"
                     ? "Einstellungen"
                     : locale === "ar"
-                    ? "الإعدادات"
-                    : "Settings"}
+                      ? "الإعدادات"
+                      : "Settings"}
                 </button>
               </nav>
             </div>
@@ -1295,8 +1331,8 @@ export default function ProfilePage() {
                       {locale === "de"
                         ? "Ihre aktuelle monatliche Zahlung:"
                         : locale === "ar"
-                        ? "دفعتك الشهرية الحالية:"
-                        : "Votre paiement mensuel actuel:"}
+                          ? "دفعتك الشهرية الحالية:"
+                          : "Votre paiement mensuel actuel:"}
                     </span>
                     <span className="text-lg font-bold text-blue-600">
                       {currentMonthlyAmount}€
@@ -1309,10 +1345,10 @@ export default function ProfilePage() {
                             students.length !== 1 ? "er" : ""
                           } angemeldet`
                         : locale === "ar"
-                        ? `${students.length} طفل مسجل`
-                        : `${students.length} enfant${
-                            students.length > 1 ? "s" : ""
-                          } inscrit${students.length > 1 ? "s" : ""}`}
+                          ? `${students.length} طفل مسجل`
+                          : `${students.length} enfant${
+                              students.length > 1 ? "s" : ""
+                            } inscrit${students.length > 1 ? "s" : ""}`}
                     </p>
                   )}
                   {students.length === 0 && (
@@ -1320,8 +1356,8 @@ export default function ProfilePage() {
                       {locale === "de"
                         ? "Keine Kinder angemeldet"
                         : locale === "ar"
-                        ? "لا يوجد أطفال مسجلون"
-                        : "Aucun enfant inscrit"}
+                          ? "لا يوجد أطفال مسجلون"
+                          : "Aucun enfant inscrit"}
                     </p>
                   )}
                 </div>
@@ -1332,8 +1368,8 @@ export default function ProfilePage() {
                       {locale === "de"
                         ? "Bankverbindung"
                         : locale === "ar"
-                        ? "البيانات المصرفية"
-                        : "Informations bancaires"}
+                          ? "البيانات المصرفية"
+                          : "Informations bancaires"}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="md:col-span-2">
@@ -1418,8 +1454,8 @@ export default function ProfilePage() {
                       {locale === "de"
                         ? "Bankverbindung"
                         : locale === "ar"
-                        ? "البيانات المصرفية"
-                        : "Informations bancaires"}
+                          ? "البيانات المصرفية"
+                          : "Informations bancaires"}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="md:col-span-2">
@@ -1525,8 +1561,8 @@ export default function ProfilePage() {
                     {locale === "de"
                       ? "Als Mitglied können Sie Ihre Kinder für das Bildungsprogramm anmelden."
                       : locale === "ar"
-                      ? "كعضو، يمكنك تسجيل أطفالك في برنامج التعليم."
-                      : "As a member, you can register your children for the education program."}
+                        ? "كعضو، يمكنك تسجيل أطفالك في برنامج التعليم."
+                        : "As a member, you can register your children for the education program."}
                   </p>
                   {students.length === 0 ? (
                     <button
@@ -1548,8 +1584,8 @@ export default function ProfilePage() {
                               {locale === "de"
                                 ? "Kind"
                                 : locale === "ar"
-                                ? "الطفل"
-                                : "Child"}{" "}
+                                  ? "الطفل"
+                                  : "Child"}{" "}
                               {index + 1}
                             </h4>
                             <button
@@ -1572,7 +1608,7 @@ export default function ProfilePage() {
                                   updateStudent(
                                     index,
                                     "first_name",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
@@ -1590,7 +1626,7 @@ export default function ProfilePage() {
                                   updateStudent(
                                     index,
                                     "last_name",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
@@ -1608,7 +1644,7 @@ export default function ProfilePage() {
                                   updateStudent(
                                     index,
                                     "birth_date",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
@@ -1626,7 +1662,7 @@ export default function ProfilePage() {
                                   updateStudent(
                                     index,
                                     "estimated_level",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
@@ -1696,8 +1732,8 @@ export default function ProfilePage() {
                           ? locale === "de"
                             ? "Abbrechen"
                             : locale === "ar"
-                            ? "إلغاء"
-                            : "Annuler"
+                              ? "إلغاء"
+                              : "Annuler"
                           : dictionary.education?.addChild ||
                             "Ajouter un enfant"}
                       </button>
@@ -1812,10 +1848,10 @@ export default function ProfilePage() {
                               ? dictionary.support?.submitting ||
                                 "Envoi en cours..."
                               : locale === "de"
-                              ? "Hinzufügen"
-                              : locale === "ar"
-                              ? "إضافة"
-                              : "Ajouter"}
+                                ? "Hinzufügen"
+                                : locale === "ar"
+                                  ? "إضافة"
+                                  : "Ajouter"}
                           </button>
                           <button
                             type="button"
@@ -1838,8 +1874,8 @@ export default function ProfilePage() {
                             {locale === "de"
                               ? "Kind"
                               : locale === "ar"
-                              ? "الطفل"
-                              : "Enfant"}{" "}
+                                ? "الطفل"
+                                : "Enfant"}{" "}
                             {index + 1}: {student.first_name}{" "}
                             {student.last_name}
                           </h4>
@@ -1863,7 +1899,7 @@ export default function ProfilePage() {
                                 updateStudent(
                                   index,
                                   "first_name",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               disabled={!isEditing}
@@ -1882,7 +1918,7 @@ export default function ProfilePage() {
                                 updateStudent(
                                   index,
                                   "last_name",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               disabled={!isEditing}
@@ -1902,7 +1938,7 @@ export default function ProfilePage() {
                                 updateStudent(
                                   index,
                                   "birth_date",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               disabled={!isEditing}
@@ -1921,7 +1957,7 @@ export default function ProfilePage() {
                                 updateStudent(
                                   index,
                                   "estimated_level",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               disabled={!isEditing}
@@ -2203,10 +2239,10 @@ export default function ProfilePage() {
                 {isSubmitting
                   ? dictionary.support?.submitting || "Envoi en cours..."
                   : locale === "de"
-                  ? "Stornieren"
-                  : locale === "ar"
-                  ? "إلغاء"
-                  : "Annuler"}
+                    ? "Stornieren"
+                    : locale === "ar"
+                      ? "إلغاء"
+                      : "Annuler"}
               </button>
             </div>
           </div>

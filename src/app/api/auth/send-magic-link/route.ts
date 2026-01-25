@@ -4,47 +4,49 @@ import pool from "@/lib/db";
 import { sendMagicLink } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
+  const connection = await pool.getConnection();
   try {
     const { email, locale } = await request.json();
 
     if (!email || !locale) {
       return NextResponse.json(
         { error: "Email and locale are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Check if email exists in memberships table
-    const [membershipRows] = await pool.query(
-      "SELECT id, first_name, last_name FROM memberships WHERE email = ? AND status IN ('active', 'approved')",
-      [email]
+    // Check if email exists in users table
+    const [userRows] = await connection.query(
+      `SELECT u.id, u.first_name, u.last_name, u.email
+       FROM users u
+       WHERE u.email = ?`,
+      [email],
     );
 
-    // Check if email exists in education_requesters table
-    const [educationRows] = await pool.query(
-      "SELECT id, first_name, last_name FROM education_requesters WHERE email = ? AND status IN ('confirmed')",
-      [email]
-    );
-
-    if (
-      (membershipRows as any[]).length === 0 &&
-      (educationRows as any[]).length === 0
-    ) {
+    if ((userRows as any[]).length === 0) {
       return NextResponse.json(
         { error: "Email not found or account not active" },
-        { status: 404 }
+        { status: 404 },
       );
     }
+
+    const user = (userRows as any[])[0];
 
     // Generate token
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // Store token
-    await pool.query(
-      "INSERT INTO auth_tokens (email, token, expires_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), expires_at = VALUES(expires_at), used = FALSE",
-      [email, token, expiresAt]
-    );
+    // Store token in auth_tokens table
+    try {
+      await connection.query(
+        `INSERT INTO auth_tokens (user_id, token, token_type, expires_at, created_at)
+         VALUES (?, ?, 'magic_link', ?, NOW())`,
+        [user.id, token, expiresAt],
+      );
+    } catch (dbError) {
+      console.error("Database error when inserting auth token:", dbError);
+      throw dbError;
+    }
 
     // Send email
     // BASE_URL must be set in production environment
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
       console.error("BASE_URL environment variable is not set!");
       return NextResponse.json(
         { error: "Server configuration error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -64,14 +66,37 @@ export async function POST(request: NextRequest) {
     console.log("- BASE_URL:", baseUrl);
     console.log("- Login URL:", loginUrl);
 
-    await sendMagicLink(email, locale, loginUrl);
+    try {
+      await sendMagicLink(email, locale, loginUrl);
+      console.log("✓ Magic link email sent successfully");
+    } catch (emailError) {
+      // Log the error but don't fail the request - the token is still valid
+      console.error(
+        "⚠️ Email sending failed (but token was created):",
+        emailError,
+      );
+      console.log("📋 Manual login URL for development:", loginUrl);
+
+      // In development, return the login URL so user can manually navigate
+      if (process.env.NODE_ENV === "development") {
+        return NextResponse.json({
+          message:
+            "Magic link created (email sending failed - check console for URL)",
+          loginUrl: loginUrl,
+          warning: "SMTP is disabled. Check server logs for login URL.",
+        });
+      }
+    }
 
     return NextResponse.json({ message: "Magic link sent" });
   } catch (error) {
     console.error("Error sending magic link:", error);
+    console.error("Error details:", (error as Error).message);
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+      { error: "Internal server error", details: (error as Error).message },
+      { status: 500 },
     );
+  } finally {
+    connection.release();
   }
 }

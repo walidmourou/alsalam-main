@@ -22,7 +22,7 @@ interface Article {
 
 async function getAllArticles(): Promise<Article[]> {
   const [result] = await pool.query(
-    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC"
+    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC",
   );
   return result as Article[];
 }
@@ -54,14 +54,14 @@ export default async function ArticlesPage({
         currentLang === "de"
           ? article.title_de
           : currentLang === "fr"
-          ? article.title_fr
-          : article.title_ar;
+            ? article.title_fr
+            : article.title_ar;
       const content =
         currentLang === "de"
           ? article.content_de
           : currentLang === "fr"
-          ? article.content_fr
-          : article.content_ar;
+            ? article.content_fr
+            : article.content_ar;
       return (
         title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         content.toLowerCase().includes(searchQuery.toLowerCase())
@@ -74,7 +74,7 @@ export default async function ArticlesPage({
     filteredArticles.sort(
       (a, b) =>
         new Date(a.published_at || 0).getTime() -
-        new Date(b.published_at || 0).getTime()
+        new Date(b.published_at || 0).getTime(),
     );
   } else if (sortBy === "title") {
     filteredArticles.sort((a, b) => {
@@ -82,14 +82,14 @@ export default async function ArticlesPage({
         currentLang === "de"
           ? a.title_de
           : currentLang === "fr"
-          ? a.title_fr
-          : a.title_ar;
+            ? a.title_fr
+            : a.title_ar;
       const titleB =
         currentLang === "de"
           ? b.title_de
           : currentLang === "fr"
-          ? b.title_fr
-          : b.title_ar;
+            ? b.title_fr
+            : b.title_ar;
       return titleA.localeCompare(titleB);
     });
   }
@@ -198,14 +198,14 @@ export default async function ArticlesPage({
               currentLang === "de"
                 ? article.title_de
                 : currentLang === "fr"
-                ? article.title_fr
-                : article.title_ar;
+                  ? article.title_fr
+                  : article.title_ar;
             const content =
               currentLang === "de"
                 ? article.content_de
                 : currentLang === "fr"
-                ? article.content_fr
-                : article.content_ar;
+                  ? article.content_fr
+                  : article.content_ar;
             const contentSnippet =
               content.length > 150
                 ? content.substring(0, 150) + "..."
@@ -251,7 +251,7 @@ export default async function ArticlesPage({
                           day: "numeric",
                           month: "short",
                           year: "numeric",
-                        }
+                        },
                       )}
                     </div>
                   )}

@@ -1,0 +1,414 @@
+erDiagram
+    %% Core User System
+    users ||--o{ user_roles : has
+    users ||--o{ auth_tokens : has
+    users ||--o{ memberships : has
+    users ||--o{ student_guardians : "is guardian"
+    users ||--o{ articles : "authors"
+    users ||--o{ teachers : "is teacher"
+    users ||--o{ incoming : "makes payment"
+    users ||--o{ purchases : "makes purchase"
+    users ||--o{ payments : "makes payment"
+
+    %% Lookup References for Users
+    users }o--|| genders : references
+    users }o--|| marital_statuses : references
+
+    %% Roles and Permissions (RBAC)
+    user_roles }o--|| roles : references
+    roles ||--o{ role_permissions : has
+    role_permissions }o--|| permissions : has
+
+    %% Memberships
+    memberships }o--|| membership_types : "has type"
+    memberships }o--|| membership_statuses : "has status"
+    memberships ||--o{ payments : "receives"
+    memberships ||--o{ incoming : "generates"
+
+    %% Students and Guardians
+    students ||--o{ student_guardians : "has guardian"
+    students ||--o{ class_students : "enrolls in"
+    students ||--o{ attendance : "attends"
+    students }o--|| genders : references
+
+    student_guardians }o--|| relationship_types : "relationship type"
+
+    %% Education System
+    teachers ||--o{ classes : teaches
+    classes }o--|| education_years : "belongs to"
+    classes }o--|| education_levels : "at level"
+    classes ||--o{ class_schedules : "has schedule"
+    classes ||--o{ class_students : "has students"
+    classes ||--o{ attendance : "tracks"
+
+    class_schedules }o--|| schedule_days : "on day"
+    class_students }o--|| enrollment_statuses : "has status"
+    attendance }o--|| attendance_statuses : "has status"
+
+    %% Financial System
+    incoming }o--|| incoming_types : "type of"
+    incoming }o--|| payment_methods : "paid by"
+
+    purchases }o--|| purchase_categories : "category"
+    purchases }o--|| payment_methods : "paid by"
+
+    payments }o--|| payment_methods : "paid by"
+    payments }o--|| payment_statuses : "has status"
+
+    %% Entity Definitions
+
+    users {
+        int id PK
+        varchar email UK
+        varchar first_name
+        varchar last_name
+        date birth_date
+        int gender_id FK
+        varchar phone
+        text address
+        int marital_status_id FK
+        boolean is_active
+        timestamp last_connection_at
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    roles {
+        int id PK
+        varchar code UK
+        varchar name_de
+        varchar name_ar
+        varchar name_fr
+        text description
+        boolean is_system_role
+        boolean is_active
+    }
+
+    permissions {
+        int id PK
+        varchar code UK
+        varchar name
+        text description
+        varchar resource
+        varchar action
+        boolean is_active
+    }
+
+    user_roles {
+        int id PK
+        int user_id FK
+        varchar role_code FK
+        timestamp granted_at
+        int granted_by_user_id FK
+        timestamp expires_at
+        boolean is_active
+    }
+
+    role_permissions {
+        varchar role_code FK
+        int permission_id FK
+    }
+
+    auth_tokens {
+        int id PK
+        int user_id FK
+        varchar token UK
+        varchar token_type
+        timestamp expires_at
+        timestamp used_at
+    }
+
+    memberships {
+        int id PK
+        varchar membership_id UK
+        int user_id FK
+        int membership_type_id FK
+        int status_id FK
+        date start_date
+        date end_date
+        decimal annual_fee
+        text notes
+        varchar sepa_account_holder
+        varchar sepa_iban
+        varchar sepa_bic
+        varchar sepa_bank
+        boolean sepa_mandate_accepted
+        varchar confirmation_token UK
+        timestamp confirmed_at
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    students {
+        int id PK
+        varchar first_name
+        varchar last_name
+        date birth_date
+        int gender_id FK
+        varchar emergency_contact
+        varchar emergency_phone
+        text medical_info
+        text notes
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    student_guardians {
+        int id PK
+        int student_id FK
+        int user_id FK
+        int relationship_type_id FK
+        boolean is_primary
+        boolean can_pickup
+        timestamp created_at
+    }
+
+    teachers {
+        int id PK
+        int user_id FK
+        varchar specialization
+        text qualifications
+        text bio
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    classes {
+        int id PK
+        varchar name
+        int teacher_id FK
+        int education_year_id FK
+        int education_level_id FK
+        varchar room
+        int max_students
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    class_schedules {
+        int id PK
+        int class_id FK
+        int schedule_day_id FK
+        time start_time
+        time end_time
+    }
+
+    class_students {
+        int id PK
+        int class_id FK
+        int student_id FK
+        int enrollment_status_id FK
+        date enrollment_date
+        date completion_date
+        text notes
+        timestamp created_at
+    }
+
+    attendance {
+        int id PK
+        int class_id FK
+        int student_id FK
+        date attendance_date
+        int attendance_status_id FK
+        text notes
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    articles {
+        int id PK
+        text title_de
+        text title_ar
+        text title_fr
+        text content_de
+        text content_ar
+        text content_fr
+        int author_id FK
+        timestamp published_at
+        boolean is_published
+        int created_by_user_id FK
+        int updated_by_user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    incoming {
+        int id PK
+        int incoming_type_id FK
+        int payment_method_id FK
+        int user_id FK
+        int membership_id FK
+        decimal amount
+        varchar currency
+        text description
+        varchar transaction_reference
+        varchar receipt_number
+        date received_date
+        text notes
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    purchases {
+        int id PK
+        int purchase_category_id FK
+        int payment_method_id FK
+        int purchased_by_user_id FK
+        text description
+        decimal amount
+        varchar currency
+        varchar invoice_number
+        date invoice_date
+        varchar vendor_name
+        text notes
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    payments {
+        int id PK
+        int user_id FK
+        int membership_id FK
+        int payment_method_id FK
+        int payment_status_id FK
+        decimal amount
+        varchar currency
+        text description
+        varchar transaction_reference
+        date payment_date
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Lookup Tables
+    genders {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    marital_statuses {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    membership_types {
+        int id PK
+        varchar code UK
+        varchar name
+        text description
+        decimal default_annual_fee
+        boolean is_active
+    }
+
+    membership_statuses {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    relationship_types {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    payment_methods {
+        int id PK
+        varchar code UK
+        varchar name
+        varchar type
+        boolean is_active
+    }
+
+    payment_statuses {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    schedule_days {
+        int id PK
+        varchar code UK
+        int day_number
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    education_years {
+        int id PK
+        varchar year_label UK
+        date start_date
+        date end_date
+        boolean is_current
+    }
+
+    education_levels {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        text description
+        int sort_order
+        boolean is_active
+    }
+
+    enrollment_statuses {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    attendance_statuses {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    incoming_types {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }
+
+    purchase_categories {
+        int id PK
+        varchar code UK
+        varchar label_de
+        varchar label_ar
+        varchar label_fr
+        boolean is_active
+    }

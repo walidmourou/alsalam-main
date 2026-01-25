@@ -4,6 +4,7 @@ import transporter from "@/lib/email";
 import crypto from "crypto";
 
 export async function POST(request: NextRequest) {
+  const connection = await pool.getConnection();
   try {
     const {
       requesterFirstName,
@@ -47,71 +48,106 @@ export async function POST(request: NextRequest) {
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Generate unique education ID
-    const year = new Date().getFullYear();
-    const educationId = `EDU${year}${Date.now().toString().slice(-6)}`;
+    await connection.beginTransaction();
 
-    // Generate confirmation token
-    const confirmationToken = crypto.randomBytes(32).toString("hex");
-
-    // Insert education requester
-    const [requesterResult] = await pool.query(
-      `INSERT INTO education_requesters (
-        education_id, first_name, last_name, address, email, phone,
-        responsible_first_name, responsible_last_name, responsible_address,
-        responsible_email, responsible_phone,
-        consent_media_online,
-        consent_media_print, consent_media_promotion, school_rules_accepted,
-        sepa_account_holder, sepa_iban, sepa_bic, sepa_bank, sepa_mandate,
-        lang, status, confirmation_token, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, NOW())`,
-      [
-        educationId,
-        requesterFirstName,
-        requesterLastName,
-        requesterAddress,
-        requesterEmail,
-        requesterPhone,
-        responsibleFirstName || null,
-        responsibleLastName || null,
-        responsibleAddress || null,
-        responsibleEmail || null,
-        responsiblePhone || null,
-        consentMediaOnline,
-        consentMediaPrint,
-        consentMediaPromotion,
-        schoolRulesAccepted,
-        sepaAccountHolder,
-        sepaIban,
-        sepaBic || null,
-        sepaBank,
-        sepaMandate,
-        lang,
-        confirmationToken,
-      ]
+    // Check if user already exists by email
+    let userId;
+    const [existingUserRows] = await connection.query(
+      "SELECT id FROM users WHERE email = ? AND deleted_at IS NULL",
+      [requesterEmail],
     );
 
-    const requesterId = (requesterResult as any).insertId;
-
-    // Insert students
-    for (const child of children) {
-      await pool.query(
-        `INSERT INTO education_students (
-          requester_id, first_name, last_name, birth_date, estimated_level
-        ) VALUES (?, ?, ?, ?, ?)`,
+    if ((existingUserRows as any[]).length > 0) {
+      userId = (existingUserRows as any[])[0].id;
+    } else {
+      // Create new user (guardian/parent)
+      const [userResult] = await connection.query(
+        `INSERT INTO users (
+          email, first_name, last_name, phone, address, is_active, created_at
+        ) VALUES (?, ?, ?, ?, ?, true, NOW())`,
         [
-          requesterId,
-          child.firstName,
-          child.lastName,
-          child.birthDate,
-          child.estimatedLevel,
-        ]
+          requesterEmail,
+          requesterFirstName,
+          requesterLastName,
+          requesterPhone,
+          requesterAddress,
+        ],
+      );
+      userId = (userResult as any).insertId;
+
+      // Assign 'parent' role to the user
+      await connection.query(
+        `INSERT INTO user_roles (user_id, role_code, granted_at, is_active)
+         VALUES (?, 'parent', NOW(), true)`,
+        [userId],
       );
     }
+
+    // Get relationship_type_id for 'parent' (primary guardian)
+    const [relationshipRows] = await connection.query(
+      "SELECT id FROM relationship_types WHERE code = ?",
+      ["parent"],
+    );
+    const relationshipTypeId = (relationshipRows as any[])[0]?.id || 1;
+
+    // Get enrollment_status_id for 'pending'
+    const [enrollmentStatusRows] = await connection.query(
+      "SELECT id FROM enrollment_statuses WHERE code = ?",
+      ["pending"],
+    );
+    const enrollmentStatusId = (enrollmentStatusRows as any[])[0]?.id;
+
+    // Insert students and link them to the guardian
+    for (const child of children) {
+      // Get gender_id
+      let genderId = null;
+      if (child.gender) {
+        const [genderRows] = await connection.query(
+          "SELECT id FROM genders WHERE code = ?",
+          [child.gender],
+        );
+        genderId = (genderRows as any[])[0]?.id;
+      }
+
+      // Insert student
+      const [studentResult] = await connection.query(
+        `INSERT INTO students (
+          first_name, last_name, birth_date, gender_id, created_at
+        ) VALUES (?, ?, ?, ?, NOW())`,
+        [child.firstName, child.lastName, child.birthDate, genderId],
+      );
+      const studentId = (studentResult as any).insertId;
+
+      // Link student to guardian
+      await connection.query(
+        `INSERT INTO student_guardians (
+          student_id, user_id, relationship_type_id, is_primary, can_pickup, created_at
+        ) VALUES (?, ?, ?, true, true, NOW())`,
+        [studentId, userId, relationshipTypeId],
+      );
+
+      // If estimated level is provided, enroll student in a class
+      // (This would require finding or creating appropriate classes)
+      // For now, we'll just store the information in notes
+      // You may need to create a temporary table or store this differently
+    }
+
+    await connection.commit();
+
+    // Generate confirmation token and send email
+    const confirmationToken = crypto.randomBytes(32).toString("hex");
+
+    // Store confirmation token in auth_tokens table for verification
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await connection.query(
+      `INSERT INTO auth_tokens (user_id, token, token_type, expires_at, created_at)
+       VALUES (?, ?, 'education_confirmation', ?, NOW())`,
+      [userId, confirmationToken, expiresAt],
+    );
 
     // Send confirmation email
     try {
@@ -119,8 +155,8 @@ export async function POST(request: NextRequest) {
         lang === "de"
           ? "Bildungsanmeldung bestätigen - AL-SALAM E.V."
           : lang === "ar"
-          ? "تأكيد التسجيل في التعليم - جمعية السلام"
-          : "Confirmer l'inscription éducation - AL-SALAM E.V.";
+            ? "تأكيد التسجيل في التعليم - جمعية السلام"
+            : "Confirmer l'inscription éducation - AL-SALAM E.V.";
 
       const confirmationUrl = `${process.env.BASE_URL}/api/education-registration/confirm?token=${confirmationToken}`;
 
@@ -144,7 +180,7 @@ export async function POST(request: NextRequest) {
         </div>
       `
           : lang === "ar"
-          ? `
+            ? `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; direction: rtl;">
           <h2 style="color: #059669;">تأكيد التسجيل في التعليم</h2>
           <p>عزيزي ${requesterFirstName} ${requesterLastName}،</p>
@@ -161,7 +197,7 @@ export async function POST(request: NextRequest) {
           <p>مع خالص التحية،<br>فريق جمعية السلام</p>
         </div>
       `
-          : `
+            : `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #059669;">Confirmer l'inscription éducation</h2>
           <p>Cher/Chère ${requesterFirstName} ${requesterLastName},</p>
@@ -186,12 +222,12 @@ export async function POST(request: NextRequest) {
         html,
       });
       console.log(
-        "✓ Education registration confirmation email sent successfully"
+        "✓ Education registration confirmation email sent successfully",
       );
     } catch (emailError) {
       console.error(
         "Failed to send confirmation email:",
-        (emailError as Error).message
+        (emailError as Error).message,
       );
       // Don't fail the registration if email fails - log and continue
     }
@@ -199,14 +235,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Education registration submitted successfully",
-      requesterId,
-      educationId,
+      userId,
     });
   } catch (error) {
+    await connection.rollback();
     console.error("Education registration error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
+  } finally {
+    connection.release();
   }
 }

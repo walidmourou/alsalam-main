@@ -39,7 +39,7 @@ export default function MembershipForm({
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -66,6 +66,7 @@ export default function MembershipForm({
       const data = await response.json();
 
       if (!response.ok) {
+        console.error("Membership registration error:", data);
         throw new Error(data.error || "Registration failed");
       }
 

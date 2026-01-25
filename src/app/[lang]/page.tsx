@@ -14,7 +14,7 @@ interface Article {
   content_fr: string;
   content_ar: string;
   image_url: string | null;
-  status: string;
+  is_published: boolean;
   author_id: number;
   created_at: Date;
   updated_at: Date;
@@ -23,7 +23,7 @@ interface Article {
 
 async function getArticles(): Promise<Article[]> {
   const [result] = await pool.query(
-    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3"
+    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3",
   );
   return result as Article[];
 }
