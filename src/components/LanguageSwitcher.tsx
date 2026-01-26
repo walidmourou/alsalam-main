@@ -1,10 +1,16 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { locales, type Locale } from "@/i18n/config";
-import { useTransition } from "react";
+import { locales, type Locale, localeNames } from "@/i18n/config";
+import { useTransition, memo, useCallback } from "react";
 
-export default function LanguageSwitcher() {
+const LANGUAGES = [
+  { code: "de" as const, label: "DE", name: localeNames.de },
+  { code: "ar" as const, label: "عربي", name: localeNames.ar },
+  { code: "fr" as const, label: "FR", name: localeNames.fr },
+] as const;
+
+function LanguageSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -13,27 +19,24 @@ export default function LanguageSwitcher() {
   const currentLocale = pathname.split("/")[1] as Locale;
   const isRTL = currentLocale === "ar";
 
-  const switchLocale = (newLocale: Locale) => {
-    if (!isPending && newLocale !== currentLocale) {
-      startTransition(() => {
-        // Set cookie for locale preference
-        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
+  const switchLocale = useCallback(
+    (newLocale: Locale) => {
+      if (!isPending && newLocale !== currentLocale) {
+        startTransition(() => {
+          // Set cookie for locale preference
+          document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-        // Replace the locale in the pathname
-        const segments = pathname.split("/");
-        segments[1] = newLocale;
-        const newPath = segments.join("/");
+          // Replace the locale in the pathname
+          const segments = pathname.split("/");
+          segments[1] = newLocale;
+          const newPath = segments.join("/");
 
-        router.push(newPath);
-      });
-    }
-  };
-
-  const languages = [
-    { code: "de" as const, label: "DE", name: "Deutsch" },
-    { code: "ar" as const, label: "عربي", name: "العربية" },
-    { code: "fr" as const, label: "FR", name: "Français" },
-  ];
+          router.push(newPath);
+        });
+      }
+    },
+    [currentLocale, isPending, pathname, router],
+  );
 
   return (
     <div className="relative group">
@@ -47,6 +50,7 @@ export default function LanguageSwitcher() {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -57,12 +61,16 @@ export default function LanguageSwitcher() {
         </svg>
         <div
           className={`flex gap-0.5 md:gap-1 ${isRTL ? "flex-row-reverse" : ""}`}
+          role="group"
+          aria-label="Language selection"
         >
-          {languages.map(({ code, label, name }) => (
+          {LANGUAGES.map(({ code, label, name }) => (
             <button
               key={code}
               onClick={() => switchLocale(code)}
               disabled={isPending}
+              aria-label={`Switch to ${name}`}
+              aria-current={currentLocale === code ? "true" : undefined}
               className={`relative px-2 md:px-3 py-1 md:py-1.5 text-sm font-medium rounded-lg transition-all duration-300 group/lang ${
                 currentLocale === code
                   ? "text-white bg-linear-to-r from-[#009245] to-[#007a3a] shadow-lg shadow-[#009245]/25"
@@ -72,7 +80,10 @@ export default function LanguageSwitcher() {
             >
               {label}
               {currentLocale === code && (
-                <div className="absolute inset-0 bg-linear-to-r from-white/20 to-transparent rounded-lg"></div>
+                <div
+                  className="absolute inset-0 bg-linear-to-r from-white/20 to-transparent rounded-lg"
+                  aria-hidden="true"
+                ></div>
               )}
             </button>
           ))}
@@ -81,3 +92,5 @@ export default function LanguageSwitcher() {
     </div>
   );
 }
+
+export default memo(LanguageSwitcher);

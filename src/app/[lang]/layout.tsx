@@ -20,8 +20,24 @@ export async function generateMetadata({
   const dictionary = await getDictionary(lang as Locale);
 
   return {
-    title: dictionary.seo.title,
+    title: {
+      default: dictionary.seo.title,
+      template: `%s | ${dictionary.seo.title}`,
+    },
     description: dictionary.seo.description,
+    keywords: [
+      "Islamic Center",
+      "Mosque",
+      "Lörrach",
+      "Brombach",
+      "Muslim Community",
+      "Prayer Times",
+      "Islamic Education",
+      "Al-Salam",
+    ],
+    authors: [{ name: "AL-SALAM E.V." }],
+    creator: "AL-SALAM E.V.",
+    publisher: "AL-SALAM E.V.",
     metadataBase: new URL("https://islamisches-zentrum-brombach-loerrach.de"),
     alternates: {
       canonical: `/${lang}`,
@@ -36,11 +52,27 @@ export async function generateMetadata({
       description: dictionary.seo.description,
       locale: lang,
       type: "website",
+      siteName: "AL-SALAM E.V.",
+      url: `https://islamisches-zentrum-brombach-loerrach.de/${lang}`,
     },
     twitter: {
       card: "summary_large_image",
       title: dictionary.seo.title,
       description: dictionary.seo.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     },
   };
 }

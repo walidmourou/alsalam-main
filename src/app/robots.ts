@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/"],
       },
     ],
-    sitemap: "https://islamisches-zentrum-brombach-loerrach.de/sitemap.xml",
+    sitemap: "https://www.alsalam-loerrach.org/sitemap.xml",
   };
 }

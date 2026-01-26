@@ -1,7 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import crypto from "crypto";
 import pool from "@/lib/db";
 import { sendMagicLink } from "@/lib/email";
+import {
+  successResponse,
+  errorResponse,
+  handleApiError,
+} from "@/lib/api-helpers";
+import type { User } from "@/types";
 
 export async function POST(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -9,28 +15,28 @@ export async function POST(request: NextRequest) {
     const { email, locale } = await request.json();
 
     if (!email || !locale) {
-      return NextResponse.json(
-        { error: "Email and locale are required" },
-        { status: 400 },
-      );
+      return errorResponse("Email and locale are required", 400);
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return errorResponse("Invalid email format", 400);
     }
 
     // Check if email exists in users table
-    const [userRows] = await connection.query(
+    const [userRows] = await connection.query<User[]>(
       `SELECT u.id, u.first_name, u.last_name, u.email
        FROM users u
-       WHERE u.email = ?`,
+       WHERE u.email = ? AND u.is_active = true AND u.deleted_at IS NULL`,
       [email],
     );
 
-    if ((userRows as any[]).length === 0) {
-      return NextResponse.json(
-        { error: "Email not found or account not active" },
-        { status: 404 },
-      );
+    if ((userRows as User[]).length === 0) {
+      return errorResponse("Email not found or account not active", 404);
     }
 
-    const user = (userRows as any[])[0];
+    const user = (userRows as User[])[0];
 
     // Generate token
     const token = crypto.randomBytes(32).toString("hex");
@@ -49,15 +55,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email
-    // BASE_URL must be set in production environment
     const baseUrl = process.env.BASE_URL;
 
     if (!baseUrl) {
       console.error("BASE_URL environment variable is not set!");
-      return NextResponse.json(
-        { error: "Server configuration error" },
-        { status: 500 },
-      );
+      return errorResponse("Server configuration error", 500);
     }
 
     const loginUrl = `${baseUrl}/${locale}/auth/verify?token=${token}`;
@@ -79,23 +81,16 @@ export async function POST(request: NextRequest) {
 
       // In development, return the login URL so user can manually navigate
       if (process.env.NODE_ENV === "development") {
-        return NextResponse.json({
-          message:
-            "Magic link created (email sending failed - check console for URL)",
-          loginUrl: loginUrl,
-          warning: "SMTP is disabled. Check server logs for login URL.",
-        });
+        return successResponse(
+          { loginUrl },
+          "Magic link created (email sending failed - check console for URL)",
+        );
       }
     }
 
-    return NextResponse.json({ message: "Magic link sent" });
+    return successResponse(null, "Magic link sent successfully");
   } catch (error) {
-    console.error("Error sending magic link:", error);
-    console.error("Error details:", (error as Error).message);
-    return NextResponse.json(
-      { error: "Internal server error", details: (error as Error).message },
-      { status: 500 },
-    );
+    return handleApiError(error, "send-magic-link");
   } finally {
     connection.release();
   }

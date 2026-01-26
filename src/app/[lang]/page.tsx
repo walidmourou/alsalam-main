@@ -1,25 +1,9 @@
-export const dynamic = "force-dynamic";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 import HeroWithModal from "@/components/HeroWithModal";
 import pool from "@/lib/db";
 import MainHero from "@/components/MainHero";
-
-interface Article {
-  id: number;
-  title_de: string;
-  title_fr: string;
-  title_ar: string;
-  content_de: string;
-  content_fr: string;
-  content_ar: string;
-  image_url: string | null;
-  is_published: boolean;
-  author_id: number;
-  created_at: Date;
-  updated_at: Date;
-  published_at: Date | null;
-}
+import type { Article } from "@/types";
 
 async function getArticles(): Promise<Article[]> {
   const [result] = await pool.query(

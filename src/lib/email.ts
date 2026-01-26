@@ -1,22 +1,73 @@
 import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Create reusable transporter with lazy initialization
+let transporter: Transporter | null = null;
+
+const getTransporter = (): Transporter => {
+  if (!transporter) {
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+
+    // Check if SMTP is configured
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.warn(
+        "SMTP not fully configured. Email functionality may be limited.",
+      );
+      // Return a test transporter for development
+      if (process.env.NODE_ENV === "development") {
+        console.log("Using test transporter for development");
+      }
+    }
+
+    transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465, // true for 465, false for other ports
+      auth:
+        smtpHost && smtpUser && smtpPass
+          ? {
+              user: smtpUser,
+              pass: smtpPass,
+            }
+          : undefined,
+    });
+  }
+
+  return transporter;
+};
+
+// Email sending helper with error handling
+async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  from = "AL-SALAM E.V. <info@alsalam-loerrach.org>",
+): Promise<void> {
+  const transporter = getTransporter();
+
+  try {
+    await transporter.sendMail({
+      from,
+      to,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    throw new Error("Failed to send email");
+  }
+}
 
 export async function sendMembershipConfirmation(
   email: string,
   firstName: string,
   lastName: string,
   lang: string,
-  confirmationToken: string
-) {
+  confirmationToken: string,
+): Promise<void> {
   const subject =
     {
       de: "Mitgliedschaftsregistrierung bestätigen - AL-SALAM E.V.",
@@ -90,29 +141,14 @@ export async function sendMembershipConfirmation(
     `,
     }[lang] || "";
 
-  const mailOptions = {
-    from: process.env.FROM_EMAIL,
-    to: email,
-    subject,
-    html: htmlContent,
-  };
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✓ Email sent successfully:", info.messageId);
-    console.log("Response:", info.response);
-    return info;
-  } catch (error) {
-    console.error("✗ Email sending failed:", error);
-    throw error;
-  }
+  await sendEmail(email, subject, htmlContent);
 }
 
 export async function sendMagicLink(
   email: string,
   lang: string,
-  loginUrl: string
-) {
+  loginUrl: string,
+): Promise<void> {
   const subject =
     {
       de: "Ihr Anmeldelink - AL-SALAM E.V.",
@@ -125,6 +161,13 @@ export async function sendMagicLink(
   console.log("- From:", process.env.FROM_EMAIL);
   console.log("- Subject:", subject);
   console.log("- Login URL:", loginUrl);
+
+  const subject =
+    {
+      de: "Ihr Anmeldelink - AL-SALAM E.V.",
+      fr: "Votre lien de connexion - AL-SALAM E.V.",
+      ar: "رابط تسجيل الدخول - AL-SALAM E.V.",
+    }[lang] || "Your Login Link - AL-SALAM E.V.";
 
   const htmlContent =
     {
@@ -169,21 +212,7 @@ export async function sendMagicLink(
     `,
     }[lang] || "";
 
-  const mailOptions = {
-    from: process.env.FROM_EMAIL,
-    to: email,
-    subject,
-    html: htmlContent,
-  };
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✓ Magic link email sent successfully:", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("✗ Magic link email sending failed:", error);
-    throw error;
-  }
+  await sendEmail(email, subject, htmlContent);
 }
 
-export default transporter;
+export default getTransporter;
