@@ -9,10 +9,16 @@ import type { Article } from "@/types";
 export const revalidate = 300;
 
 async function getArticles(): Promise<Article[]> {
-  const [result] = await pool.query(
-    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3",
-  );
-  return result as Article[];
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3",
+    );
+    return result as Article[];
+  } catch (error) {
+    // Database not available during build - return empty array
+    console.warn("Database not available, returning empty articles array");
+    return [];
+  }
 }
 
 export default async function Home({

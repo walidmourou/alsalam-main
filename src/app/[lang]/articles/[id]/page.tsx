@@ -25,19 +25,29 @@ interface Article {
 }
 
 async function getArticle(id: number): Promise<Article | null> {
-  const [result] = await pool.query(
-    "SELECT * FROM articles WHERE id = ? AND status = 'published'",
-    [id],
-  );
-  const articleRows = result as Article[];
-  return articleRows.length > 0 ? articleRows[0] : null;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM articles WHERE id = ? AND status = 'published'",
+      [id],
+    );
+    const articleRows = result as Article[];
+    return articleRows.length > 0 ? articleRows[0] : null;
+  } catch (error) {
+    console.warn("Database not available, returning null for article");
+    return null;
+  }
 }
 
 async function getAllArticleIds(): Promise<number[]> {
-  const [result] = await pool.query(
-    "SELECT id FROM articles WHERE status = 'published'",
-  );
-  return (result as { id: number }[]).map((row) => row.id);
+  try {
+    const [result] = await pool.query(
+      "SELECT id FROM articles WHERE status = 'published'",
+    );
+    return (result as { id: number }[]).map((row) => row.id);
+  } catch (error) {
+    console.warn("Database not available, returning empty article IDs");
+    return [];
+  }
 }
 
 // Generate static params for all articles and languages

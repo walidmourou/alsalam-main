@@ -27,30 +27,36 @@ async function getAllArticles(
   searchQuery?: string,
   sortBy?: string,
 ): Promise<Article[]> {
-  let query = "SELECT * FROM articles WHERE status = 'published'";
-  const params: any[] = [];
+  try {
+    let query = "SELECT * FROM articles WHERE status = 'published'";
+    const params: any[] = [];
 
-  // Add search filter in SQL for better performance
-  if (searchQuery) {
-    const titleColumn = `title_${lang}`;
-    const contentColumn = `content_${lang}`;
-    query += ` AND (${titleColumn} LIKE ? OR ${contentColumn} LIKE ?)`;
-    const searchPattern = `%${searchQuery}%`;
-    params.push(searchPattern, searchPattern);
+    // Add search filter in SQL for better performance
+    if (searchQuery) {
+      const titleColumn = `title_${lang}`;
+      const contentColumn = `content_${lang}`;
+      query += ` AND (${titleColumn} LIKE ? OR ${contentColumn} LIKE ?)`;
+      const searchPattern = `%${searchQuery}%`;
+      params.push(searchPattern, searchPattern);
+    }
+
+    // Add sorting in SQL
+    if (sortBy === "oldest") {
+      query += " ORDER BY published_at ASC";
+    } else if (sortBy === "title") {
+      const titleColumn = `title_${lang}`;
+      query += ` ORDER BY ${titleColumn} ASC`;
+    } else {
+      query += " ORDER BY published_at DESC";
+    }
+
+    const [result] = await pool.query(query, params);
+    return result as Article[];
+  } catch (error) {
+    // Database not available during build - return empty array
+    console.warn("Database not available, returning empty articles array");
+    return [];
   }
-
-  // Add sorting in SQL
-  if (sortBy === "oldest") {
-    query += " ORDER BY published_at ASC";
-  } else if (sortBy === "title") {
-    const titleColumn = `title_${lang}`;
-    query += ` ORDER BY ${titleColumn} ASC`;
-  } else {
-    query += " ORDER BY published_at DESC";
-  }
-
-  const [result] = await pool.query(query, params);
-  return result as Article[];
 }
 
 interface ArticlesPageProps {
