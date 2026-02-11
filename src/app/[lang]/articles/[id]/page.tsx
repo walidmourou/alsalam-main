@@ -42,19 +42,28 @@ async function getAllArticleIds(): Promise<number[]> {
 
 // Generate static params for all articles and languages
 export async function generateStaticParams() {
-  const articleIds = await getAllArticleIds();
+  try {
+    const articleIds = await getAllArticleIds();
 
-  const params = [];
-  for (const locale of locales) {
-    for (const id of articleIds) {
-      params.push({
-        lang: locale,
-        id: id.toString(),
-      });
+    const params = [];
+    for (const locale of locales) {
+      for (const id of articleIds) {
+        params.push({
+          lang: locale,
+          id: id.toString(),
+        });
+      }
     }
-  }
 
-  return params;
+    return params;
+  } catch (error) {
+    // Database not available during build (e.g., Docker build)
+    // Return empty array - pages will be generated on-demand at runtime
+    console.warn(
+      "Database not available during build, skipping static params generation",
+    );
+    return [];
+  }
 }
 
 interface ArticlePageProps {
