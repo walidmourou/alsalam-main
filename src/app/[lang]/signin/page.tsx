@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { getDictionary } from "@/i18n/dictionaries";
+import { useParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
-  const router = useRouter();
   const params = useParams();
   const locale = params.lang as Locale;
 
@@ -21,44 +19,44 @@ export default function SignInPage() {
         locale === "de"
           ? "Anmelden"
           : locale === "ar"
-          ? "تسجيل الدخول"
-          : "Se connecter",
+            ? "تسجيل الدخول"
+            : "Se connecter",
       subtitle:
         locale === "de"
           ? "Geben Sie Ihre E-Mail-Adresse ein, um einen Anmeldelink zu erhalten"
           : locale === "ar"
-          ? "أدخل بريدك الإلكتروني لتلقي رابط تسجيل الدخول"
-          : "Entrez votre adresse e-mail pour recevoir un lien de connexion",
+            ? "أدخل بريدك الإلكتروني لتلقي رابط تسجيل الدخول"
+            : "Entrez votre adresse e-mail pour recevoir un lien de connexion",
       emailLabel:
         locale === "de"
           ? "E-Mail-Adresse"
           : locale === "ar"
-          ? "البريد الإلكتروني"
-          : "Adresse e-mail",
+            ? "البريد الإلكتروني"
+            : "Adresse e-mail",
       emailPlaceholder:
         locale === "de"
           ? "Geben Sie Ihre E-Mail ein"
           : locale === "ar"
-          ? "أدخل بريدك الإلكتروني"
-          : "Entrez votre e-mail",
+            ? "أدخل بريدك الإلكتروني"
+            : "Entrez votre e-mail",
       sendLink:
         locale === "de"
           ? "Anmeldelink senden"
           : locale === "ar"
-          ? "إرسال رابط تسجيل الدخول"
-          : "Envoyer le lien de connexion",
+            ? "إرسال رابط تسجيل الدخول"
+            : "Envoyer le lien de connexion",
       sending:
         locale === "de"
           ? "Wird gesendet..."
           : locale === "ar"
-          ? "جارٍ الإرسال..."
-          : "Envoi en cours...",
+            ? "جارٍ الإرسال..."
+            : "Envoi en cours...",
       successMessage:
         locale === "de"
           ? "Überprüfen Sie Ihre E-Mail auf den Anmeldelink. Falls Sie die E-Mail nicht finden, überprüfen Sie bitte Ihren Spam-Ordner."
           : locale === "ar"
-          ? "تحقق من بريدك الإلكتروني لرابط تسجيل الدخول. إذا لم تجد الرسالة، يرجى التحقق من مجلد البريد المزعج."
-          : "Vérifiez votre e-mail pour le lien de connexion. Si vous ne trouvez pas l'e-mail, vérifiez votre dossier spam.",
+            ? "تحقق من بريدك الإلكتروني لرابط تسجيل الدخول. إذا لم تجد الرسالة، يرجى التحقق من مجلد البريد المزعج."
+            : "Vérifiez votre e-mail pour le lien de connexion. Si vous ne trouvez pas l'e-mail, vérifiez votre dossier spam.",
     },
   };
 

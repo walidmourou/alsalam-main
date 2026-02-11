@@ -162,13 +162,6 @@ export async function sendMagicLink(
   console.log("- Subject:", subject);
   console.log("- Login URL:", loginUrl);
 
-  const subject =
-    {
-      de: "Ihr Anmeldelink - AL-SALAM E.V.",
-      fr: "Votre lien de connexion - AL-SALAM E.V.",
-      ar: "رابط تسجيل الدخول - AL-SALAM E.V.",
-    }[lang] || "Your Login Link - AL-SALAM E.V.";
-
   const htmlContent =
     {
       de: `

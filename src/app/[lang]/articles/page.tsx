@@ -1,4 +1,6 @@
-export const dynamic = "force-dynamic";
+// Revalidate every 5 minutes (300 seconds) for better performance
+export const revalidate = 300;
+
 import pool from "@/lib/db";
 import type { Locale } from "@/i18n/config";
 import Link from "next/link";
@@ -20,10 +22,34 @@ interface Article {
   published_at: Date | null;
 }
 
-async function getAllArticles(): Promise<Article[]> {
-  const [result] = await pool.query(
-    "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC",
-  );
+async function getAllArticles(
+  lang: Locale,
+  searchQuery?: string,
+  sortBy?: string,
+): Promise<Article[]> {
+  let query = "SELECT * FROM articles WHERE status = 'published'";
+  const params: any[] = [];
+
+  // Add search filter in SQL for better performance
+  if (searchQuery) {
+    const titleColumn = `title_${lang}`;
+    const contentColumn = `content_${lang}`;
+    query += ` AND (${titleColumn} LIKE ? OR ${contentColumn} LIKE ?)`;
+    const searchPattern = `%${searchQuery}%`;
+    params.push(searchPattern, searchPattern);
+  }
+
+  // Add sorting in SQL
+  if (sortBy === "oldest") {
+    query += " ORDER BY published_at ASC";
+  } else if (sortBy === "title") {
+    const titleColumn = `title_${lang}`;
+    query += ` ORDER BY ${titleColumn} ASC`;
+  } else {
+    query += " ORDER BY published_at DESC";
+  }
+
+  const [result] = await pool.query(query, params);
   return result as Article[];
 }
 
@@ -37,7 +63,6 @@ export default async function ArticlesPage({
   searchParams,
 }: ArticlesPageProps) {
   const { lang } = await params;
-  const articles = await getAllArticles();
   const currentLang = lang as Locale;
   const dictionary = await getDictionary(currentLang);
 
@@ -46,53 +71,12 @@ export default async function ArticlesPage({
   const searchQuery = typeof search === "string" ? search : "";
   const sortBy = typeof sort === "string" ? sort : "newest";
 
-  // Filter articles based on search
-  let filteredArticles = articles;
-  if (searchQuery) {
-    filteredArticles = articles.filter((article) => {
-      const title =
-        currentLang === "de"
-          ? article.title_de
-          : currentLang === "fr"
-            ? article.title_fr
-            : article.title_ar;
-      const content =
-        currentLang === "de"
-          ? article.content_de
-          : currentLang === "fr"
-            ? article.content_fr
-            : article.content_ar;
-      return (
-        title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        content.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-  }
-
-  // Sort articles
-  if (sortBy === "oldest") {
-    filteredArticles.sort(
-      (a, b) =>
-        new Date(a.published_at || 0).getTime() -
-        new Date(b.published_at || 0).getTime(),
-    );
-  } else if (sortBy === "title") {
-    filteredArticles.sort((a, b) => {
-      const titleA =
-        currentLang === "de"
-          ? a.title_de
-          : currentLang === "fr"
-            ? a.title_fr
-            : a.title_ar;
-      const titleB =
-        currentLang === "de"
-          ? b.title_de
-          : currentLang === "fr"
-            ? b.title_fr
-            : b.title_ar;
-      return titleA.localeCompare(titleB);
-    });
-  }
+  // Fetch articles with optimized database query
+  const filteredArticles = await getAllArticles(
+    currentLang,
+    searchQuery,
+    sortBy,
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">

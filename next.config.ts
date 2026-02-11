@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+    minimumCacheTTL: 60, // Cache images for at least 60 seconds
   },
 
   // Optimize package imports
@@ -22,9 +23,6 @@ const nextConfig: NextConfig = {
   // Enable strict mode for better development experience
   reactStrictMode: true,
 
-  // Optimize production builds
-  swcMinify: true,
-
   // Compiler options
   compiler: {
     removeConsole:
@@ -34,6 +32,12 @@ const nextConfig: NextConfig = {
           }
         : false,
   },
+
+  // Production-specific optimizations
+  ...(process.env.NODE_ENV === "production" && {
+    // Enable output file tracing for smaller Docker images
+    output: process.env.STANDALONE_BUILD === "true" ? "standalone" : undefined,
+  }),
 
   // Headers for security and performance
   async headers() {
@@ -56,6 +60,16 @@ const nextConfig: NextConfig = {
           {
             key: "Referrer-Policy",
             value: "origin-when-cross-origin",
+          },
+        ],
+      },
+      // Cache static assets more aggressively
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

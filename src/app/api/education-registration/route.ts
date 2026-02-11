@@ -12,20 +12,11 @@ export async function POST(request: NextRequest) {
       requesterAddress,
       requesterEmail,
       requesterPhone,
-      responsibleFirstName,
-      responsibleLastName,
-      responsibleAddress,
-      responsibleEmail,
-      responsiblePhone,
       children,
       totalAmount,
-      consentMediaOnline,
-      consentMediaPrint,
-      consentMediaPromotion,
       schoolRulesAccepted,
       sepaAccountHolder,
       sepaIban,
-      sepaBic,
       sepaBank,
       sepaMandate,
       lang,
@@ -93,13 +84,6 @@ export async function POST(request: NextRequest) {
       ["parent"],
     );
     const relationshipTypeId = (relationshipRows as any[])[0]?.id || 1;
-
-    // Get enrollment_status_id for 'pending'
-    const [enrollmentStatusRows] = await connection.query(
-      "SELECT id FROM enrollment_statuses WHERE code = ?",
-      ["pending"],
-    );
-    const enrollmentStatusId = (enrollmentStatusRows as any[])[0]?.id;
 
     // Insert students and link them to the guardian
     for (const child of children) {
@@ -215,7 +199,7 @@ export async function POST(request: NextRequest) {
         </div>
       `;
 
-      await transporter.sendMail({
+      await transporter().sendMail({
         from: process.env.FROM_EMAIL,
         to: requesterEmail,
         subject,

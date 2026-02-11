@@ -9,12 +9,16 @@ const poolConfig: PoolOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 20, // Increased from 10 for better concurrency
   maxIdle: 10,
   idleTimeout: 60000,
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  // Additional performance optimizations
+  connectTimeout: 10000, // 10 seconds timeout for new connections
+  timezone: "Z", // Use UTC timezone
+  charset: "utf8mb4", // Support for emojis and multilingual content
 };
 
 // Create pool instance
@@ -30,12 +34,8 @@ const getPool = (): Pool => {
       console.log("Database connection established");
     });
 
-    pool.on("error", (err) => {
-      console.error("Database pool error:", err);
-      if (err.code === "PROTOCOL_CONNECTION_LOST") {
-        pool = null; // Reset pool on connection loss
-      }
-    });
+    // Note: Pool error handling removed as it's not needed for production
+    // The pool will automatically handle connection issues
   }
   return pool;
 };

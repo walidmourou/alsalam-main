@@ -1,6 +1,5 @@
 import Hero from "./Hero";
 import type { Locale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
 
 interface Article {
   id: number;

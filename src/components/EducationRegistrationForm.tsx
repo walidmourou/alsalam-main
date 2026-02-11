@@ -18,7 +18,7 @@ interface EducationRegistrationFormProps {
 
 export default function EducationRegistrationForm({
   locale,
-  dictionary,
+  dictionary: _dictionary,
 }: EducationRegistrationFormProps) {
   const [showForm, setShowForm] = useState(false);
 
@@ -58,7 +58,7 @@ export default function EducationRegistrationForm({
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -80,15 +80,14 @@ export default function EducationRegistrationForm({
   };
 
   const removeChild = (id: string) => {
-    const index = children.findIndex((child) => child.id === id);
     setChildren(children.filter((child) => child.id !== id));
   };
 
   const updateChild = (id: string, field: keyof Child, value: string) => {
     setChildren(
       children.map((child) =>
-        child.id === id ? { ...child, [field]: value } : child
-      )
+        child.id === id ? { ...child, [field]: value } : child,
+      ),
     );
   };
 
@@ -114,6 +113,10 @@ export default function EducationRegistrationForm({
           lang: locale,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("Registration failed");
+      }
 
       setSuccess(true);
       setShowForm(false);
@@ -150,15 +153,15 @@ export default function EducationRegistrationForm({
           {locale === "de"
             ? "Bildungsanmeldung erfolgreich!"
             : locale === "ar"
-            ? "تم التسجيل في التعليم بنجاح!"
-            : "Inscription éducation réussie!"}
+              ? "تم التسجيل في التعليم بنجاح!"
+              : "Inscription éducation réussie!"}
         </h3>
         <p className="text-green-700">
           {locale === "de"
             ? "Ihre Anmeldung wurde erfolgreich übermittelt. Bitte überprüfen Sie Ihre E-Mail und klicken Sie auf den Bestätigungslink, um Ihre Registrierung abzuschließen."
             : locale === "ar"
-            ? "تم إرسال طلب التسجيل بنجاح. يرجى التحقق من بريدك الإلكتروني والنقر على رابط التأكيد لإكمال التسجيل."
-            : "Votre inscription a été soumise avec succès. Veuillez vérifier votre e-mail et cliquer sur le lien de confirmation pour finaliser votre inscription."}
+              ? "تم إرسال طلب التسجيل بنجاح. يرجى التحقق من بريدك الإلكتروني والنقر على رابط التأكيد لإكمال التسجيل."
+              : "Votre inscription a été soumise avec succès. Veuillez vérifier votre e-mail et cliquer sur le lien de confirmation pour finaliser votre inscription."}
         </p>
       </div>
     );
@@ -173,16 +176,16 @@ export default function EducationRegistrationForm({
             {locale === "de"
               ? "Für die Bildung anmelden"
               : locale === "ar"
-              ? "التسجيل في التعليم"
-              : "S'inscrire à l'éducation"}
+                ? "التسجيل في التعليم"
+                : "S'inscrire à l'éducation"}
           </h2>
 
           <p className="text-lg opacity-90 mb-4">
             {locale === "de"
               ? "Bitte melden Sie sich an, falls Sie bereits Mitglied sind oder sich für den Bildungsdienst registriert haben."
               : locale === "ar"
-              ? "يرجى تسجيل الدخول إذا كنت عضواً بالفعل أو مسجلاً في خدمة التعليم."
-              : "Veuillez vous connecter si vous êtes déjà membre ou inscrit au service éducatif."}
+                ? "يرجى تسجيل الدخول إذا كنت عضواً بالفعل أو مسجلاً في خدمة التعليم."
+                : "Veuillez vous connecter si vous êtes déjà membre ou inscrit au service éducatif."}
           </p>
 
           {/* Membership Advantages */}
@@ -191,30 +194,30 @@ export default function EducationRegistrationForm({
               {locale === "de"
                 ? "Vorteile einer Mitgliedschaft:"
                 : locale === "ar"
-                ? "مزايا العضوية:"
-                : "Avantages de l'adhésion:"}
+                  ? "مزايا العضوية:"
+                  : "Avantages de l'adhésion:"}
             </h3>
             <ul className="text-sm space-y-1">
               <li>
                 {locale === "de"
                   ? "• Erstes Kind kostenlos"
                   : locale === "ar"
-                  ? "• الطفل الأول مجاناً"
-                  : "• Premier enfant gratuit"}
+                    ? "• الطفل الأول مجاناً"
+                    : "• Premier enfant gratuit"}
               </li>
               <li>
                 {locale === "de"
                   ? "• Jedes weitere Kind: 10€"
                   : locale === "ar"
-                  ? "• كل طفل إضافي: 10 يورو"
-                  : "• Chaque enfant supplémentaire: 10€"}
+                    ? "• كل طفل إضافي: 10 يورو"
+                    : "• Chaque enfant supplémentaire: 10€"}
               </li>
               <li>
                 {locale === "de"
                   ? "• Ohne Mitgliedschaft: 20€ pro Kind"
                   : locale === "ar"
-                  ? "• بدون عضوية: 20 يورو لكل طفل"
-                  : "• Sans adhésion: 20€ par enfant"}
+                    ? "• بدون عضوية: 20 يورو لكل طفل"
+                    : "• Sans adhésion: 20€ par enfant"}
               </li>
             </ul>
             <a
@@ -224,8 +227,8 @@ export default function EducationRegistrationForm({
               {locale === "de"
                 ? "Zur Mitgliedschaftsanmeldung"
                 : locale === "ar"
-                ? "للتسجيل في العضوية"
-                : "S'inscrire à l'adhésion"}
+                  ? "للتسجيل في العضوية"
+                  : "S'inscrire à l'adhésion"}
             </a>
           </div>
 
@@ -249,8 +252,8 @@ export default function EducationRegistrationForm({
             {locale === "de"
               ? "Jetzt anmelden"
               : locale === "ar"
-              ? "سجل الآن"
-              : "S'inscrire maintenant"}
+                ? "سجل الآن"
+                : "S'inscrire maintenant"}
           </button>
         </div>
       )}
@@ -294,8 +297,8 @@ export default function EducationRegistrationForm({
                 {locale === "de"
                   ? "Angaben zur anmeldenden Person"
                   : locale === "ar"
-                  ? "بيانات مقدم الطلب"
-                  : "Informations du demandeur"}
+                    ? "بيانات مقدم الطلب"
+                    : "Informations du demandeur"}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -303,8 +306,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Vorname"
                       : locale === "ar"
-                      ? "الاسم الأول"
-                      : "Prénom"}{" "}
+                        ? "الاسم الأول"
+                        : "Prénom"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -324,8 +327,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Nachname"
                       : locale === "ar"
-                      ? "الاسم الأخير"
-                      : "Nom"}{" "}
+                        ? "الاسم الأخير"
+                        : "Nom"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -345,8 +348,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Adresse"
                       : locale === "ar"
-                      ? "العنوان"
-                      : "Adresse"}{" "}
+                        ? "العنوان"
+                        : "Adresse"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -366,8 +369,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "E-Mail"
                       : locale === "ar"
-                      ? "البريد الإلكتروني"
-                      : "E-mail"}{" "}
+                        ? "البريد الإلكتروني"
+                        : "E-mail"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -385,8 +388,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Telefon"
                       : locale === "ar"
-                      ? "الهاتف"
-                      : "Téléphone"}{" "}
+                        ? "الهاتف"
+                        : "Téléphone"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -409,8 +412,8 @@ export default function EducationRegistrationForm({
                 {locale === "de"
                   ? "Zusätzliche verantwortliche Person (optional)"
                   : locale === "ar"
-                  ? "شخص مسؤول إضافي (اختياري)"
-                  : "Personne responsable supplémentaire (optionnel)"}
+                    ? "شخص مسؤول إضافي (اختياري)"
+                    : "Personne responsable supplémentaire (optionnel)"}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -418,8 +421,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Vorname"
                       : locale === "ar"
-                      ? "الاسم الأول"
-                      : "Prénom"}
+                        ? "الاسم الأول"
+                        : "Prénom"}
                   </label>
                   <input
                     type="text"
@@ -437,8 +440,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Nachname"
                       : locale === "ar"
-                      ? "الاسم الأخير"
-                      : "Nom"}
+                        ? "الاسم الأخير"
+                        : "Nom"}
                   </label>
                   <input
                     type="text"
@@ -456,8 +459,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Adresse"
                       : locale === "ar"
-                      ? "العنوان"
-                      : "Adresse"}
+                        ? "العنوان"
+                        : "Adresse"}
                   </label>
                   <textarea
                     name="responsibleAddress"
@@ -475,8 +478,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "E-Mail"
                       : locale === "ar"
-                      ? "البريد الإلكتروني"
-                      : "E-mail"}
+                        ? "البريد الإلكتروني"
+                        : "E-mail"}
                   </label>
                   <input
                     type="email"
@@ -492,8 +495,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Telefon"
                       : locale === "ar"
-                      ? "الهاتف"
-                      : "Téléphone"}
+                        ? "الهاتف"
+                        : "Téléphone"}
                   </label>
                   <input
                     type="tel"
@@ -515,8 +518,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Kinder"
                     : locale === "ar"
-                    ? "الأطفال"
-                    : "Enfants"}
+                      ? "الأطفال"
+                      : "Enfants"}
                 </h3>
                 <button
                   type="button"
@@ -526,8 +529,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Kind hinzufügen"
                     : locale === "ar"
-                    ? "إضافة طفل"
-                    : "Ajouter un enfant"}
+                      ? "إضافة طفل"
+                      : "Ajouter un enfant"}
                 </button>
               </div>
 
@@ -536,8 +539,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Fügen Sie mindestens ein Kind hinzu"
                     : locale === "ar"
-                    ? "أضف طفلاً واحداً على الأقل"
-                    : "Ajoutez au moins un enfant"}
+                      ? "أضف طفلاً واحداً على الأقل"
+                      : "Ajoutez au moins un enfant"}
                 </p>
               )}
 
@@ -551,8 +554,8 @@ export default function EducationRegistrationForm({
                       {locale === "de"
                         ? `Kind ${index + 1}`
                         : locale === "ar"
-                        ? `الطفل ${index + 1}`
-                        : `Enfant ${index + 1}`}
+                          ? `الطفل ${index + 1}`
+                          : `Enfant ${index + 1}`}
                     </h4>
                     <button
                       type="button"
@@ -581,8 +584,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Vorname"
                           : locale === "ar"
-                          ? "الاسم الأول"
-                          : "Prénom"}{" "}
+                            ? "الاسم الأول"
+                            : "Prénom"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -603,8 +606,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Nachname"
                           : locale === "ar"
-                          ? "الاسم الأخير"
-                          : "Nom"}{" "}
+                            ? "الاسم الأخير"
+                            : "Nom"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -625,8 +628,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Geburtsdatum"
                           : locale === "ar"
-                          ? "تاريخ الميلاد"
-                          : "Date de naissance"}{" "}
+                            ? "تاريخ الميلاد"
+                            : "Date de naissance"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -645,8 +648,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Geschätztes Niveau"
                           : locale === "ar"
-                          ? "المستوى المقدر"
-                          : "Niveau estimé"}{" "}
+                            ? "المستوى المقدر"
+                            : "Niveau estimé"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <select
@@ -655,7 +658,7 @@ export default function EducationRegistrationForm({
                           updateChild(
                             child.id,
                             "estimatedLevel",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         required
@@ -665,36 +668,36 @@ export default function EducationRegistrationForm({
                           {locale === "de"
                             ? "Vorbereitungsstufe"
                             : locale === "ar"
-                            ? "المستوى التحضيري"
-                            : "Niveau préparatoire"}
+                              ? "المستوى التحضيري"
+                              : "Niveau préparatoire"}
                         </option>
                         <option value="level1">
                           {locale === "de"
                             ? "Stufe 1"
                             : locale === "ar"
-                            ? "المستوى 1"
-                            : "Niveau 1"}
+                              ? "المستوى 1"
+                              : "Niveau 1"}
                         </option>
                         <option value="level2">
                           {locale === "de"
                             ? "Stufe 2"
                             : locale === "ar"
-                            ? "المستوى 2"
-                            : "Niveau 2"}
+                              ? "المستوى 2"
+                              : "Niveau 2"}
                         </option>
                         <option value="level3">
                           {locale === "de"
                             ? "Stufe 3"
                             : locale === "ar"
-                            ? "المستوى 3"
-                            : "Niveau 3"}
+                              ? "المستوى 3"
+                              : "Niveau 3"}
                         </option>
                         <option value="level4">
                           {locale === "de"
                             ? "Stufe 4"
                             : locale === "ar"
-                            ? "المستوى 4"
-                            : "Niveau 4"}
+                              ? "المستوى 4"
+                              : "Niveau 4"}
                         </option>
                       </select>
                     </div>
@@ -710,8 +713,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Einverständniserklärung zur Foto- und Videoaufnahme von Kindern"
                     : locale === "ar"
-                    ? "موافقة على التصوير والفيديو للأطفال"
-                    : "Consentement pour la photographie et la vidéographie des enfants"}
+                      ? "موافقة على التصوير والفيديو للأطفال"
+                      : "Consentement pour la photographie et la vidéographie des enfants"}
                 </h3>
 
                 <div className="bg-white p-4 rounded border border-gray-200 mb-4">
@@ -719,8 +722,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "An die Eltern und Erziehungsberechtigten, hiermit autorisiere(n) ich/wir Al-Salam e.V., Fotos und Videos der Vereinsaktivitäten für folgende Zwecke zu erstellen und zeitlich unbegrenzt zu veröffentlichen:"
                       : locale === "ar"
-                      ? "إلى الآباء وأولياء الأمور، بهذا أمنح/نمنح جمعية السلام إذناً بإنشاء صور وفيديوهات لأنشطة الجمعية للأغراض التالية ونشرها دون قيود زمنية:"
-                      : "Aux parents et tuteurs, par la présente, je/nous autorise/ns Al-Salam e.V. à créer et publier sans limitation temporelle des photos et vidéos associatives pour ces raisons :"}
+                        ? "إلى الآباء وأولياء الأمور، بهذا أمنح/نمنح جمعية السلام إذناً بإنشاء صور وفيديوهات لأنشطة الجمعية للأغراض التالية ونشرها دون قيود زمنية:"
+                        : "Aux parents et tuteurs, par la présente, je/nous autorise/ns Al-Salam e.V. à créer et publier sans limitation temporelle des photos et vidéos associatives pour ces raisons :"}
                   </p>
 
                   <div className="space-y-3 mb-6">
@@ -740,8 +743,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Unsere Online-Kanäle (Website, Soziale Medien)"
                           : locale === "ar"
-                          ? "قنواتنا عبر الإنترنت (الموقع الإلكتروني، وسائل التواصل الاجتماعي)"
-                          : "Nos canaux en ligne (site web, réseaux sociaux)"}
+                            ? "قنواتنا عبر الإنترنت (الموقع الإلكتروني، وسائل التواصل الاجتماعي)"
+                            : "Nos canaux en ligne (site web, réseaux sociaux)"}
                       </span>
                     </div>
 
@@ -761,8 +764,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Printmedien (Tageszeitungen, Broschüren)"
                           : locale === "ar"
-                          ? "الوسائط المطبوعة (الصحف اليومية، الكتيبات)"
-                          : "Médias imprimés (journaux quotidiens, brochures)"}
+                            ? "الوسائط المطبوعة (الصحف اليومية، الكتيبات)"
+                            : "Médias imprimés (journaux quotidiens, brochures)"}
                       </span>
                     </div>
 
@@ -782,8 +785,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Mitgliederwerbung und Veranstaltungsankündigungen"
                           : locale === "ar"
-                          ? "الترويج للأعضاء وإعلانات الفعاليات"
-                          : "Promotion des membres et annonces d'événements"}
+                            ? "الترويج للأعضاء وإعلانات الفعاليات"
+                            : "Promotion des membres et annonces d'événements"}
                       </span>
                     </div>
                   </div>
@@ -792,8 +795,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Diese Bilder können erkennbare Aufnahmen Ihrer Kinder im Rahmen der Vereinsaktivitäten enthalten."
                       : locale === "ar"
-                      ? "قد تحتوي هذه الصور على صور معترف بها لأطفالكم في إطار أنشطة الجمعية."
-                      : "Ces images reconnaissables de vos enfants peuvent être utilisées dans le cadre des activités du club."}
+                        ? "قد تحتوي هذه الصور على صور معترف بها لأطفالكم في إطار أنشطة الجمعية."
+                        : "Ces images reconnaissables de vos enfants peuvent être utilisées dans le cadre des activités du club."}
                   </p>
 
                   <div className="bg-gray-50 p-4 rounded mb-4">
@@ -801,8 +804,8 @@ export default function EducationRegistrationForm({
                       {locale === "de"
                         ? "Wir bestätigen:"
                         : locale === "ar"
-                        ? "نحن نؤكد:"
-                        : "Nous confirmons :"}
+                          ? "نحن نؤكد:"
+                          : "Nous confirmons :"}
                     </p>
 
                     <div className="space-y-2 text-sm text-gray-700">
@@ -810,15 +813,15 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Die Veröffentlichung wurde mit den Kindern besprochen."
                           : locale === "ar"
-                          ? "تم مناقشة النشر مع الأطفال."
-                          : "La publication a été discutée avec les enfants."}
+                            ? "تم مناقشة النشر مع الأطفال."
+                            : "La publication a été discutée avec les enfants."}
                       </p>
                       <p>
                         {locale === "de"
                           ? "Die Kinder wurden über die Online-Veröffentlichung informiert."
                           : locale === "ar"
-                          ? "تم إبلاغ الأطفال بالنشر عبر الإنترنت."
-                          : "Les enfants ont été informés de la publication en ligne."}
+                            ? "تم إبلاغ الأطفال بالنشر عبر الإنترنت."
+                            : "Les enfants ont été informés de la publication en ligne."}
                       </p>
                     </div>
                   </div>
@@ -828,8 +831,8 @@ export default function EducationRegistrationForm({
                       {locale === "de"
                         ? "Ihre Rechte nach EU-DSGVO bleiben gewahrt (Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch, Beschwerde)"
                         : locale === "ar"
-                        ? "حقوقكم بموجب اللائحة العامة لحماية البيانات في الاتحاد الأوروبي (الوصول، التصحيح، الحذف، تقييد المعالجة، الاعتراض، الشكوى) محفوظة"
-                        : "Vos droits selon le RGPD de l'UE sont préservés (accès, rectification, effacement, limitation du traitement, opposition, réclamation)"}
+                          ? "حقوقكم بموجب اللائحة العامة لحماية البيانات في الاتحاد الأوروبي (الوصول، التصحيح، الحذف، تقييد المعالجة، الاعتراض، الشكوى) محفوظة"
+                          : "Vos droits selon le RGPD de l'UE sont préservés (accès, rectification, effacement, limitation du traitement, opposition, réclamation)"}
                     </span>
                   </div>
 
@@ -837,8 +840,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Gültigkeit: Diese Einwilligung tritt mit der Einreichung dieses Formulars in Kraft."
                       : locale === "ar"
-                      ? "الصلاحية: يسري هذا الموافقة عند تقديم هذا النموذج."
-                      : "Validité : Ce consentement prend effet à la soumission de ce formulaire."}
+                        ? "الصلاحية: يسري هذا الموافقة عند تقديم هذا النموذج."
+                        : "Validité : Ce consentement prend effet à la soumission de ce formulaire."}
                   </div>
                 </div>
               </div>
@@ -851,8 +854,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Schulordnung"
                     : locale === "ar"
-                    ? "قواعد المدرسة"
-                    : "Règlement scolaire"}
+                      ? "قواعد المدرسة"
+                      : "Règlement scolaire"}
                 </h3>
 
                 <div className="bg-white p-4 rounded border border-gray-200">
@@ -870,8 +873,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Ich akzeptiere die Schulordnung der Al-Salam-Vereinsschule und verpflichte mich, diese einzuhalten."
                           : locale === "ar"
-                          ? "أقبل قواعد مدرسة السلام الجمعية وألتزم بالامتثال لها."
-                          : "J'accepte le règlement de l'école Al-Salam et m'engage à le respecter."}
+                            ? "أقبل قواعد مدرسة السلام الجمعية وألتزم بالامتثال لها."
+                            : "J'accepte le règlement de l'école Al-Salam et m'engage à le respecter."}
                       </span>
                       <button
                         type="button"
@@ -881,8 +884,8 @@ export default function EducationRegistrationForm({
                         {locale === "de"
                           ? "Schulordnung lesen"
                           : locale === "ar"
-                          ? "قراءة قواعد المدرسة"
-                          : "Lire le règlement"}
+                            ? "قراءة قواعد المدرسة"
+                            : "Lire le règlement"}
                       </button>
                     </div>
                   </div>
@@ -896,8 +899,8 @@ export default function EducationRegistrationForm({
                 {locale === "de"
                   ? "SEPA-Lastschriftmandat"
                   : locale === "ar"
-                  ? "تفويض الخصم المباشر SEPA"
-                  : "Mandat de prélèvement SEPA"}
+                    ? "تفويض الخصم المباشر SEPA"
+                    : "Mandat de prélèvement SEPA"}
               </h3>
 
               <div className="space-y-4">
@@ -906,8 +909,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Kontoinhaber"
                       : locale === "ar"
-                      ? "صاحب الحساب"
-                      : "Titulaire du compte"}{" "}
+                        ? "صاحب الحساب"
+                        : "Titulaire du compte"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -956,8 +959,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Bank"
                       : locale === "ar"
-                      ? "البنك"
-                      : "Banque"}{" "}
+                        ? "البنك"
+                        : "Banque"}{" "}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -986,8 +989,8 @@ export default function EducationRegistrationForm({
                       {locale === "de"
                         ? "Ich ermächtige AL-SALAM E.V., Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von AL-SALAM E.V. auf mein Konto gezogenen Lastschriften einzulösen. Gläubiger-ID: DE05ZZZ00002617424. Die monatliche Gebühr beträgt 20 Euro pro Kind."
                         : locale === "ar"
-                        ? "أنا أفوض جمعية السلام بسحب المدفوعات من حسابي عن طريق الخصم المباشر. وفي نفس الوقت، أوجه مؤسستي المصرفية بصرف الخصوم المباشرة التي تسحبها جمعية السلام من حسابي. معرف الدائن: DE05ZZZ00002617424. الرسوم الشهرية 20 يورو لكل طفل."
-                        : "J'autorise AL-SALAM E.V. à prélever des paiements de mon compte par prélèvement automatique. En même temps, j'ordonne à mon établissement bancaire d'honorer les prélèvements tirés sur mon compte par AL-SALAM E.V. ID créancier: DE05ZZZ00002617424. Les frais mensuels sont de 20 euros par enfant."}
+                          ? "أنا أفوض جمعية السلام بسحب المدفوعات من حسابي عن طريق الخصم المباشر. وفي نفس الوقت، أوجه مؤسستي المصرفية بصرف الخصوم المباشرة التي تسحبها جمعية السلام من حسابي. معرف الدائن: DE05ZZZ00002617424. الرسوم الشهرية 20 يورو لكل طفل."
+                          : "J'autorise AL-SALAM E.V. à prélever des paiements de mon compte par prélèvement automatique. En même temps, j'ordonne à mon établissement bancaire d'honorer les prélèvements tirés sur mon compte par AL-SALAM E.V. ID créancier: DE05ZZZ00002617424. Les frais mensuels sont de 20 euros par enfant."}
                     </span>
                   </label>
                 </div>
@@ -1024,8 +1027,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Wird gesendet..."
                       : locale === "ar"
-                      ? "جارٍ الإرسال..."
-                      : "Envoi en cours..."}
+                        ? "جارٍ الإرسال..."
+                        : "Envoi en cours..."}
                   </>
                 ) : (
                   <>
@@ -1045,8 +1048,8 @@ export default function EducationRegistrationForm({
                     {locale === "de"
                       ? "Anmeldung absenden"
                       : locale === "ar"
-                      ? "إرسال التسجيل"
-                      : "Soumettre l'inscription"}
+                        ? "إرسال التسجيل"
+                        : "Soumettre l'inscription"}
                   </>
                 )}
               </button>
@@ -1065,8 +1068,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Schulordnung der Al-Salam-Vereinsschule"
                     : locale === "ar"
-                    ? "قواعد مدرسة السلام الجمعية"
-                    : "Règlement de l'école Al-Salam"}
+                      ? "قواعد مدرسة السلام الجمعية"
+                      : "Règlement de l'école Al-Salam"}
                 </h2>
                 <button
                   onClick={() => setShowSchoolRulesModal(false)}
@@ -1097,52 +1100,52 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Die Al-Salam-Vereinsschule legt großen Wert auf eine respektvolle, saubere und lernförderliche Umgebung. Alle Eltern und Schüler werden gebeten, folgende Regeln einzuhalten:"
                     : locale === "ar"
-                    ? "تولي مدرسة السلام الجمعية أهمية كبيرة لبيئة محترمة ونظيفة وتساعد على التعلم. يُطلب من جميع الآباء والطلاب الالتزام بالقواعد التالية:"
-                    : "L'école Al-Salam attache une grande importance à un environnement respectueux, propre et propice à l'apprentissage. Tous les parents et élèves sont priés de respecter les règles suivantes :"}
+                      ? "تولي مدرسة السلام الجمعية أهمية كبيرة لبيئة محترمة ونظيفة وتساعد على التعلم. يُطلب من جميع الآباء والطلاب الالتزام بالقواعد التالية:"
+                      : "L'école Al-Salam attache une grande importance à un environnement respectueux, propre et propice à l'apprentissage. Tous les parents et élèves sont priés de respecter les règles suivantes :"}
                 </p>
 
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   {locale === "de"
                     ? "1. Verhalten und Respekt"
                     : locale === "ar"
-                    ? "1. السلوك والاحترام"
-                    : "1. Comportement et respect"}
+                      ? "1. السلوك والاحترام"
+                      : "1. Comportement et respect"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Schüler verhalten sich höflich und respektvoll in Schule und Moschee."
                       : locale === "ar"
-                      ? "يتصرف الطلاب بلباقة واحترام في المدرسة والمسجد."
-                      : "Les élèves se comportent poliment et respectueusement à l'école et à la mosquée."}
+                        ? "يتصرف الطلاب بلباقة واحترام في المدرسة والمسجد."
+                        : "Les élèves se comportent poliment et respectueusement à l'école et à la mosquée."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Sauberkeit ist verpflichtend: Müll ist in die vorgesehenen Behälter zu entsorgen."
                       : locale === "ar"
-                      ? "النظافة إلزامية: يجب التخلص من القمامة في الحاويات المخصصة."
-                      : "La propreté est obligatoire : les déchets doivent être jetés dans les conteneurs prévus."}
+                        ? "النظافة إلزامية: يجب التخلص من القمامة في الحاويات المخصصة."
+                        : "La propreté est obligatoire : les déchets doivent être jetés dans les conteneurs prévus."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Angemessene Kleidung, die der Würde der Moschee entspricht, ist zu tragen."
                       : locale === "ar"
-                      ? "يجب ارتداء ملابس مناسبة تتناسب مع كرامة المسجد."
-                      : "Des vêtements appropriés, respectant la dignité de la mosquée, doivent être portés."}
+                        ? "يجب ارتداء ملابس مناسبة تتناسب مع كرامة المسجد."
+                        : "Des vêtements appropriés, respectant la dignité de la mosquée, doivent être portés."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Beleidigungen, Streitigkeiten oder unangemessene Sprache sind untersagt."
                       : locale === "ar"
-                      ? "الإهانات والخلافات أو اللغة غير المناسبة محظورة."
-                      : "Les insultes, disputes ou langage inapproprié sont interdits."}
+                        ? "الإهانات والخلافات أو اللغة غير المناسبة محظورة."
+                        : "Les insultes, disputes ou langage inapproprié sont interdits."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Handynutzung während des Unterrichts ist verboten."
                       : locale === "ar"
-                      ? "استخدام الهاتف أثناء الدرس محظور."
-                      : "L'utilisation du téléphone pendant les cours est interdite."}
+                        ? "استخدام الهاتف أثناء الدرس محظور."
+                        : "L'utilisation du téléphone pendant les cours est interdite."}
                   </li>
                 </ul>
 
@@ -1150,37 +1153,37 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "2. Anwesenheit und Pflichten"
                     : locale === "ar"
-                    ? "2. الحضور والواجبات"
-                    : "2. Présence et devoirs"}
+                      ? "2. الحضور والواجبات"
+                      : "2. Présence et devoirs"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Unterrichtszeiten sind pünktlich einzuhalten."
                       : locale === "ar"
-                      ? "يجب الالتزام بمواعيد الدروس بدقة."
-                      : "Les horaires de cours doivent être respectés ponctuellement."}
+                        ? "يجب الالتزام بمواعيد الدروس بدقة."
+                        : "Les horaires de cours doivent être respectés ponctuellement."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Eltern informieren die Schule umgehend über Abwesenheiten ihres Kindes."
                       : locale === "ar"
-                      ? "يجب على الآباء إبلاغ المدرسة فوراً عن غياب أطفالهم."
-                      : "Les parents informent immédiatement l'école des absences de leur enfant."}
+                        ? "يجب على الآباء إبلاغ المدرسة فوراً عن غياب أطفالهم."
+                        : "Les parents informent immédiatement l'école des absences de leur enfant."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Versäumte Aufgaben und Hausaufgaben sind unverzüglich nachzuholen."
                       : locale === "ar"
-                      ? "يجب تعويض المهام والواجبات المنزلية المفقودة فوراً."
-                      : "Les tâches manquées et les devoirs doivent être rattrapés immédiatement."}
+                        ? "يجب تعويض المهام والواجبات المنزلية المفقودة فوراً."
+                        : "Les tâches manquées et les devoirs doivent être rattrapés immédiatement."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Nach drei unentschuldigten Fehltagen oder drei nicht erledigten Hausaufgaben erfolgt schriftliche Benachrichtigung der Eltern."
                       : locale === "ar"
-                      ? "بعد ثلاثة أيام غياب غير مبرر أو ثلاث واجبات منزلية غير منجزة، يتم إخطار الآباء كتابياً."
-                      : "Après trois jours d'absence non justifiée ou trois devoirs non effectués, une notification écrite est envoyée aux parents."}
+                        ? "بعد ثلاثة أيام غياب غير مبرر أو ثلاث واجبات منزلية غير منجزة، يتم إخطار الآباء كتابياً."
+                        : "Après trois jours d'absence non justifiée ou trois devoirs non effectués, une notification écrite est envoyée aux parents."}
                   </li>
                 </ul>
 
@@ -1188,23 +1191,23 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "3. Unterricht und Pausen"
                     : locale === "ar"
-                    ? "3. الدروس والاستراحات"
-                    : "3. Cours et pauses"}
+                      ? "3. الدروس والاستراحات"
+                      : "3. Cours et pauses"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Schüler führen alle benötigten Materialien regelmäßig mit sich."
                       : locale === "ar"
-                      ? "يحمل الطلاب جميع المواد المطلوبة بانتظام معهم."
-                      : "Les élèves apportent régulièrement tous les matériaux nécessaires."}
+                        ? "يحمل الطلاب جميع المواد المطلوبة بانتظام معهم."
+                        : "Les élèves apportent régulièrement tous les matériaux nécessaires."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Pausen finden ausschließlich auf dem Schulgelände statt; das Verlassen des Geländes ist nicht gestattet."
                       : locale === "ar"
-                      ? "تتم الاستراحات حصرياً داخل أرض المدرسة؛ مغادرة الأرض غير مسموح بها."
-                      : "Les pauses ont lieu exclusivement sur le terrain de l'école ; quitter les lieux n'est pas autorisé."}
+                        ? "تتم الاستراحات حصرياً داخل أرض المدرسة؛ مغادرة الأرض غير مسموح بها."
+                        : "Les pauses ont lieu exclusivement sur le terrain de l'école ; quitter les lieux n'est pas autorisé."}
                   </li>
                 </ul>
 
@@ -1212,30 +1215,30 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "4. Bibliothek"
                     : locale === "ar"
-                    ? "4. المكتبة"
-                    : "4. Bibliothèque"}
+                      ? "4. المكتبة"
+                      : "4. Bibliothèque"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Ausleihregeln sind strikt zu befolgen."
                       : locale === "ar"
-                      ? "يجب الالتزام الصارم بقواعد الاستعارة."
-                      : "Les règles d'emprunt doivent être strictement respectées."}
+                        ? "يجب الالتزام الصارم بقواعد الاستعارة."
+                        : "Les règles d'emprunt doivent être strictement respectées."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Ausgeliehene Bücher werden innerhalb der vorgegebenen Frist zurückgegeben."
                       : locale === "ar"
-                      ? "يتم إرجاع الكتب المستعارة خلال المهلة المحددة."
-                      : "Les livres empruntés sont retournés dans le délai prévu."}
+                        ? "يتم إرجاع الكتب المستعارة خلال المهلة المحددة."
+                        : "Les livres empruntés sont retournés dans le délai prévu."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Beschädigte oder verlorene Bücher müssen ersetzt werden."
                       : locale === "ar"
-                      ? "يجب استبدال الكتب التالفة أو المفقودة."
-                      : "Les livres endommagés ou perdus doivent être remplacés."}
+                        ? "يجب استبدال الكتب التالفة أو المفقودة."
+                        : "Les livres endommagés ou perdus doivent être remplacés."}
                   </li>
                 </ul>
 
@@ -1243,30 +1246,30 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "5. Zusammenarbeit mit Eltern"
                     : locale === "ar"
-                    ? "5. التعاون مع الآباء"
-                    : "5. Collaboration avec les parents"}
+                      ? "5. التعاون مع الآباء"
+                      : "5. Collaboration avec les parents"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Kontakte zu Lehrerinnen erfolgen über die Mütter."
                       : locale === "ar"
-                      ? "يتم التواصل مع المعلمات من خلال الأمهات."
-                      : "Les contacts avec les enseignantes se font via les mères."}
+                        ? "يتم التواصل مع المعلمات من خلال الأمهات."
+                        : "Les contacts avec les enseignantes se font via les mères."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Väter wenden sich bei Anliegen über die Schulleitung an das Lehrpersonal."
                       : locale === "ar"
-                      ? "يتوجه الآباء في قضاياهم إلى هيئة التدريس من خلال إدارة المدرسة."
-                      : "Les pères s'adressent au personnel enseignant via la direction de l'école pour leurs demandes."}
+                        ? "يتوجه الآباء في قضاياهم إلى هيئة التدريس من خلال إدارة المدرسة."
+                        : "Les pères s'adressent au personnel enseignant via la direction de l'école pour leurs demandes."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Die Schule steht stets für Fragen und Vorschläge der Eltern offen."
                       : locale === "ar"
-                      ? "المدرسة دائماً متاحة لأسئلة واقتراحات الآباء."
-                      : "L'école est toujours ouverte aux questions et suggestions des parents."}
+                        ? "المدرسة دائماً متاحة لأسئلة واقتراحات الآباء."
+                        : "L'école est toujours ouverte aux questions et suggestions des parents."}
                   </li>
                 </ul>
 
@@ -1274,23 +1277,23 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "6. Sicherheit und Abholung"
                     : locale === "ar"
-                    ? "6. السلامة والاستلام"
-                    : "6. Sécurité et ramassage"}
+                      ? "6. السلامة والاستلام"
+                      : "6. Sécurité et ramassage"}
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
                   <li>
                     {locale === "de"
                       ? "Parken erfolgt ausschließlich auf gekennzeichneten Flächen."
                       : locale === "ar"
-                      ? "يتم الركن حصرياً في الأماكن المحددة."
-                      : "Le stationnement se fait exclusivement sur les places signalées."}
+                        ? "يتم الركن حصرياً في الأماكن المحددة."
+                        : "Le stationnement se fait exclusivement sur les places signalées."}
                   </li>
                   <li>
                     {locale === "de"
                       ? "Rettungswege und Zufahrten dürfen nicht blockiert werden."
                       : locale === "ar"
-                      ? "يجب عدم عرقلة طرق الإنقاذ والوصول."
-                      : "Les voies de secours et d'accès ne doivent pas être bloquées."}
+                        ? "يجب عدم عرقلة طرق الإنقاذ والوصول."
+                        : "Les voies de secours et d'accès ne doivent pas être bloquées."}
                   </li>
                 </ul>
               </div>
@@ -1303,8 +1306,8 @@ export default function EducationRegistrationForm({
                   {locale === "de"
                     ? "Schließen"
                     : locale === "ar"
-                    ? "إغلاق"
-                    : "Fermer"}
+                      ? "إغلاق"
+                      : "Fermer"}
                 </button>
               </div>
             </div>

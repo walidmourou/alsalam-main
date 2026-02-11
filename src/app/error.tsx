@@ -1,8 +1,6 @@
 // This file handles errors for the Next.js app
 "use client";
 
-import React from "react";
-
 export default function Error({
   error,
   reset,

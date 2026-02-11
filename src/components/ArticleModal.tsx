@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import type { Locale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
 
 interface Article {
   id: number;
@@ -41,14 +39,14 @@ export default function ArticleModal({
     lang === "de"
       ? article.title_de
       : lang === "fr"
-      ? article.title_fr
-      : article.title_ar;
+        ? article.title_fr
+        : article.title_ar;
   const content =
     lang === "de"
       ? article.content_de
       : lang === "fr"
-      ? article.content_fr
-      : article.content_ar;
+        ? article.content_fr
+        : article.content_ar;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "init-db": "node scripts/init-db.mjs"
+    "init-db": "node scripts/init-db.mjs",
+    "verify-performance": "node scripts/verify-performance.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
+import { locales } from "@/i18n/config";
+
+// Static generation for all languages
+export async function generateStaticParams() {
+  return locales.map((locale) => ({
+    lang: locale,
+  }));
+}
 
 export async function generateMetadata({
   params,

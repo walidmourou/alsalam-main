@@ -5,6 +5,9 @@ import pool from "@/lib/db";
 import MainHero from "@/components/MainHero";
 import type { Article } from "@/types";
 
+// Revalidate every 5 minutes (300 seconds)
+export const revalidate = 300;
+
 async function getArticles(): Promise<Article[]> {
   const [result] = await pool.query(
     "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3",

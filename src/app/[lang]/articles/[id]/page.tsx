@@ -3,6 +3,10 @@ import type { Locale } from "@/i18n/config";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/dictionaries";
+import { locales } from "@/i18n/config";
+
+// Revalidate every 5 minutes (300 seconds)
+export const revalidate = 300;
 
 interface Article {
   id: number;
@@ -23,10 +27,34 @@ interface Article {
 async function getArticle(id: number): Promise<Article | null> {
   const [result] = await pool.query(
     "SELECT * FROM articles WHERE id = ? AND status = 'published'",
-    [id]
+    [id],
   );
   const articleRows = result as Article[];
   return articleRows.length > 0 ? articleRows[0] : null;
+}
+
+async function getAllArticleIds(): Promise<number[]> {
+  const [result] = await pool.query(
+    "SELECT id FROM articles WHERE status = 'published'",
+  );
+  return (result as { id: number }[]).map((row) => row.id);
+}
+
+// Generate static params for all articles and languages
+export async function generateStaticParams() {
+  const articleIds = await getAllArticleIds();
+
+  const params = [];
+  for (const locale of locales) {
+    for (const id of articleIds) {
+      params.push({
+        lang: locale,
+        id: id.toString(),
+      });
+    }
+  }
+
+  return params;
 }
 
 interface ArticlePageProps {
@@ -53,14 +81,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     currentLang === "de"
       ? article.title_de
       : currentLang === "fr"
-      ? article.title_fr
-      : article.title_ar;
+        ? article.title_fr
+        : article.title_ar;
   const content =
     currentLang === "de"
       ? article.content_de
       : currentLang === "fr"
-      ? article.content_fr
-      : article.content_ar;
+        ? article.content_fr
+        : article.content_ar;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -242,8 +270,8 @@ export async function generateMetadata({ params }: ArticlePageProps) {
     currentLang === "de"
       ? article.title_de
       : currentLang === "fr"
-      ? article.title_fr
-      : article.title_ar;
+        ? article.title_fr
+        : article.title_ar;
 
   return {
     title: `${title} | Alsalam Loerrach`,
@@ -251,16 +279,16 @@ export async function generateMetadata({ params }: ArticlePageProps) {
       currentLang === "de"
         ? article.content_de.substring(0, 160)
         : currentLang === "fr"
-        ? article.content_fr.substring(0, 160)
-        : article.content_ar.substring(0, 160),
+          ? article.content_fr.substring(0, 160)
+          : article.content_ar.substring(0, 160),
     openGraph: {
       title: title,
       description:
         currentLang === "de"
           ? article.content_de.substring(0, 160)
           : currentLang === "fr"
-          ? article.content_fr.substring(0, 160)
-          : article.content_ar.substring(0, 160),
+            ? article.content_fr.substring(0, 160)
+            : article.content_ar.substring(0, 160),
       images: article.image_url ? [article.image_url] : [],
     },
   };
