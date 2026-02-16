@@ -91,7 +91,7 @@
     "paypalEmail": "بريد PayPal الإلكتروني",
     "donateNow": "تبرع الآن",
     "qrTitle": "رموز QR للتبرع السهل",
-    "bankQR": "رمز QR البنكي",
+    "bankQR": "رمز QR للتحويل البنكي",
     "scanToTransfer": "امسح للتحويل",
     "paypalQR": "رمز PayPal QR",
     "scanToDonate": "امسح للتبرع",

@@ -82,7 +82,7 @@
     "paypalEmail": "PayPal E-Mail",
     "donateNow": "Jetzt spenden",
     "qrTitle": "QR-Codes zum einfachen Spenden",
-    "bankQR": "Bank QR-Code",
+    "bankQR": "Bank Überweisung QR Code",
     "scanToTransfer": "Scannen für Überweisung",
     "paypalQR": "PayPal QR-Code",
     "scanToDonate": "Scannen zum Spenden",

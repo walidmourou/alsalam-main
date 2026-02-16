@@ -82,7 +82,7 @@
     "paypalEmail": "E-mail PayPal",
     "donateNow": "Faire un don maintenant",
     "qrTitle": "Codes QR pour faciliter les dons",
-    "bankQR": "Code QR bancaire",
+    "bankQR": "Code QR de virement bancaire",
     "scanToTransfer": "Scanner pour transférer",
     "paypalQR": "Code QR PayPal",
     "scanToDonate": "Scanner pour donner",

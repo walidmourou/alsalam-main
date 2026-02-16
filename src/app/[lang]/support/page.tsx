@@ -244,7 +244,7 @@ export default async function SupportPage({
                     {dictionary.support.iban}
                   </p>
                   <p className="text-sm font-mono font-semibold text-primary-green break-all">
-                    DE81 6835 0048 0001 1153 885
+                    DE81 6835 0048 0001 1153 85
                   </p>
                 </div>
 
@@ -255,6 +255,17 @@ export default async function SupportPage({
                   <p className="text-sm font-mono font-semibold text-gray-800">
                     DE05ZZZ00002617424
                   </p>
+                </div>
+
+                <div className="bg-accent-light p-3 rounded flex flex-col items-center">
+                  <p className="text-xs text-gray-600 mb-2">
+                    {dictionary.support.bankQR}
+                  </p>
+                  <img
+                    src="/images/alsalam-epc-qr-code.png"
+                    alt="Bank Transfer QR Code"
+                    className="w-48 h-48 object-contain"
+                  />
                 </div>
               </div>
             </div>
