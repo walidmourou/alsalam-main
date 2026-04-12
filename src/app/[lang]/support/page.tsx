@@ -267,6 +267,7 @@ export default async function SupportPage({
                     alt="Bank Transfer QR Code"
                     width={192}
                     height={192}
+                    loading="eager"
                     className="w-48 h-48 object-contain"
                   />
                 </div>
