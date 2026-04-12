@@ -3,6 +3,11 @@ import pool from "@/lib/db";
 import { sendMembershipConfirmation } from "@/lib/email";
 import { z } from "zod";
 import crypto from "crypto";
+import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+
+interface IdRow extends RowDataPacket {
+  id: number;
+}
 
 const membershipSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -32,12 +37,12 @@ export async function POST(request: NextRequest) {
     const validatedData = membershipSchema.parse(body);
 
     // Check if email already exists in users table
-    const [existingUser] = await connection.query(
+    const [existingUser] = await connection.query<IdRow[]>(
       "SELECT id FROM users WHERE email = ? AND deleted_at IS NULL",
       [validatedData.email],
     );
 
-    if ((existingUser as any[]).length > 0) {
+    if (existingUser.length > 0) {
       return NextResponse.json(
         { error: "This email is already registered" },
         { status: 400 },
@@ -52,37 +57,37 @@ export async function POST(request: NextRequest) {
     const membershipId = `MEM${year}${Date.now().toString().slice(-6)}`;
 
     // Get gender_id from lookup table
-    const [genderResult] = await connection.query(
+    const [genderResult] = await connection.query<IdRow[]>(
       "SELECT id FROM genders WHERE code = ?",
       [validatedData.gender],
     );
-    const genderId = (genderResult as any[])[0]?.id;
+    const genderId = genderResult[0]?.id ?? null;
 
     // Get marital_status_id from lookup table
-    const [maritalStatusResult] = await connection.query(
+    const [maritalStatusResult] = await connection.query<IdRow[]>(
       "SELECT id FROM marital_statuses WHERE code = ?",
       [validatedData.maritalStatus],
     );
-    const maritalStatusId = (maritalStatusResult as any[])[0]?.id;
+    const maritalStatusId = maritalStatusResult[0]?.id ?? null;
 
     // Get membership_status_id for 'pending'
-    const [statusResult] = await connection.query(
+    const [statusResult] = await connection.query<IdRow[]>(
       "SELECT id FROM membership_statuses WHERE code = ?",
       ["pending"],
     );
-    const statusId = (statusResult as any[])[0]?.id;
+    const statusId = statusResult[0]?.id ?? null;
 
     // Get default membership_type_id (assuming 'individual' is default)
-    const [typeResult] = await connection.query(
+    const [typeResult] = await connection.query<IdRow[]>(
       "SELECT id FROM membership_types WHERE code = ?",
       ["individual"],
     );
-    const typeId = (typeResult as any[])[0]?.id || 1; // fallback to 1 if not found
+    const typeId = typeResult[0]?.id ?? 1; // fallback to 1 if not found
 
     await connection.beginTransaction();
 
     // Insert into users table first
-    const [userResult] = await connection.query(
+    const [userResult] = await connection.query<ResultSetHeader>(
       `INSERT INTO users (
         email, first_name, last_name, birth_date, gender_id, 
         phone, address, marital_status_id, is_active, created_at
@@ -100,7 +105,7 @@ export async function POST(request: NextRequest) {
       ],
     );
 
-    const userId = (userResult as any).insertId;
+    const userId = userResult.insertId;
 
     // Insert into memberships table
     await connection.query(

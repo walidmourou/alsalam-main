@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Article {
   id: number;
@@ -20,7 +21,16 @@ interface Article {
 interface HeroProps {
   articles: Article[];
   lang: Locale;
-  dictionary: any;
+  dictionary: {
+    home: {
+      latestArticles: string;
+      latestArticlesDesc: string;
+      viewAll: string;
+    };
+    articles: {
+      readMore: string;
+    };
+  };
 }
 
 export default function Hero({ articles, lang, dictionary }: HeroProps) {
@@ -92,9 +102,12 @@ export default function Hero({ articles, lang, dictionary }: HeroProps) {
                   {/* Image Section */}
                   <div className="relative overflow-hidden">
                     {article.image_url ? (
-                      <img
+                      <Image
                         src={article.image_url}
                         alt={title}
+                        width={1200}
+                        height={675}
+                        unoptimized
                         className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (

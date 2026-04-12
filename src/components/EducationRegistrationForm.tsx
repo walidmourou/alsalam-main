@@ -13,13 +13,14 @@ interface Child {
 
 interface EducationRegistrationFormProps {
   locale: Locale;
-  dictionary: any;
+  dictionary: Record<string, unknown>;
 }
 
 export default function EducationRegistrationForm({
   locale,
-  dictionary: _dictionary,
+  dictionary,
 }: EducationRegistrationFormProps) {
+  void dictionary;
   const [showForm, setShowForm] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -120,8 +121,8 @@ export default function EducationRegistrationForm({
 
       setSuccess(true);
       setShowForm(false);
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }

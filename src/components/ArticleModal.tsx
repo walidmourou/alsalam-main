@@ -1,6 +1,7 @@
 "use client";
 
 import type { Locale } from "@/i18n/config";
+import Image from "next/image";
 
 interface Article {
   id: number;
@@ -23,7 +24,11 @@ interface ArticleModalProps {
   isOpen: boolean;
   onClose: () => void;
   lang: Locale;
-  dictionary: any;
+  dictionary: {
+    articles: {
+      publishedOn: string;
+    };
+  };
 }
 
 export default function ArticleModal({
@@ -77,9 +82,12 @@ export default function ArticleModal({
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
           {article.image_url && (
-            <img
+            <Image
               src={article.image_url}
               alt={title}
+              width={1200}
+              height={675}
+              unoptimized
               className="w-full h-64 object-cover rounded-lg mb-6"
             />
           )}

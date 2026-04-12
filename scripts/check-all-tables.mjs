@@ -28,7 +28,7 @@ async function checkTables() {
     try {
       const [guardians] = await pool.query('DESCRIBE student_guardians');
       console.table(guardians);
-    } catch (e) {
+    } catch {
       console.log('Table student_guardians does not exist');
     }
   } catch (error) {

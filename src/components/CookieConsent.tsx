@@ -6,7 +6,9 @@ import type { Locale } from "@/i18n/config";
 
 interface CookieConsentProps {
   locale: Locale;
-  translations: any;
+  translations: {
+    cookies?: Record<string, string>;
+  };
 }
 
 // Helper function to get a cookie value

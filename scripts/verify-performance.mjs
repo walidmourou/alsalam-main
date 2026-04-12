@@ -5,8 +5,8 @@
  * Run this after deployment to verify optimizations are working
  */
 
-const https = require('https');
-const http = require('http');
+import https from 'https';
+import http from 'http';
 
 // Configuration
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -40,10 +40,8 @@ function makeRequest(url) {
     const startTime = Date.now();
 
     protocol.get(url, (res) => {
-      let data = '';
-      
-      res.on('data', (chunk) => {
-        data += chunk;
+      res.on('data', () => {
+        // Consume stream to completion for accurate timing.
       });
 
       res.on('end', () => {

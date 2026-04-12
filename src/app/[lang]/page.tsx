@@ -14,7 +14,7 @@ async function getArticles(): Promise<Article[]> {
       "SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 3",
     );
     return result as Article[];
-  } catch (error) {
+  } catch {
     // Database not available during build - return empty array
     console.warn("Database not available, returning empty articles array");
     return [];

@@ -51,7 +51,7 @@ export function handleApiError(error: unknown, context?: string) {
  * Validate required fields in request body
  */
 export function validateRequiredFields(
-  body: Record<string, any>,
+  body: Record<string, unknown>,
   requiredFields: string[],
 ): { valid: boolean; missing?: string[] } {
   const missing = requiredFields.filter((field) => {

@@ -2,6 +2,7 @@ import { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Book, Clock, Users } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function MainHero({
   params,
@@ -14,9 +15,13 @@ export default async function MainHero({
   return (
     <section className="relative lg:h-[600px] overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=2000&q=80"
           alt="Mosque Interior"
+          fill
+          sizes="100vw"
+          priority
+          unoptimized
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-[#262262]/60"></div>

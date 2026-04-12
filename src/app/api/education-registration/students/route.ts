@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import pool from "@/lib/db";
+import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+
+interface IdRow extends RowDataPacket {
+  id: number;
+}
 
 export async function DELETE(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -23,7 +28,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verify the student belongs to the authenticated user and is not already deleted
-    const [studentRows] = await connection.query(
+    const [studentRows] = await connection.query<IdRow[]>(
       `SELECT s.id 
        FROM students s
        JOIN student_guardians sg ON s.id = sg.student_id
@@ -32,7 +37,7 @@ export async function DELETE(request: NextRequest) {
       [studentId, authEmail],
     );
 
-    if ((studentRows as any[]).length === 0) {
+    if (studentRows.length === 0) {
       return NextResponse.json(
         { error: "Student not found or access denied" },
         { status: 404 },
@@ -83,43 +88,43 @@ export async function POST(request: NextRequest) {
     await connection.beginTransaction();
 
     // Get the user ID for the authenticated user
-    const [userRows] = await connection.query(
+    const [userRows] = await connection.query<IdRow[]>(
       "SELECT id FROM users WHERE email = ? AND deleted_at IS NULL",
       [authEmail],
     );
 
-    if ((userRows as any[]).length === 0) {
+    if (userRows.length === 0) {
       await connection.rollback();
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const userId = (userRows as any[])[0].id;
+    const userId = userRows[0].id;
 
     // Get gender_id if provided
     let genderId = null;
     if (gender_code) {
-      const [genderRows] = await connection.query(
+      const [genderRows] = await connection.query<IdRow[]>(
         "SELECT id FROM genders WHERE code = ?",
         [gender_code],
       );
-      genderId = (genderRows as any[])[0]?.id;
+      genderId = genderRows[0]?.id ?? null;
     }
 
     // Insert the new student
-    const [studentResult] = await connection.query(
+    const [studentResult] = await connection.query<ResultSetHeader>(
       `INSERT INTO students (first_name, last_name, birth_date, gender_id, created_at)
        VALUES (?, ?, ?, ?, NOW())`,
       [first_name, last_name, birth_date, genderId],
     );
 
-    const newStudentId = (studentResult as any).insertId;
+    const newStudentId = studentResult.insertId;
 
     // Get relationship_type_id for 'parent'
-    const [relationshipRows] = await connection.query(
+    const [relationshipRows] = await connection.query<IdRow[]>(
       "SELECT id FROM relationship_types WHERE code = ?",
       ["parent"],
     );
-    const relationshipTypeId = (relationshipRows as any[])[0]?.id || 1;
+    const relationshipTypeId = relationshipRows[0]?.id ?? 1;
 
     // Link student to guardian
     await connection.query(

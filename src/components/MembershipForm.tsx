@@ -6,7 +6,9 @@ import StatutesModal from "@/components/StatutesModal";
 
 interface MembershipFormProps {
   locale: Locale;
-  dictionary: any;
+  dictionary: {
+    support: Record<string, string>;
+  };
 }
 
 export default function MembershipForm({
@@ -88,8 +90,8 @@ export default function MembershipForm({
         sepaMandate: false,
         statutesAccepted: false,
       });
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }

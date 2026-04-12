@@ -20,7 +20,16 @@ interface Article {
 interface HeroWithModalProps {
   articles: Article[];
   lang: Locale;
-  dictionary: any;
+  dictionary: {
+    home: {
+      latestArticles: string;
+      latestArticlesDesc: string;
+      viewAll: string;
+    };
+    articles: {
+      readMore: string;
+    };
+  };
 }
 
 export default async function HeroWithModal({

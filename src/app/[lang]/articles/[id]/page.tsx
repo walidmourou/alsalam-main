@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import type { Locale } from "@/i18n/config";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/dictionaries";
 import { locales } from "@/i18n/config";
@@ -32,7 +33,7 @@ async function getArticle(id: number): Promise<Article | null> {
     );
     const articleRows = result as Article[];
     return articleRows.length > 0 ? articleRows[0] : null;
-  } catch (error) {
+  } catch {
     console.warn("Database not available, returning null for article");
     return null;
   }
@@ -44,7 +45,7 @@ async function getAllArticleIds(): Promise<number[]> {
       "SELECT id FROM articles WHERE status = 'published'",
     );
     return (result as { id: number }[]).map((row) => row.id);
-  } catch (error) {
+  } catch {
     console.warn("Database not available, returning empty article IDs");
     return [];
   }
@@ -66,7 +67,7 @@ export async function generateStaticParams() {
     }
 
     return params;
-  } catch (error) {
+  } catch {
     // Database not available during build (e.g., Docker build)
     // Return empty array - pages will be generated on-demand at runtime
     console.warn(
@@ -189,9 +190,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Featured Image */}
         {article.image_url && (
           <div className="mb-8">
-            <img
+            <Image
               src={article.image_url}
               alt={title}
+              width={1600}
+              height={900}
+              unoptimized
               className="w-full max-w-4xl mx-auto h-64 md:h-96 object-cover rounded-2xl shadow-lg"
             />
           </div>

@@ -1,6 +1,8 @@
 import mysql from "mysql2/promise";
 import type { Pool, PoolOptions } from "mysql2/promise";
 
+type QueryParam = string | number | boolean | Date | null | Buffer | Uint8Array;
+
 // Database configuration
 const poolConfig: PoolOptions = {
   host: process.env.DB_HOST,
@@ -44,9 +46,9 @@ const getPool = (): Pool => {
 export default getPool();
 
 // Helper function to safely execute queries with connection management
-export async function executeQuery<T = any>(
+export async function executeQuery<T = unknown>(
   query: string,
-  params?: any[],
+  params?: QueryParam[],
 ): Promise<T> {
   const connection = await getPool().getConnection();
   try {

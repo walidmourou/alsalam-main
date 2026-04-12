@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 
@@ -443,11 +443,7 @@ export default function ProfilePage() {
 
   const currentMonthlyAmount = calculateCurrentMonthlyAmount();
 
-  useEffect(() => {
-    fetchProfileData();
-  }, []);
-
-  const fetchProfileData = async () => {
+  const fetchProfileData = useCallback(async () => {
     try {
       const response = await fetch("/api/auth/profile");
       if (response.ok) {
@@ -467,12 +463,16 @@ export default function ProfilePage() {
       } else {
         setMessage("Error loading profile data");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error loading profile data");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [locale, router]);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, [fetchProfileData]);
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
@@ -504,7 +504,7 @@ export default function ProfilePage() {
       } else {
         setMessage("Error updating profile");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error updating profile");
     } finally {
       setIsSubmitting(false);
@@ -546,7 +546,7 @@ export default function ProfilePage() {
         const error = await response.json();
         setMessage(error.error || "Error submitting cancellation request");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error submitting cancellation request");
     } finally {
       setIsSubmitting(false);
@@ -635,7 +635,7 @@ export default function ProfilePage() {
         const error = await response.json();
         setMessage(error.error || "Error registering children");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error registering children");
     } finally {
       setIsSubmitting(false);
@@ -670,7 +670,7 @@ export default function ProfilePage() {
         const error = await response.json();
         setMessage(error.error || "Error cancelling student education");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error cancelling student education");
     } finally {
       setIsSubmitting(false);
@@ -726,7 +726,7 @@ export default function ProfilePage() {
         const error = await response.json();
         setMessage(error.error || "Error adding new child");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error adding new child");
     } finally {
       setIsSubmitting(false);

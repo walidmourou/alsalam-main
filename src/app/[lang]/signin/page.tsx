@@ -81,7 +81,7 @@ export default function SignInPage() {
       } else {
         setMessage(data.error || "An error occurred. Please try again.");
       }
-    } catch (error) {
+    } catch {
       setMessage("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);

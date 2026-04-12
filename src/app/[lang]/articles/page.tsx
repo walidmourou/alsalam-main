@@ -4,6 +4,7 @@ export const revalidate = 300;
 import pool from "@/lib/db";
 import type { Locale } from "@/i18n/config";
 import Link from "next/link";
+import Image from "next/image";
 import { getDictionary } from "@/i18n/dictionaries";
 
 interface Article {
@@ -29,7 +30,7 @@ async function getAllArticles(
 ): Promise<Article[]> {
   try {
     let query = "SELECT * FROM articles WHERE status = 'published'";
-    const params: any[] = [];
+    const params: string[] = [];
 
     // Add search filter in SQL for better performance
     if (searchQuery) {
@@ -52,7 +53,7 @@ async function getAllArticles(
 
     const [result] = await pool.query(query, params);
     return result as Article[];
-  } catch (error) {
+  } catch {
     // Database not available during build - return empty array
     console.warn("Database not available, returning empty articles array");
     return [];
@@ -209,9 +210,12 @@ export default async function ArticlesPage({
                 {/* Image Section */}
                 <div className="relative overflow-hidden">
                   {article.image_url ? (
-                    <img
+                    <Image
                       src={article.image_url}
                       alt={title}
+                      width={1200}
+                      height={675}
+                      unoptimized
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (

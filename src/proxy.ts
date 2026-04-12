@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { defaultLocale, locales } from "./i18n/config";
+import { defaultLocale, locales, type Locale } from "./i18n/config";
+
+const isLocale = (value: string | undefined): value is Locale =>
+  Boolean(value) && (locales as readonly string[]).includes(value);
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,7 +16,7 @@ export function proxy(request: NextRequest) {
 
   // Check if there is any supported locale in the cookies
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-  const locale = locales.includes(cookieLocale as any) ? cookieLocale : null;
+  const locale = isLocale(cookieLocale) ? cookieLocale : null;
 
   // Check if there is any supported locale in the Accept-Language header
   const acceptLanguage = request.headers.get("accept-language");
@@ -22,7 +25,7 @@ export function proxy(request: NextRequest) {
   // Determine which locale to use
   const selectedLocale =
     locale ||
-    (locales.includes(headerLocale as any) ? headerLocale : null) ||
+    (isLocale(headerLocale) ? headerLocale : null) ||
     defaultLocale;
 
   // Redirect to locale-prefixed path

@@ -7,9 +7,20 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import type { Locale } from "@/i18n/config";
 import { useState, useEffect } from "react";
 
+interface HeaderDictionary {
+  header: { title: string };
+  nav: {
+    home: string;
+    prayers: string;
+    education: string;
+    articles: string;
+    support: string;
+  };
+}
+
 interface HeaderProps {
   locale: Locale;
-  dictionary: any;
+  dictionary: HeaderDictionary;
 }
 
 export default function Header({ locale, dictionary }: HeaderProps) {
@@ -27,7 +38,7 @@ export default function Header({ locale, dictionary }: HeaderProps) {
     try {
       const response = await fetch("/api/auth/profile");
       setIsAuthenticated(response.ok);
-    } catch (error) {
+    } catch {
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);

@@ -1,5 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import type { RowDataPacket } from "mysql2/promise";
+
+interface MembershipConfirmationRow extends RowDataPacket {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  confirmed_at: string | null;
+}
+
+interface IdRow extends RowDataPacket {
+  id: number;
+}
 
 export async function GET(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -15,7 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Find membership by token (exclude soft-deleted)
-    const [membershipRows] = await connection.query(
+    const [membershipRows] = await connection.query<MembershipConfirmationRow[]>(
       `SELECT m.id, u.email, u.first_name, u.last_name, m.confirmed_at 
        FROM memberships m
        JOIN users u ON m.user_id = u.id
@@ -23,14 +36,14 @@ export async function GET(request: NextRequest) {
       [token],
     );
 
-    if ((membershipRows as any[]).length === 0) {
+    if (membershipRows.length === 0) {
       return NextResponse.json(
         { error: "Invalid or expired confirmation token" },
         { status: 404 },
       );
     }
 
-    const membership = (membershipRows as any[])[0];
+    const membership = membershipRows[0];
 
     // Check if already confirmed
     if (membership.confirmed_at) {
@@ -41,11 +54,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Get status_id for 'active'
-    const [statusRows] = await connection.query(
+    const [statusRows] = await connection.query<IdRow[]>(
       "SELECT id FROM membership_statuses WHERE code = ?",
       ["active"],
     );
-    const activeStatusId = (statusRows as any[])[0]?.id;
+    const activeStatusId = statusRows[0]?.id ?? null;
 
     // Update membership status to active and set confirmed_at
     await connection.query(

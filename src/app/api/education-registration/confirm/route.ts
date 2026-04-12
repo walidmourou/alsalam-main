@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import type { RowDataPacket } from "mysql2/promise";
+
+interface EducationTokenRow extends RowDataPacket {
+  id: number;
+  user_id: number;
+  used_at: string | null;
+  expires_at: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
 
 export async function GET(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -15,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Find token in auth_tokens table
-    const [tokenRows] = await connection.query(
+    const [tokenRows] = await connection.query<EducationTokenRow[]>(
       `SELECT at.id, at.user_id, at.used_at, at.expires_at, u.email, u.first_name, u.last_name
        FROM auth_tokens at
        JOIN users u ON at.user_id = u.id
@@ -23,14 +34,14 @@ export async function GET(request: NextRequest) {
       [token],
     );
 
-    if ((tokenRows as any[]).length === 0) {
+    if (tokenRows.length === 0) {
       return NextResponse.json(
         { error: "Invalid or expired confirmation token" },
         { status: 404 },
       );
     }
 
-    const tokenData = (tokenRows as any[])[0];
+    const tokenData = tokenRows[0];
 
     // Check if token has expired
     if (new Date(tokenData.expires_at) < new Date()) {

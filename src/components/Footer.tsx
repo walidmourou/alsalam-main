@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/config";
 
 interface FooterProps {
   locale: Locale;
-  translations: any;
+  translations: Record<string, unknown>;
 }
 
 export default function Footer({ locale, translations: t }: FooterProps) {
@@ -15,11 +15,16 @@ export default function Footer({ locale, translations: t }: FooterProps) {
   // Helper function to get nested translation
   const getTranslation = (key: string) => {
     const keys = key.split(".");
-    let result: any = t;
+    let result: unknown = t;
     for (const k of keys) {
-      result = result?.[k];
+      if (typeof result === "object" && result !== null) {
+        result = (result as Record<string, unknown>)[k];
+      } else {
+        result = undefined;
+        break;
+      }
     }
-    return result || key;
+    return typeof result === "string" && result.length > 0 ? result : key;
   };
 
   return (

@@ -2,6 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import transporter from "@/lib/email";
 import crypto from "crypto";
+import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+
+interface IdRow extends RowDataPacket {
+  id: number;
+}
+
+interface EducationChildInput {
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  gender?: string;
+}
+
+interface EducationRegistrationInput {
+  requesterFirstName: string;
+  requesterLastName: string;
+  requesterAddress: string;
+  requesterEmail: string;
+  requesterPhone: string;
+  children: EducationChildInput[];
+  totalAmount: number;
+  schoolRulesAccepted: boolean;
+  sepaAccountHolder: string;
+  sepaIban: string;
+  sepaBank: string;
+  sepaMandate: boolean;
+  lang: "de" | "ar" | "fr";
+}
 
 export async function POST(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -20,7 +48,7 @@ export async function POST(request: NextRequest) {
       sepaBank,
       sepaMandate,
       lang,
-    } = await request.json();
+    } = (await request.json()) as EducationRegistrationInput;
 
     // Validate required fields
     if (
@@ -47,16 +75,16 @@ export async function POST(request: NextRequest) {
 
     // Check if user already exists by email
     let userId;
-    const [existingUserRows] = await connection.query(
+    const [existingUserRows] = await connection.query<IdRow[]>(
       "SELECT id FROM users WHERE email = ? AND deleted_at IS NULL",
       [requesterEmail],
     );
 
-    if ((existingUserRows as any[]).length > 0) {
-      userId = (existingUserRows as any[])[0].id;
+    if (existingUserRows.length > 0) {
+      userId = existingUserRows[0].id;
     } else {
       // Create new user (guardian/parent)
-      const [userResult] = await connection.query(
+      const [userResult] = await connection.query<ResultSetHeader>(
         `INSERT INTO users (
           email, first_name, last_name, phone, address, is_active, created_at
         ) VALUES (?, ?, ?, ?, ?, true, NOW())`,
@@ -68,7 +96,7 @@ export async function POST(request: NextRequest) {
           requesterAddress,
         ],
       );
-      userId = (userResult as any).insertId;
+      userId = userResult.insertId;
 
       // Assign 'parent' role to the user
       await connection.query(
@@ -79,32 +107,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Get relationship_type_id for 'parent' (primary guardian)
-    const [relationshipRows] = await connection.query(
+    const [relationshipRows] = await connection.query<IdRow[]>(
       "SELECT id FROM relationship_types WHERE code = ?",
       ["parent"],
     );
-    const relationshipTypeId = (relationshipRows as any[])[0]?.id || 1;
+    const relationshipTypeId = relationshipRows[0]?.id ?? 1;
 
     // Insert students and link them to the guardian
     for (const child of children) {
       // Get gender_id
       let genderId = null;
       if (child.gender) {
-        const [genderRows] = await connection.query(
+        const [genderRows] = await connection.query<IdRow[]>(
           "SELECT id FROM genders WHERE code = ?",
           [child.gender],
         );
-        genderId = (genderRows as any[])[0]?.id;
+        genderId = genderRows[0]?.id ?? null;
       }
 
       // Insert student
-      const [studentResult] = await connection.query(
+      const [studentResult] = await connection.query<ResultSetHeader>(
         `INSERT INTO students (
           first_name, last_name, birth_date, gender_id, created_at
         ) VALUES (?, ?, ?, ?, NOW())`,
         [child.firstName, child.lastName, child.birthDate, genderId],
       );
-      const studentId = (studentResult as any).insertId;
+      const studentId = studentResult.insertId;
 
       // Link student to guardian
       await connection.query(

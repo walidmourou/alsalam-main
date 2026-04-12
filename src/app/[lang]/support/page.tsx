@@ -1,6 +1,7 @@
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 import MembershipForm from "@/components/MembershipForm";
+import Image from "next/image";
 
 export default async function SupportPage({
   params,
@@ -261,9 +262,11 @@ export default async function SupportPage({
                   <p className="text-xs text-gray-600 mb-2">
                     {dictionary.support.bankQR}
                   </p>
-                  <img
+                  <Image
                     src="/images/alsalam-epc-qr-code.png"
                     alt="Bank Transfer QR Code"
+                    width={192}
+                    height={192}
                     className="w-48 h-48 object-contain"
                   />
                 </div>
@@ -307,9 +310,11 @@ export default async function SupportPage({
                   <p className="text-xs text-gray-600 mb-2">
                     {dictionary.support.paypalQR}
                   </p>
-                  <img
+                  <Image
                     src="/images/paypal_qrcode.png"
                     alt="PayPal QR Code"
+                    width={192}
+                    height={192}
                     className="w-48 h-48 object-contain"
                   />
                 </div>

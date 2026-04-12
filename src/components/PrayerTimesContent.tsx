@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 
 interface PrayerTimesContentProps {
   locale: Locale;
-  dictionary: any;
+  dictionary: {
+    prayers: Record<string, string>;
+  };
 }
 
 interface PrayerTime {

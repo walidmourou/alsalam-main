@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import type { RowDataPacket } from "mysql2/promise";
+
+interface AuthTokenRow extends RowDataPacket {
+  user_id: number;
+  email: string;
+}
 
 export async function GET(
   request: NextRequest,
@@ -18,7 +24,7 @@ export async function GET(
     }
 
     // Check token
-    const [tokenRows] = await connection.query(
+    const [tokenRows] = await connection.query<AuthTokenRow[]>(
       `SELECT at.user_id, u.email 
        FROM auth_tokens at
        JOIN users u ON at.user_id = u.id
@@ -27,13 +33,13 @@ export async function GET(
       [token],
     );
 
-    if ((tokenRows as any[]).length === 0) {
+    if (tokenRows.length === 0) {
       return NextResponse.redirect(
         new URL(`/${lang}/signin?error=invalid_token`, request.url),
       );
     }
 
-    const { user_id, email } = (tokenRows as any[])[0];
+    const { user_id, email } = tokenRows[0];
 
     // Mark token as used
     await connection.query(
