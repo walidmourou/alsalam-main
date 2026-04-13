@@ -15,6 +15,9 @@ interface HeaderDictionary {
     education: string;
     articles: string;
     support: string;
+    signIn: string;
+    profile?: string;
+    logout?: string;
   };
 }
 

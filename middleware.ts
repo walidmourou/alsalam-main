@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { defaultLocale, locales, type Locale } from "./src/i18n/config";
 
 const isLocale = (value: string | undefined): value is Locale =>
-  Boolean(value) && (locales as readonly string[]).includes(value);
+  typeof value === "string" && (locales as readonly string[]).includes(value);
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
