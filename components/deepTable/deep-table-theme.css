@@ -1,0 +1,171 @@
+/**
+ * DeepTable Component Theme - ProScope Design System
+ * 
+ * This file contains all the CSS custom properties used by the DeepTable component.
+ * Updated to match the ProScope color palette and design system.
+ * 
+ * Color Palette:
+ * Primary: #009ee3, #e5007d, #afd3e8, #007caa, #00597a, #a8005c, #7b0040
+ * Secondary: #e6ecf0, #c3ced5, #8fa2ac, #506671
+ * Content: #ffe596, #ffcc00, #fbcdab, #d50c2f, #e94c0a, #652e2b, #c2ddaf, #486f4f, #54a931
+ */
+
+:root {
+  /* Primary brand colors - Blues and Pinks from the ProScope palette */
+  --deep-table-primary: #009ee3; /* Main primary blue */
+  --deep-table-primary-light: #afd3e8; /* Light blue variant */
+  --deep-table-primary-medium: #007caa; /* Medium blue variant */
+  --deep-table-primary-dark: #00597a; /* Dark blue variant */
+
+  /* Secondary accent - Pink colors */
+  --deep-table-accent: #e5007d; /* Main pink accent */
+  --deep-table-accent-medium: #a8005c; /* Medium pink */
+  --deep-table-accent-dark: #7b0040; /* Dark pink */
+
+  /* Neutral colors - Grays from the ProScope palette */
+  --deep-table-secondary-50: #e6ecf0; /* Lightest gray */
+  --deep-table-secondary-100: #c3ced5; /* Light gray */
+  --deep-table-secondary-200: #8fa2ac; /* Medium gray */
+  --deep-table-secondary-300: #506671; /* Main neutral */
+  --deep-table-secondary-400: #3d525a; /* Darker neutral */
+  --deep-table-secondary-500: #2a363d; /* Darkest neutral */
+
+  /* Content/action colors - ProScope accent colors */
+  --deep-table-content-yellow-light: #ffe596; /* Light yellow */
+  --deep-table-content-yellow: #ffcc00; /* Main yellow */
+  --deep-table-content-peach: #fbcdab; /* Peach */
+  --deep-table-content-red: #d50c2f; /* Main red */
+  --deep-table-content-orange: #e94c0a; /* Main orange */
+  --deep-table-content-brown: #652e2b; /* Brown */
+  --deep-table-content-green-light: #c2ddaf; /* Light green */
+  --deep-table-content-green: #54a931; /* Main green */
+  --deep-table-content-green-dark: #486f4f; /* Dark green */
+
+  /* Background colors - Enhanced with new palette */
+  --deep-table-bg-main: var(--deep-table-secondary-50); /* Main background */
+  --deep-table-bg-white: #ffffff; /* White backgrounds */
+  --deep-table-bg-surface: #ffffff; /* Surface backgrounds */
+  --deep-table-bg-muted: var(
+    --deep-table-secondary-100
+  ); /* Muted backgrounds */
+  --deep-table-bg-error: #fef2f2; /* Error backgrounds */
+  --deep-table-bg-success: #f0fdf4; /* Success backgrounds */
+  --deep-table-bg-warning: #fffbeb; /* Warning backgrounds */
+
+  /* Semantic colors - For specific UI states */
+  --deep-table-semantic-pink-text: var(--deep-table-accent-dark);
+  --deep-table-semantic-success: var(--deep-table-content-green);
+  --deep-table-semantic-warning: var(--deep-table-content-yellow);
+  --deep-table-semantic-error: var(--deep-table-content-red);
+  --deep-table-semantic-info: var(--deep-table-primary);
+}
+
+/* Fallback styles with direct color values to ensure visibility */
+.deep-table-container {
+  /* Ensure the component uses its own color scheme */
+  --color-primary: var(--deep-table-primary);
+  --color-primary-light: var(--deep-table-primary-light);
+  --color-primary-medium: var(--deep-table-primary-medium);
+  --color-primary-dark: var(--deep-table-primary-dark);
+
+  --color-secondary-50: var(--deep-table-secondary-50);
+  --color-secondary-100: var(--deep-table-secondary-100);
+  --color-secondary-200: var(--deep-table-secondary-200);
+  --color-secondary-300: var(--deep-table-secondary-300);
+  --color-secondary-400: var(--deep-table-secondary-400);
+  --color-secondary-500: var(--deep-table-secondary-500);
+
+  --color-content-yellow: var(--deep-table-content-yellow);
+  --color-content-red: var(--deep-table-content-red);
+  --color-content-orange: var(--deep-table-content-orange);
+  --color-content-green: var(--deep-table-content-green);
+  --color-content-brown: var(--deep-table-content-brown);
+  --color-content-peach: var(--deep-table-content-peach);
+}
+
+/* Direct fallback styles for critical elements */
+.deep-table-container .bg-deep-table-primary {
+  background-color: #009ee3 !important;
+}
+
+.deep-table-container .text-deep-table-primary {
+  color: #009ee3 !important;
+}
+
+.deep-table-container .border-deep-table-primary {
+  border-color: #009ee3 !important;
+}
+
+.deep-table-container .bg-deep-table-primary-light {
+  background-color: #afd3e8 !important;
+}
+
+.deep-table-container .bg-deep-table-primary-medium {
+  background-color: #007caa !important;
+}
+
+.deep-table-container .text-deep-table-primary-dark {
+  color: #00597a !important;
+}
+
+.deep-table-container .bg-deep-table-bg-white {
+  background-color: #ffffff !important;
+}
+
+.deep-table-container .bg-deep-table-bg-main {
+  background-color: #e6ecf0 !important;
+}
+
+.deep-table-container .border-deep-table-secondary-100 {
+  border-color: #c3ced5 !important;
+}
+
+.deep-table-container .border-deep-table-secondary-200 {
+  border-color: #8fa2ac !important;
+}
+
+.deep-table-container .text-deep-table-secondary-300 {
+  color: #506671 !important;
+}
+
+.deep-table-container .text-deep-table-content-yellow {
+  color: #ffcc00 !important;
+}
+
+.deep-table-container .text-deep-table-content-red {
+  color: #d50c2f !important;
+}
+
+.deep-table-container .text-deep-table-content-orange {
+  color: #e94c0a !important;
+}
+
+.deep-table-container .text-deep-table-content-green {
+  color: #54a931 !important;
+}
+
+.deep-table-container .text-deep-table-accent {
+  color: #e5007d !important;
+}
+
+/* Hover states */
+.deep-table-container .hover\:bg-deep-table-primary-medium:hover {
+  background-color: #007caa !important;
+}
+
+.deep-table-container .hover\:bg-deep-table-secondary-50:hover {
+  background-color: #e6ecf0 !important;
+}
+
+.deep-table-container .hover\:text-deep-table-primary:hover {
+  color: #009ee3 !important;
+}
+
+/* Focus states */
+.deep-table-container .focus\:border-deep-table-primary:focus {
+  border-color: #009ee3 !important;
+}
+
+.deep-table-container .focus\:ring-deep-table-primary:focus {
+  --tw-ring-color: #009ee3 !important;
+}
