@@ -1,1 +1,0 @@
-ALTER TABLE `users` MODIFY COLUMN `marital_status_id` tinyint unsigned NOT NULL DEFAULT 1;

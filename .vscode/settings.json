@@ -1,0 +1,19 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "srv1805.hstgr.io",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "AL-SALAM",
+      "database": "u917895091_alsalam",
+      "username": "u917895091_admin",
+      "password": "Z[XW?3i*kX2"
+    }
+  ]
+}
