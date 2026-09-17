@@ -4,12 +4,13 @@ import type { Pool, PoolOptions } from "mysql2/promise";
 type QueryParam = string | number | boolean | Date | null | Buffer | Uint8Array;
 
 // Database configuration
+// Both DB_* and DATABASE_* variable names are supported for compatibility.
 const poolConfig: PoolOptions = {
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || "3306"),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST ?? process.env.DATABASE_HOST,
+  port: parseInt(process.env.DB_PORT ?? process.env.DATABASE_PORT ?? "3306"),
+  user: process.env.DB_USER ?? process.env.DATABASE_USER,
+  password: process.env.DB_PASSWORD ?? process.env.DATABASE_PASSWORD,
+  database: process.env.DB_NAME ?? process.env.DATABASE_NAME,
   waitForConnections: true,
   connectionLimit: 20, // Increased from 10 for better concurrency
   maxIdle: 10,

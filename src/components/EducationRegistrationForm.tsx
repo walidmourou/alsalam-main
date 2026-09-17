@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
+import { GENDERS, GENDER_LABELS } from "@/lib/enums";
 
 interface Child {
   id: string;
   firstName: string;
   lastName: string;
   birthDate: string;
+  gender: string;
   estimatedLevel: string;
 }
 
@@ -75,6 +77,7 @@ export default function EducationRegistrationForm({
       firstName: "",
       lastName: formData.requesterLastName,
       birthDate: "",
+      gender: "Keine Angabe",
       estimatedLevel: "preparatory",
     };
     setChildren([...children, newChild]);
@@ -642,6 +645,31 @@ export default function EducationRegistrationForm({
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {locale === "de"
+                          ? "Geschlecht"
+                          : locale === "ar"
+                            ? "الجنس"
+                            : "Genre"}{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={child.gender}
+                        onChange={(e) =>
+                          updateChild(child.id, "gender", e.target.value)
+                        }
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      >
+                        {GENDERS.map((gender) => (
+                          <option key={gender} value={gender}>
+                            {GENDER_LABELS[gender][locale]}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>

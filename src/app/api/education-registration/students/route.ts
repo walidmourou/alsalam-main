@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import pool from "@/lib/db";
+import { getOrCreateLookupId } from "@/lib/db-helpers";
+import { GENDERS } from "@/lib/enums";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 interface IdRow extends RowDataPacket {
   id: number;
 }
+
+const VALID_GENDERS = new Set<string>(GENDERS);
 
 export async function DELETE(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -74,8 +78,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { first_name, last_name, birth_date, gender_code } =
-      await request.json();
+    const {
+      first_name,
+      last_name,
+      birth_date,
+      gender,
+      estimated_level,
+    }: {
+      first_name?: string;
+      last_name?: string;
+      birth_date?: string;
+      gender?: string;
+      estimated_level?: string;
+    } = await request.json();
 
     // Validate required fields
     if (!first_name || !last_name || !birth_date) {
@@ -84,6 +99,9 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    const studentGender =
+      gender && VALID_GENDERS.has(gender) ? gender : "Keine Angabe";
 
     await connection.beginTransaction();
 
@@ -100,31 +118,21 @@ export async function POST(request: NextRequest) {
 
     const userId = userRows[0].id;
 
-    // Get gender_id if provided
-    let genderId = null;
-    if (gender_code) {
-      const [genderRows] = await connection.query<IdRow[]>(
-        "SELECT id FROM genders WHERE code = ?",
-        [gender_code],
-      );
-      genderId = genderRows[0]?.id ?? null;
-    }
-
     // Insert the new student
     const [studentResult] = await connection.query<ResultSetHeader>(
-      `INSERT INTO students (first_name, last_name, birth_date, gender_id, created_at)
-       VALUES (?, ?, ?, ?, NOW())`,
-      [first_name, last_name, birth_date, genderId],
+      `INSERT INTO students (first_name, last_name, birth_date, gender, estimated_level, created_at)
+       VALUES (?, ?, ?, ?, ?, NOW())`,
+      [first_name, last_name, birth_date, studentGender, estimated_level || null],
     );
 
     const newStudentId = studentResult.insertId;
 
-    // Get relationship_type_id for 'parent'
-    const [relationshipRows] = await connection.query<IdRow[]>(
-      "SELECT id FROM relationship_types WHERE code = ?",
-      ["parent"],
+    // Resolve relationship type id for the primary guardian
+    const relationshipTypeId = await getOrCreateLookupId(
+      connection,
+      "relationship_types",
+      "Elternteil",
     );
-    const relationshipTypeId = relationshipRows[0]?.id ?? 1;
 
     // Link student to guardian
     await connection.query(

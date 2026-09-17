@@ -1,14 +1,4 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-dotenv.config({ path: join(__dirname, '..', '.env.local') });
-
-const articles = [
+[
   {
     title_de: "Das Freitagsgebet - Jumu'ah",
     title_fr: "La prière du vendredi - Jumu'ah",
@@ -41,9 +31,9 @@ La prière du vendredi renforce la communauté et rappelle aux musulmans leurs d
 
 تعزز صلاة الجمعة الروابط المجتمعية وتذكر المسلمين بواجباتهم الدينية. إنها وقت للتجديد الروحي والتعلم من القرآن والسنة.`,
     image_url: "/images/articles/jomoaa.png",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-01-15')
+    published_at: new Date("2025-01-15"),
   },
   {
     title_de: "Der Ramadan - Der Monat des Fastens",
@@ -77,9 +67,9 @@ Le Ramadan est un temps de purification spirituelle, de prière et de charité.`
 
 رمضان وقت للتطهير الروحي والصلاة والصدقة والتقوى.`,
     image_url: "/images/articles/ramadan.png",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-01-20')
+    published_at: new Date("2025-01-20"),
   },
   {
     title_de: "Die Pilgerfahrt - Hajj",
@@ -116,9 +106,9 @@ Le Hajj symbolise l'unité de tous les musulmans et leur soumission à Allah.`,
 
 يرمز الحج لوحدة المسلمين وتسليمهم لله تعالى.`,
     image_url: "/images/articles/hajj.jpg",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-01-25')
+    published_at: new Date("2025-01-25"),
   },
   {
     title_de: "Eid al-Adha - Das Opferfest",
@@ -152,9 +142,9 @@ La fête symbolise la générosité, le sacrifice et la communauté.`,
 
 يرمز العيد للكرم والتضحية والألفة المجتمعية.`,
     image_url: "/images/articles/adha.png",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-02-01')
+    published_at: new Date("2025-02-01"),
   },
   {
     title_de: "Eid al-Fitr - Das Zuckerfest",
@@ -188,9 +178,9 @@ La fête célèbre l'accomplissement du jeûne du Ramadan et la purification spi
 
 يحتفل العيد بإتمام صيام رمضان والتطهير الروحي.`,
     image_url: "/images/articles/fitr.png",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-02-05')
+    published_at: new Date("2025-02-05"),
   },
   {
     title_de: "Zakat - Die Almosensteuer",
@@ -224,62 +214,8 @@ Zakat promeut la justice sociale et la solidarité dans la communauté musulmane
 
 تعزز الزكاة العدالة الاجتماعية والتضامن في المجتمع المسلم.`,
     image_url: "/images/articles/zakat.png",
-    status: 'published',
+    status: "published",
     author_id: 1,
-    published_at: new Date('2025-02-10')
-  }
+    published_at: new Date("2025-02-10"),
+  },
 ];
-
-async function insertArticles() {
-  let connection;
-
-  try {
-    // Create connection
-    connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || '3306'),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    });
-
-    console.log('Connected to database successfully!');
-
-    // Insert articles
-    for (const article of articles) {
-      const [result] = await connection.execute(
-        `INSERT INTO articles (
-          title_de, title_fr, title_ar,
-          content_de, content_fr, content_ar,
-          image_url, status, author_id, published_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          article.title_de,
-          article.title_fr,
-          article.title_ar,
-          article.content_de,
-          article.content_fr,
-          article.content_ar,
-          article.image_url,
-          article.status,
-          article.author_id,
-          article.published_at
-        ]
-      );
-
-      console.log(`✓ Article "${article.title_ar}" inserted with ID: ${result.insertId}`);
-    }
-
-    console.log(`\n✅ Successfully inserted ${articles.length} articles into the database!`);
-
-  } catch (error) {
-    console.error('Error inserting articles:', error);
-    process.exit(1);
-  } finally {
-    if (connection) {
-      await connection.end();
-    }
-  }
-}
-
-insertArticles();

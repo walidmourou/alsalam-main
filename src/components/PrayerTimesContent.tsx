@@ -22,19 +22,28 @@ export default function PrayerTimesContent({
   locale,
   dictionary,
 }: PrayerTimesContentProps) {
-  const [currentDate, setCurrentDate] = useState("");
   const [prayerTimes, setPrayerTimes] = useState<PrayerTime[]>([]);
   const [loading, setLoading] = useState(true);
   const isRTL = locale === "ar";
 
-  useEffect(() => {
-    const now = new Date();
-    const dateString = now.toLocaleDateString(
-      locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "ar-SA",
-      { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-    );
-    setCurrentDate(dateString);
+  const currentDate = new Date().toLocaleDateString(
+    locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "ar-SA",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
 
+  // Helper function to calculate Iqama time
+  const calculateIqama = (adhanTime: string, minutesAfter: number): string => {
+    const [hours, minutes] = adhanTime.split(":").map(Number);
+    const totalMinutes = hours * 60 + minutes + minutesAfter;
+    const newHours = Math.floor(totalMinutes / 60) % 24;
+    const newMinutes = totalMinutes % 60;
+    return `${String(newHours).padStart(2, "0")}:${String(newMinutes).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  useEffect(() => {
     // Fetch prayer times from Aladhan API
     const fetchPrayerTimes = async () => {
       try {
@@ -118,19 +127,7 @@ export default function PrayerTimesContent({
     };
 
     fetchPrayerTimes();
-  }, [locale, dictionary]);
-
-  // Helper function to calculate Iqama time
-  const calculateIqama = (adhanTime: string, minutesAfter: number): string => {
-    const [hours, minutes] = adhanTime.split(":").map(Number);
-    const totalMinutes = hours * 60 + minutes + minutesAfter;
-    const newHours = Math.floor(totalMinutes / 60) % 24;
-    const newMinutes = totalMinutes % 60;
-    return `${String(newHours).padStart(2, "0")}:${String(newMinutes).padStart(
-      2,
-      "0"
-    )}`;
-  };
+  }, [dictionary]);
 
   return (
     <div className="container mx-auto px-4 py-8">

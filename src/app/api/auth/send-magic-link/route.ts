@@ -7,7 +7,14 @@ import {
   errorResponse,
   handleApiError,
 } from "@/lib/api-helpers";
-import type { User } from "@/types";
+import type { RowDataPacket } from "mysql2/promise";
+
+interface MagicLinkUserRow extends RowDataPacket {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
 
 export async function POST(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -25,18 +32,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email exists in users table
-    const [userRows] = await connection.query<User[]>(
+    const [userRows] = await connection.query<MagicLinkUserRow[]>(
       `SELECT u.id, u.first_name, u.last_name, u.email
        FROM users u
-       WHERE u.email = ? AND u.is_active = true AND u.deleted_at IS NULL`,
+       WHERE u.email = ? AND u.deleted_at IS NULL`,
       [email],
     );
 
-    if ((userRows as User[]).length === 0) {
+    if (userRows.length === 0) {
       return errorResponse("Email not found or account not active", 404);
     }
 
-    const user = (userRows as User[])[0];
+    const user = userRows[0];
 
     // Generate token
     const token = crypto.randomBytes(32).toString("hex");

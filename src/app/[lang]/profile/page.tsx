@@ -3,6 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
+import {
+  GENDERS,
+  MARITAL_STATUSES,
+  GENDER_LABELS,
+  MARITAL_STATUS_LABELS,
+} from "@/lib/enums";
 
 interface MembershipData {
   id: number;
@@ -23,7 +29,7 @@ interface MembershipData {
 
 interface EducationRequesterData {
   id: number;
-  education_id: string;
+  education_id?: string | null;
   first_name: string;
   last_name: string;
   address: string;
@@ -49,6 +55,7 @@ interface StudentData {
   first_name: string;
   last_name: string;
   birth_date: string;
+  gender: string;
   estimated_level: string;
 }
 
@@ -423,6 +430,7 @@ export default function ProfilePage() {
     first_name: "",
     last_name: "",
     birth_date: "",
+    gender: "Keine Angabe",
     estimated_level: "preparatory",
   });
   const [cancelStudentId, setCancelStudentId] = useState<number | null>(null);
@@ -471,7 +479,11 @@ export default function ProfilePage() {
   }, [locale, router]);
 
   useEffect(() => {
-    fetchProfileData();
+    const load = async () => {
+      await fetchProfileData();
+    };
+
+    load();
   }, [fetchProfileData]);
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -562,6 +574,7 @@ export default function ProfilePage() {
         first_name: "",
         last_name: "",
         birth_date: "",
+        gender: "Keine Angabe",
         estimated_level: "preparatory",
       },
     ]);
@@ -603,6 +616,7 @@ export default function ProfilePage() {
           firstName: student.first_name,
           lastName: student.last_name,
           birthDate: student.birth_date,
+          gender: student.gender,
           estimatedLevel: student.estimated_level,
         })),
         totalAmount: students.length * 50, // Assuming 50€ per child
@@ -718,6 +732,7 @@ export default function ProfilePage() {
           first_name: "",
           last_name: "",
           birth_date: "",
+          gender: "Keine Angabe",
           estimated_level: "preparatory",
         });
         setShowAddChildForm(false);
@@ -986,12 +1001,11 @@ export default function ProfilePage() {
                         disabled={!isEditing}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
                       >
-                        <option value="male">
-                          {dictionary.support?.male || "Male"}
-                        </option>
-                        <option value="female">
-                          {dictionary.support?.female || "Female"}
-                        </option>
+                        {GENDERS.map((gender) => (
+                          <option key={gender} value={gender}>
+                            {GENDER_LABELS[gender][locale]}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -1040,18 +1054,11 @@ export default function ProfilePage() {
                         disabled={!isEditing}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
                       >
-                        <option value="single">
-                          {dictionary.support?.single || "Single"}
-                        </option>
-                        <option value="married">
-                          {dictionary.support?.married || "Married"}
-                        </option>
-                        <option value="divorced">
-                          {dictionary.support?.divorced || "Divorced"}
-                        </option>
-                        <option value="widowed">
-                          {dictionary.support?.widowed || "Widowed"}
-                        </option>
+                        {MARITAL_STATUSES.map((status) => (
+                          <option key={status} value={status}>
+                            {MARITAL_STATUS_LABELS[status][locale]}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -1087,7 +1094,7 @@ export default function ProfilePage() {
                           <h3 className="text-sm font-medium text-blue-800">
                             {dictionary.education?.educationId ||
                               "Education ID"}
-                            : {educationRequester.education_id}
+                            : {educationRequester.education_id || "—"}
                           </h3>
                           <p className="text-sm text-blue-600">
                             {dictionary.education?.status || "Status"}:{" "}
@@ -1653,6 +1660,29 @@ export default function ProfilePage() {
 
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
+                                {dictionary.support?.gender || "Gender"}
+                              </label>
+                              <select
+                                value={student.gender}
+                                onChange={(e) =>
+                                  updateStudent(
+                                    index,
+                                    "gender",
+                                    e.target.value,
+                                  )
+                                }
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
+                              >
+                                {GENDERS.map((gender) => (
+                                  <option key={gender} value={gender}>
+                                    {GENDER_LABELS[gender][locale]}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
                                 {dictionary.education?.estimatedLevel ||
                                   "Estimated Level"}
                               </label>
@@ -1803,6 +1833,28 @@ export default function ProfilePage() {
 
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
+                              {dictionary.support?.gender || "Genre"}
+                            </label>
+                            <select
+                              value={newChild.gender}
+                              onChange={(e) =>
+                                setNewChild({
+                                  ...newChild,
+                                  gender: e.target.value,
+                                })
+                              }
+                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                            >
+                              {GENDERS.map((gender) => (
+                                <option key={gender} value={gender}>
+                                  {GENDER_LABELS[gender][locale]}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
                               {dictionary.education?.estimatedLevel ||
                                 "Niveau estimé"}{" "}
                               <span className="text-red-500">*</span>
@@ -1944,6 +1996,30 @@ export default function ProfilePage() {
                               disabled={!isEditing}
                               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
                             />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {dictionary.support?.gender || "Genre"}
+                            </label>
+                            <select
+                              value={student.gender}
+                              onChange={(e) =>
+                                updateStudent(
+                                  index,
+                                  "gender",
+                                  e.target.value,
+                                )
+                              }
+                              disabled={!isEditing}
+                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
+                            >
+                              {GENDERS.map((gender) => (
+                                <option key={gender} value={gender}>
+                                  {GENDER_LABELS[gender][locale]}
+                                </option>
+                              ))}
+                            </select>
                           </div>
 
                           <div>

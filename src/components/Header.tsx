@@ -34,19 +34,19 @@ export default function Header({ locale, dictionary }: HeaderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("/api/auth/profile");
+        setIsAuthenticated(response.ok);
+      } catch {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     checkAuthStatus();
   }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch("/api/auth/profile");
-      setIsAuthenticated(response.ok);
-    } catch {
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     try {

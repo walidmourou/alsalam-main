@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import transporter from "@/lib/email";
+import { getOrCreateLookupId } from "@/lib/db-helpers";
+import { GENDERS } from "@/lib/enums";
 import crypto from "crypto";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -13,6 +15,7 @@ interface EducationChildInput {
   lastName: string;
   birthDate: string;
   gender?: string;
+  estimatedLevel?: string;
 }
 
 interface EducationRegistrationInput {
@@ -24,12 +27,10 @@ interface EducationRegistrationInput {
   children: EducationChildInput[];
   totalAmount: number;
   schoolRulesAccepted: boolean;
-  sepaAccountHolder: string;
-  sepaIban: string;
-  sepaBank: string;
-  sepaMandate: boolean;
   lang: "de" | "ar" | "fr";
 }
+
+const VALID_GENDERS = new Set<string>(GENDERS);
 
 export async function POST(request: NextRequest) {
   const connection = await pool.getConnection();
@@ -43,10 +44,6 @@ export async function POST(request: NextRequest) {
       children,
       totalAmount,
       schoolRulesAccepted,
-      sepaAccountHolder,
-      sepaIban,
-      sepaBank,
-      sepaMandate,
       lang,
     } = (await request.json()) as EducationRegistrationInput;
 
@@ -59,16 +56,27 @@ export async function POST(request: NextRequest) {
       !requesterPhone ||
       !children ||
       children.length === 0 ||
-      !schoolRulesAccepted ||
-      !sepaAccountHolder ||
-      !sepaIban ||
-      !sepaBank ||
-      !sepaMandate
+      !schoolRulesAccepted
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 },
       );
+    }
+
+    for (const child of children) {
+      if (!child.firstName || !child.lastName || !child.birthDate) {
+        return NextResponse.json(
+          { error: "Missing required child fields" },
+          { status: 400 },
+        );
+      }
+      if (child.gender && !VALID_GENDERS.has(child.gender)) {
+        return NextResponse.json(
+          { error: `Invalid gender value: ${child.gender}` },
+          { status: 400 },
+        );
+      }
     }
 
     await connection.beginTransaction();
@@ -83,11 +91,12 @@ export async function POST(request: NextRequest) {
     if (existingUserRows.length > 0) {
       userId = existingUserRows[0].id;
     } else {
-      // Create new user (guardian/parent)
+      // Create new user (guardian/parent). The users.gender column defaults to
+      // "Keine Angabe" since the education form does not collect a gender.
       const [userResult] = await connection.query<ResultSetHeader>(
         `INSERT INTO users (
-          email, first_name, last_name, phone, address, is_active, created_at
-        ) VALUES (?, ?, ?, ?, ?, true, NOW())`,
+          email, first_name, last_name, phone, address, created_at
+        ) VALUES (?, ?, ?, ?, ?, NOW())`,
         [
           requesterEmail,
           requesterFirstName,
@@ -97,40 +106,33 @@ export async function POST(request: NextRequest) {
         ],
       );
       userId = userResult.insertId;
-
-      // Assign 'parent' role to the user
-      await connection.query(
-        `INSERT INTO user_roles (user_id, role_code, granted_at, is_active)
-         VALUES (?, 'parent', NOW(), true)`,
-        [userId],
-      );
     }
 
-    // Get relationship_type_id for 'parent' (primary guardian)
-    const [relationshipRows] = await connection.query<IdRow[]>(
-      "SELECT id FROM relationship_types WHERE code = ?",
-      ["parent"],
+    // Resolve relationship type id for the primary guardian
+    const relationshipTypeId = await getOrCreateLookupId(
+      connection,
+      "relationship_types",
+      "Elternteil",
     );
-    const relationshipTypeId = relationshipRows[0]?.id ?? 1;
 
     // Insert students and link them to the guardian
     for (const child of children) {
-      // Get gender_id
-      let genderId = null;
-      if (child.gender) {
-        const [genderRows] = await connection.query<IdRow[]>(
-          "SELECT id FROM genders WHERE code = ?",
-          [child.gender],
-        );
-        genderId = genderRows[0]?.id ?? null;
-      }
+      const gender = child.gender && VALID_GENDERS.has(child.gender)
+        ? child.gender
+        : "Keine Angabe";
 
       // Insert student
       const [studentResult] = await connection.query<ResultSetHeader>(
         `INSERT INTO students (
-          first_name, last_name, birth_date, gender_id, created_at
-        ) VALUES (?, ?, ?, ?, NOW())`,
-        [child.firstName, child.lastName, child.birthDate, genderId],
+          first_name, last_name, birth_date, gender, estimated_level, created_at
+        ) VALUES (?, ?, ?, ?, ?, NOW())`,
+        [
+          child.firstName,
+          child.lastName,
+          child.birthDate,
+          gender,
+          child.estimatedLevel || null,
+        ],
       );
       const studentId = studentResult.insertId;
 
@@ -141,25 +143,18 @@ export async function POST(request: NextRequest) {
         ) VALUES (?, ?, ?, true, true, NOW())`,
         [studentId, userId, relationshipTypeId],
       );
-
-      // If estimated level is provided, enroll student in a class
-      // (This would require finding or creating appropriate classes)
-      // For now, we'll just store the information in notes
-      // You may need to create a temporary table or store this differently
     }
 
-    await connection.commit();
-
-    // Generate confirmation token and send email
+    // Store confirmation token for the education verification flow
     const confirmationToken = crypto.randomBytes(32).toString("hex");
-
-    // Store confirmation token in auth_tokens table for verification
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
     await connection.query(
       `INSERT INTO auth_tokens (user_id, token, token_type, expires_at, created_at)
        VALUES (?, ?, 'education_confirmation', ?, NOW())`,
       [userId, confirmationToken, expiresAt],
     );
+
+    await connection.commit();
 
     // Send confirmation email
     try {

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { sendMembershipConfirmation } from "@/lib/email";
+import { getOrCreateLookupId } from "@/lib/db-helpers";
+import { GENDERS, MARITAL_STATUSES } from "@/lib/enums";
 import { z } from "zod";
 import crypto from "crypto";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
@@ -13,11 +15,11 @@ const membershipSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   birthDate: z.string().min(1, "Birth date is required"),
-  gender: z.enum(["male", "female"]),
+  gender: z.enum(GENDERS),
   address: z.string().min(1, "Address is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().min(1, "Phone number is required"),
-  maritalStatus: z.enum(["single", "married", "divorced", "widowed"]),
+  maritalStatus: z.enum(MARITAL_STATUSES),
   sepaAccountHolder: z.string().min(1, "Account holder name is required"),
   sepaIban: z.string().min(15, "Valid IBAN is required"),
   sepaBic: z.string().optional(),
@@ -52,56 +54,42 @@ export async function POST(request: NextRequest) {
     // Generate confirmation token
     const confirmationToken = crypto.randomBytes(32).toString("hex");
 
-    // Generate unique membership ID
-    const year = new Date().getFullYear();
-    const membershipId = `MEM${year}${Date.now().toString().slice(-6)}`;
-
-    // Get gender_id from lookup table
-    const [genderResult] = await connection.query<IdRow[]>(
-      "SELECT id FROM genders WHERE code = ?",
-      [validatedData.gender],
+    // Resolve membership type and status lookup ids (get-or-create by label)
+    const membershipTypeId = await getOrCreateLookupId(
+      connection,
+      "membership_types",
+      "Einzelmitgliedschaft",
     );
-    const genderId = genderResult[0]?.id ?? null;
-
-    // Get marital_status_id from lookup table
-    const [maritalStatusResult] = await connection.query<IdRow[]>(
-      "SELECT id FROM marital_statuses WHERE code = ?",
-      [validatedData.maritalStatus],
+    const pendingStatusId = await getOrCreateLookupId(
+      connection,
+      "membership_statuses",
+      "Beantragt",
     );
-    const maritalStatusId = maritalStatusResult[0]?.id ?? null;
-
-    // Get membership_status_id for 'pending'
-    const [statusResult] = await connection.query<IdRow[]>(
-      "SELECT id FROM membership_statuses WHERE code = ?",
-      ["pending"],
-    );
-    const statusId = statusResult[0]?.id ?? null;
-
-    // Get default membership_type_id (assuming 'individual' is default)
-    const [typeResult] = await connection.query<IdRow[]>(
-      "SELECT id FROM membership_types WHERE code = ?",
-      ["individual"],
-    );
-    const typeId = typeResult[0]?.id ?? 1; // fallback to 1 if not found
 
     await connection.beginTransaction();
 
-    // Insert into users table first
+    // Insert into users table (SEPA data lives on users in the new schema)
     const [userResult] = await connection.query<ResultSetHeader>(
       `INSERT INTO users (
-        email, first_name, last_name, birth_date, gender_id, 
-        phone, address, marital_status_id, is_active, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+        email, first_name, last_name, birth_date, gender,
+        phone, address, marital_status,
+        bank, iban, bic, bank_account_holder, sepa_mandate_accepted,
+        created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
       [
         validatedData.email,
         validatedData.firstName,
         validatedData.lastName,
         validatedData.birthDate,
-        genderId,
+        validatedData.gender,
         validatedData.phone,
         validatedData.address,
-        maritalStatusId,
-        true,
+        validatedData.maritalStatus,
+        validatedData.sepaBank,
+        validatedData.sepaIban,
+        validatedData.sepaBic || null,
+        validatedData.sepaAccountHolder,
+        validatedData.sepaMandate,
       ],
     );
 
@@ -110,22 +98,18 @@ export async function POST(request: NextRequest) {
     // Insert into memberships table
     await connection.query(
       `INSERT INTO memberships (
-        membership_id, user_id, membership_type_id, status_id,
-        sepa_account_holder, sepa_iban, sepa_bic, sepa_bank, 
-        sepa_mandate_accepted, confirmation_token, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
-      [
-        membershipId,
-        userId,
-        typeId,
-        statusId,
-        validatedData.sepaAccountHolder,
-        validatedData.sepaIban,
-        validatedData.sepaBic || null,
-        validatedData.sepaBank,
-        validatedData.sepaMandate,
-        confirmationToken,
-      ],
+        user_id, membership_type_id, membership_status_id,
+        start_date, created_at
+      ) VALUES (?, ?, ?, CURDATE(), NOW())`,
+      [userId, membershipTypeId, pendingStatusId],
+    );
+
+    // Store confirmation token for the membership verification flow
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await connection.query(
+      `INSERT INTO auth_tokens (user_id, token, token_type, expires_at, created_at)
+       VALUES (?, ?, 'membership_confirmation', ?, NOW())`,
+      [userId, confirmationToken, expiresAt],
     );
 
     await connection.commit();

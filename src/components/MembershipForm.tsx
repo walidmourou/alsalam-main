@@ -3,6 +3,12 @@
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import StatutesModal from "@/components/StatutesModal";
+import {
+  GENDERS,
+  MARITAL_STATUSES,
+  GENDER_LABELS,
+  MARITAL_STATUS_LABELS,
+} from "@/lib/enums";
 
 interface MembershipFormProps {
   locale: Locale;
@@ -19,11 +25,11 @@ export default function MembershipForm({
     firstName: "",
     lastName: "",
     birthDate: "",
-    gender: "male",
+    gender: "Männlich",
     address: "",
     email: "",
     phone: "",
-    maritalStatus: "single",
+    maritalStatus: "Ledig",
     sepaAccountHolder: "",
     sepaIban: "",
     sepaBic: "",
@@ -78,11 +84,11 @@ export default function MembershipForm({
         firstName: "",
         lastName: "",
         birthDate: "",
-        gender: "male",
+        gender: "Männlich",
         address: "",
         email: "",
         phone: "",
-        maritalStatus: "single",
+        maritalStatus: "Ledig",
         sepaAccountHolder: "",
         sepaIban: "",
         sepaBic: "",
@@ -262,8 +268,11 @@ export default function MembershipForm({
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     >
-                      <option value="male">{t.male}</option>
-                      <option value="female">{t.female}</option>
+                      {GENDERS.map((gender) => (
+                        <option key={gender} value={gender}>
+                          {GENDER_LABELS[gender][locale]}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -278,10 +287,11 @@ export default function MembershipForm({
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     >
-                      <option value="single">{t.single}</option>
-                      <option value="married">{t.married}</option>
-                      <option value="divorced">{t.divorced}</option>
-                      <option value="widowed">{t.widowed}</option>
+                      {MARITAL_STATUSES.map((status) => (
+                        <option key={status} value={status}>
+                          {MARITAL_STATUS_LABELS[status][locale]}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

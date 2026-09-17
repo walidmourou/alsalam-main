@@ -39,18 +39,12 @@ export async function GET(
       );
     }
 
-    const { user_id, email } = tokenRows[0];
+    const { email } = tokenRows[0];
 
     // Mark token as used
     await connection.query(
       "UPDATE auth_tokens SET used_at = NOW() WHERE token = ?",
       [token],
-    );
-
-    // Update last connection time
-    await connection.query(
-      "UPDATE users SET last_connection_at = NOW() WHERE id = ?",
-      [user_id],
     );
 
     // Set cookie for authentication

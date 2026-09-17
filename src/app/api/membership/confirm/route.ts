@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { getOrCreateLookupId } from "@/lib/db-helpers";
 import type { RowDataPacket } from "mysql2/promise";
 
-interface MembershipConfirmationRow extends RowDataPacket {
+interface MembershipTokenRow extends RowDataPacket {
   id: number;
+  user_id: number;
+  expires_at: string;
+  used_at: string | null;
   email: string;
-  first_name: string;
-  last_name: string;
-  confirmed_at: string | null;
 }
 
-interface IdRow extends RowDataPacket {
+interface MembershipIdRow extends RowDataPacket {
   id: number;
 }
 
@@ -27,26 +28,35 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Find membership by token (exclude soft-deleted)
-    const [membershipRows] = await connection.query<MembershipConfirmationRow[]>(
-      `SELECT m.id, u.email, u.first_name, u.last_name, m.confirmed_at 
-       FROM memberships m
-       JOIN users u ON m.user_id = u.id
-       WHERE m.confirmation_token = ? AND m.deleted_at IS NULL AND u.deleted_at IS NULL`,
+    // Find the membership confirmation token
+    const [tokenRows] = await connection.query<MembershipTokenRow[]>(
+      `SELECT at.id, at.user_id, at.expires_at, at.used_at, u.email
+       FROM auth_tokens at
+       JOIN users u ON at.user_id = u.id
+       WHERE at.token = ? AND at.token_type = 'membership_confirmation'
+       AND u.deleted_at IS NULL`,
       [token],
     );
 
-    if (membershipRows.length === 0) {
+    if (tokenRows.length === 0) {
       return NextResponse.json(
         { error: "Invalid or expired confirmation token" },
         { status: 404 },
       );
     }
 
-    const membership = membershipRows[0];
+    const tokenData = tokenRows[0];
+
+    // Check if token has expired
+    if (new Date(tokenData.expires_at) < new Date()) {
+      return NextResponse.json(
+        { error: "Confirmation token has expired" },
+        { status: 400 },
+      );
+    }
 
     // Check if already confirmed
-    if (membership.confirmed_at) {
+    if (tokenData.used_at) {
       // Redirect to success page
       return NextResponse.redirect(
         new URL("/de/support?confirmed=already", request.url),
@@ -54,18 +64,29 @@ export async function GET(request: NextRequest) {
     }
 
     // Get status_id for 'active'
-    const [statusRows] = await connection.query<IdRow[]>(
-      "SELECT id FROM membership_statuses WHERE code = ?",
-      ["active"],
+    const activeStatusId = await getOrCreateLookupId(
+      connection,
+      "membership_statuses",
+      "Aktiv",
     );
-    const activeStatusId = statusRows[0]?.id ?? null;
 
-    // Update membership status to active and set confirmed_at
+    // Find the membership for this user and set it to active
+    const [membershipRows] = await connection.query<MembershipIdRow[]>(
+      "SELECT id FROM memberships WHERE user_id = ? AND deleted_at IS NULL LIMIT 1",
+      [tokenData.user_id],
+    );
+
+    if (membershipRows.length > 0) {
+      await connection.query(
+        "UPDATE memberships SET membership_status_id = ?, updated_at = NOW() WHERE id = ?",
+        [activeStatusId, membershipRows[0].id],
+      );
+    }
+
+    // Mark token as used
     await connection.query(
-      `UPDATE memberships 
-       SET status_id = ?, confirmed_at = NOW(), confirmation_token = NULL 
-       WHERE id = ?`,
-      [activeStatusId, membership.id],
+      "UPDATE auth_tokens SET used_at = NOW() WHERE id = ?",
+      [tokenData.id],
     );
 
     // Redirect to success page
