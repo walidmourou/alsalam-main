@@ -430,7 +430,7 @@ export default function ProfilePage() {
     first_name: "",
     last_name: "",
     birth_date: "",
-    gender: "Keine Angabe",
+    gender: "Männlich",
     estimated_level: "preparatory",
   });
   const [cancelStudentId, setCancelStudentId] = useState<number | null>(null);
@@ -574,7 +574,7 @@ export default function ProfilePage() {
         first_name: "",
         last_name: "",
         birth_date: "",
-        gender: "Keine Angabe",
+        gender: "Männlich",
         estimated_level: "preparatory",
       },
     ]);
@@ -732,7 +732,7 @@ export default function ProfilePage() {
           first_name: "",
           last_name: "",
           birth_date: "",
-          gender: "Keine Angabe",
+          gender: "Männlich",
           estimated_level: "preparatory",
         });
         setShowAddChildForm(false);

@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       userId = existingUserRows[0].id;
     } else {
       // Create new user (guardian/parent). The users.gender column defaults to
-      // "Keine Angabe" since the education form does not collect a gender.
+      // "Männlich" since the education form does not collect a gender.
       const [userResult] = await connection.query<ResultSetHeader>(
         `INSERT INTO users (
           email, first_name, last_name, phone, address, created_at
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     for (const child of children) {
       const gender = child.gender && VALID_GENDERS.has(child.gender)
         ? child.gender
-        : "Keine Angabe";
+        : "Männlich";
 
       // Insert student
       const [studentResult] = await connection.query<ResultSetHeader>(

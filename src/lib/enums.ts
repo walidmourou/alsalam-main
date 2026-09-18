@@ -2,12 +2,7 @@
 // Enum value sets used by the Drizzle schema (db/schema.ts) and by the
 // membership / education / profile flows.
 
-export const GENDERS = [
-  "Männlich",
-  "Weiblich",
-  "Divers",
-  "Keine Angabe",
-] as const;
+export const GENDERS = ["Männlich", "Weiblich"] as const;
 export type Gender = (typeof GENDERS)[number];
 
 export const MARITAL_STATUSES = [
@@ -43,8 +38,6 @@ type Lang = "de" | "fr" | "ar";
 export const GENDER_LABELS: Record<Gender, Record<Lang, string>> = {
   Männlich: { de: "Männlich", fr: "Masculin", ar: "ذكر" },
   Weiblich: { de: "Weiblich", fr: "Féminin", ar: "أنثى" },
-  Divers: { de: "Divers", fr: "Divers", ar: "متنوع" },
-  "Keine Angabe": { de: "Keine Angabe", fr: "Non précisé", ar: "غير محدد" },
 };
 
 export const MARITAL_STATUS_LABELS: Record<MaritalStatus, Record<Lang, string>> = {

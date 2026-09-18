@@ -160,7 +160,7 @@ export const users = mysqlTable(
     email: varchar("email", { length: 255 }).notNull(),
     firstName: varchar("first_name", { length: 255 }).notNull(),
     lastName: varchar("last_name", { length: 255 }).notNull(),
-    gender: mysqlEnum("gender", GENDERS).notNull().default("Keine Angabe"),
+    gender: mysqlEnum("gender", GENDERS).notNull().default("Männlich"),
     birthDate: date("birth_date"),
     phone: varchar("phone", { length: 100 }),
     phone2: varchar("phone2", { length: 100 }),
@@ -229,7 +229,7 @@ export const students = mysqlTable(
     birthDate: date("birth_date").notNull(),
     notes: text("notes"),
     estimatedLevel: varchar("estimated_level", { length: 50 }),
-    gender: mysqlEnum("gender", GENDERS).notNull().default("Keine Angabe"),
+    gender: mysqlEnum("gender", GENDERS).notNull().default("Männlich"),
     admissionStatus: mysqlEnum("admission_status", ADMISSION_STATUSES)
       .notNull()
       .default("Zulassungsantrag"),

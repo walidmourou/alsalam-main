@@ -25,18 +25,18 @@ CREATE TABLE IF NOT EXISTS auth_tokens (
 ) ENGINE = InnoDB;
 
 -- ------------------------------------------------------------
--- users: SEPA mandate fields + extended gender enum
+-- users: SEPA mandate fields + gender enum (male/female only)
 -- ------------------------------------------------------------
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS bank_account_holder VARCHAR(255) NULL,
   ADD COLUMN IF NOT EXISTS sepa_mandate_accepted TINYINT(1) NOT NULL DEFAULT 0,
-  MODIFY COLUMN gender ENUM ('Männlich', 'Weiblich', 'Divers', 'Keine Angabe')
-    NOT NULL DEFAULT 'Keine Angabe';
+  MODIFY COLUMN gender ENUM ('Männlich', 'Weiblich')
+    NOT NULL DEFAULT 'Männlich';
 
 -- ------------------------------------------------------------
--- students: estimated level + extended gender enum
+-- students: estimated level + gender enum (male/female only)
 -- ------------------------------------------------------------
 ALTER TABLE students
   ADD COLUMN IF NOT EXISTS estimated_level VARCHAR(50) NULL,
-  MODIFY COLUMN gender ENUM ('Männlich', 'Weiblich', 'Divers', 'Keine Angabe')
-    NOT NULL DEFAULT 'Keine Angabe';
+  MODIFY COLUMN gender ENUM ('Männlich', 'Weiblich')
+    NOT NULL DEFAULT 'Männlich';

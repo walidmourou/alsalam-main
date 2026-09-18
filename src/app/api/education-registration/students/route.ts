@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     const studentGender =
-      gender && VALID_GENDERS.has(gender) ? gender : "Keine Angabe";
+      gender && VALID_GENDERS.has(gender) ? gender : "Männlich";
 
     await connection.beginTransaction();
 

@@ -346,7 +346,7 @@ export async function PUT(request: NextRequest) {
               student.first_name,
               student.last_name,
               student.birth_date,
-              studentGender ?? "Keine Angabe",
+              studentGender ?? "Männlich",
               student.estimated_level ?? null,
               student.notes ?? null,
             ],

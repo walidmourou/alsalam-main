@@ -77,7 +77,7 @@ export default function EducationRegistrationForm({
       firstName: "",
       lastName: formData.requesterLastName,
       birthDate: "",
-      gender: "Keine Angabe",
+      gender: "Männlich",
       estimatedLevel: "preparatory",
     };
     setChildren([...children, newChild]);
