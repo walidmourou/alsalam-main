@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { sendMembershipConfirmation } from "@/lib/email";
 import { getOrCreateLookupId } from "@/lib/db-helpers";
-import { GENDERS, MARITAL_STATUSES } from "@/lib/enums";
+import {
+  DEFAULT_MEMBERSHIP_STATUS,
+  GENDERS,
+  MARITAL_STATUSES,
+  MEMBERSHIP_TYPE_SINGLE,
+} from "@/lib/enums";
 import { z } from "zod";
 import crypto from "crypto";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
@@ -19,6 +24,7 @@ const membershipSchema = z.object({
   address: z.string().min(1, "Address is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().min(1, "Phone number is required"),
+  phone2: z.string().optional(),
   maritalStatus: z.enum(MARITAL_STATUSES),
   sepaAccountHolder: z.string().min(1, "Account holder name is required"),
   sepaIban: z.string().min(15, "Valid IBAN is required"),
@@ -58,12 +64,12 @@ export async function POST(request: NextRequest) {
     const membershipTypeId = await getOrCreateLookupId(
       connection,
       "membership_types",
-      "Einzelmitgliedschaft",
+      MEMBERSHIP_TYPE_SINGLE,
     );
     const pendingStatusId = await getOrCreateLookupId(
       connection,
       "membership_statuses",
-      "Beantragt",
+      DEFAULT_MEMBERSHIP_STATUS,
     );
 
     await connection.beginTransaction();
@@ -72,10 +78,10 @@ export async function POST(request: NextRequest) {
     const [userResult] = await connection.query<ResultSetHeader>(
       `INSERT INTO users (
         email, first_name, last_name, birth_date, gender,
-        phone, address, marital_status,
+        phone, phone2, address, marital_status,
         bank, iban, bic, bank_account_holder, sepa_mandate_accepted,
         created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
       [
         validatedData.email,
         validatedData.firstName,
@@ -83,6 +89,7 @@ export async function POST(request: NextRequest) {
         validatedData.birthDate,
         validatedData.gender,
         validatedData.phone,
+        validatedData.phone2 || null,
         validatedData.address,
         validatedData.maritalStatus,
         validatedData.sepaBank,

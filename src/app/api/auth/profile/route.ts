@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import pool from "@/lib/db";
 import { getOrCreateLookupId } from "@/lib/db-helpers";
-import { GENDERS, MARITAL_STATUSES } from "@/lib/enums";
+import {
+  DEFAULT_ADMISSION_STATUS,
+  DEFAULT_GENDER,
+  GENDERS,
+  MARITAL_STATUSES,
+  RELATIONSHIP_PARENT,
+} from "@/lib/enums";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 interface UserRow extends RowDataPacket {
@@ -14,6 +20,7 @@ interface UserRow extends RowDataPacket {
   birth_date: string | null;
   address: string | null;
   phone: string | null;
+  phone2: string | null;
   marital_status: string;
   bank: string | null;
   iban: string | null;
@@ -48,6 +55,7 @@ interface ProfileUpdatePayload {
     gender?: string;
     address?: string;
     phone?: string;
+    phone2?: string;
     marital_status?: string;
     sepa_account_holder?: string;
     sepa_iban?: string;
@@ -61,6 +69,7 @@ interface ProfileUpdatePayload {
     gender?: string;
     address?: string;
     phone?: string;
+    phone2?: string;
     marital_status?: string;
     sepa_account_holder?: string;
     sepa_iban?: string;
@@ -91,6 +100,7 @@ function mapUserToClient(user: UserRow) {
     gender: user.gender,
     address: user.address,
     phone: user.phone,
+    phone2: user.phone2,
     marital_status: user.marital_status,
     sepa_account_holder: user.bank_account_holder,
     sepa_iban: user.iban,
@@ -167,7 +177,7 @@ export async function GET() {
             consent_media_online: false,
             consent_media_print: false,
             consent_media_promotion: false,
-            status: studentsRows[0]?.admission_status ?? "Zulassungsantrag",
+            status: studentsRows[0]?.admission_status ?? DEFAULT_ADMISSION_STATUS,
           }
         : null;
 
@@ -278,6 +288,7 @@ export async function PUT(request: NextRequest) {
           birth_date = COALESCE(?, birth_date),
           gender = ?, address = COALESCE(?, address),
           phone = COALESCE(?, phone),
+          phone2 = COALESCE(?, phone2),
           marital_status = COALESCE(?, marital_status),
           bank = COALESCE(?, bank),
           iban = COALESCE(?, iban),
@@ -292,6 +303,7 @@ export async function PUT(request: NextRequest) {
           gender ?? undefined,
           source.address ?? undefined,
           source.phone ?? undefined,
+          source.phone2 ?? undefined,
           maritalStatus ?? undefined,
           bank ?? undefined,
           iban ?? undefined,
@@ -346,7 +358,7 @@ export async function PUT(request: NextRequest) {
               student.first_name,
               student.last_name,
               student.birth_date,
-              studentGender ?? "Männlich",
+              studentGender ?? DEFAULT_GENDER,
               student.estimated_level ?? null,
               student.notes ?? null,
             ],
@@ -356,7 +368,7 @@ export async function PUT(request: NextRequest) {
           const relationshipTypeId = await getOrCreateLookupId(
             connection,
             "relationship_types",
-            "Elternteil",
+            RELATIONSHIP_PARENT,
           );
 
           await connection.query(

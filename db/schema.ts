@@ -18,13 +18,20 @@ import {
   type AnyMySqlColumn,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
+// Enum values come from the canonical definition (db/lib/enums.ts) so the
+// schema can never drift from the values the application writes.
 import {
   GENDERS,
   MARITAL_STATUSES,
   ADMISSION_STATUSES,
   TEACHER_STATUSES,
   ATTENDANCE_STATUSES,
-} from "@/lib/enums";
+  DEFAULT_GENDER,
+  DEFAULT_MARITAL_STATUS,
+  DEFAULT_ADMISSION_STATUS,
+  DEFAULT_TEACHER_STATUS,
+  DEFAULT_ATTENDANCE_STATUS,
+} from "./lib/enums";
 
 // ============================================
 // Lookup Tables
@@ -43,7 +50,7 @@ export type {
   AdmissionStatus,
   TeacherStatus,
   AttendanceStatus,
-} from "@/lib/enums";
+} from "./lib/enums";
 
 export const relationshipTypes = mysqlTable("relationship_types", {
   id: tinyint("id", { unsigned: true }).primaryKey().autoincrement(),
@@ -160,14 +167,14 @@ export const users = mysqlTable(
     email: varchar("email", { length: 255 }).notNull(),
     firstName: varchar("first_name", { length: 255 }).notNull(),
     lastName: varchar("last_name", { length: 255 }).notNull(),
-    gender: mysqlEnum("gender", GENDERS).notNull().default("Männlich"),
+    gender: mysqlEnum("gender", GENDERS).notNull().default(DEFAULT_GENDER),
     birthDate: date("birth_date"),
     phone: varchar("phone", { length: 100 }),
     phone2: varchar("phone2", { length: 100 }),
     address: varchar("address", { length: 255 }),
     maritalStatus: mysqlEnum("marital_status", MARITAL_STATUSES)
       .notNull()
-      .default("Ledig"),
+      .default(DEFAULT_MARITAL_STATUS),
     bank: varchar("bank", { length: 255 }),
     iban: varchar("iban", { length: 255 }),
     bic: varchar("bic", { length: 100 }),
@@ -207,7 +214,7 @@ export const teachers = mysqlTable(
     qualifications: text("qualifications"),
     status: mysqlEnum("status", TEACHER_STATUSES)
       .notNull()
-      .default("Antrag ausstehend"),
+      .default(DEFAULT_TEACHER_STATUS),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -229,10 +236,14 @@ export const students = mysqlTable(
     birthDate: date("birth_date").notNull(),
     notes: text("notes"),
     estimatedLevel: varchar("estimated_level", { length: 50 }),
-    gender: mysqlEnum("gender", GENDERS).notNull().default("Männlich"),
+    gender: mysqlEnum("gender", GENDERS).notNull().default(DEFAULT_GENDER),
     admissionStatus: mysqlEnum("admission_status", ADMISSION_STATUSES)
       .notNull()
-      .default("Zulassungsantrag"),
+      .default(DEFAULT_ADMISSION_STATUS),
+    // Photo and video permissions are declared per child.
+    mediaOnline: boolean("media_online").notNull().default(false),
+    mediaPrint: boolean("media_print").notNull().default(false),
+    mediaPromotion: boolean("media_promotion").notNull().default(false),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -385,7 +396,7 @@ export const sessionStudents = mysqlTable(
       .references(() => students.id, { onDelete: "cascade" }),
     attendance: mysqlEnum("attendance", ATTENDANCE_STATUSES)
       .notNull()
-      .default("present"),
+      .default(DEFAULT_ATTENDANCE_STATUS),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -418,6 +429,7 @@ export const studentGuardians = mysqlTable(
       .references(() => relationshipTypes.id),
     isPrimary: boolean("is_primary").notNull().default(false),
     canPickup: boolean("can_pickup").notNull().default(false),
+    schoolRulesAccepted: boolean("school_rules_accepted").notNull().default(false),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),

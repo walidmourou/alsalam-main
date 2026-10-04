@@ -17,6 +17,8 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const token = searchParams.get("token");
+    const requestedLang = searchParams.get("lang");
+    const lang = requestedLang === "fr" || requestedLang === "ar" ? requestedLang : "de";
 
     if (!token) {
       return NextResponse.json(
@@ -55,7 +57,7 @@ export async function GET(request: NextRequest) {
     if (tokenData.used_at) {
       // Redirect to success page
       return NextResponse.redirect(
-        new URL("/de/education?confirmed=already", request.url),
+        new URL(`/${lang}/education?confirmed=already`, request.url),
       );
     }
 
@@ -67,7 +69,7 @@ export async function GET(request: NextRequest) {
 
     // Redirect to success page
     return NextResponse.redirect(
-      new URL("/de/education?confirmed=success", request.url),
+      new URL(`/${lang}/education?confirmed=success`, request.url),
     );
   } catch (error) {
     console.error("Education registration confirmation error:", error);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import pool from "@/lib/db";
 import { getOrCreateLookupId } from "@/lib/db-helpers";
-import { GENDERS } from "@/lib/enums";
+import { DEFAULT_GENDER, GENDERS, RELATIONSHIP_PARENT } from "@/lib/enums";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 interface IdRow extends RowDataPacket {
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     const studentGender =
-      gender && VALID_GENDERS.has(gender) ? gender : "Männlich";
+      gender && VALID_GENDERS.has(gender) ? gender : DEFAULT_GENDER;
 
     await connection.beginTransaction();
 
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     const relationshipTypeId = await getOrCreateLookupId(
       connection,
       "relationship_types",
-      "Elternteil",
+      RELATIONSHIP_PARENT,
     );
 
     // Link student to guardian

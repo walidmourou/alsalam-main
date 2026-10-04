@@ -103,6 +103,7 @@ export interface MembershipFormData {
   address: string;
   email: string;
   phone: string;
+  phone2?: string;
   maritalStatus: "single" | "married" | "divorced" | "widowed";
   sepaAccountHolder: string;
   sepaIban: string;

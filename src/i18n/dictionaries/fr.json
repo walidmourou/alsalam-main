@@ -18,8 +18,15 @@
     "cookiePolicy": "Politique des cookies"
   },
   "home": {
-    "welcome": "Bienvenue",
-    "description": "Bienvenue au Centre Islamique de Brombach-Lörrach. Nous sommes une communauté dédiée à la promotion de la paix, de la compréhension et de la croissance spirituelle."
+    "educationTitle": "Éducation",
+    "educationDesc": "Éducation islamique et cours pour tous les âges",
+    "communityTitle": "Communauté",
+    "communityDesc": "Événements et activités communautaires",
+    "prayerTimesTitle": "Horaires de prière",
+    "prayerTimesDesc": "Horaires de prière quotidiens et événements spéciaux",
+    "latestArticles": "Derniers Articles",
+    "latestArticlesDesc": "Découvrez nos derniers aperçus et histoires de la communauté",
+    "viewAll": "Voir tout"
   },
   "main_hero": {
     "heroTitle": "Un lieu de paix et de communauté",
@@ -117,6 +124,7 @@
     "addressPlaceholder": "Rue, numéro, code postal, ville",
     "email": "E-mail",
     "phone": "Numéro de téléphone",
+    "phone2": "Deuxième numéro de téléphone",
     "sepaMandate": "Mandat de prélèvement SEPA",
     "sepaAccountHolder": "Titulaire du compte",
     "bankName": "Nom de la banque",
@@ -157,7 +165,184 @@
     "freeForMembers": "Participation gratuite pour le premier enfant des membres",
     "registrationRequired": "Inscription requise",
     "contactTitle": "Contact pour l'inscription",
-    "contactText": "Pour plus d'informations et d'inscription, contactez-nous par e-mail: info@alsalam-loerrach.org"
+    "contactText": "Pour plus d'informations et d'inscription, contactez-nous par e-mail: info@alsalam-loerrach.org",
+    "page": {
+      "confirmedTitle": "Inscription confirmée !",
+      "confirmedText": "Merci ! Votre inscription a été confirmée. Nous vous contacterons bientôt pour les prochaines étapes.",
+      "alreadyTitle": "Déjà confirmée",
+      "alreadyText": "Cette inscription a déjà été confirmée.",
+      "contactCta": "Une question sur l'inscription ?"
+    },
+    "form": {
+      "title": "Inscription au programme éducatif",
+      "requiredHint": "Champs obligatoires",
+      "optional": "facultatif",
+      "close": "Fermer",
+      "selectPlaceholder": "Veuillez sélectionner",
+      "back": "Retour",
+      "next": "Suivant",
+      "submit": "Envoyer l'inscription",
+      "submitting": "Envoi en cours ...",
+      "draftRestored": "Votre inscription interrompue a été restaurée. Merci de vérifier les informations.",
+      "steps": {
+        "guardian": "Parents & contact",
+        "guardianShort": "Parents",
+        "students": "Enfants",
+        "studentsShort": "Enfants",
+        "payment": "Paiement",
+        "paymentShort": "Paiement",
+        "review": "Vérifier & envoyer",
+        "reviewShort": "Vérifier"
+      },
+      "fields": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Adresse e-mail",
+        "phone": "Téléphone",
+        "phone2": "Autre numéro de téléphone",
+        "gender": "Genre",
+        "relationship": "Lien avec l'enfant",
+        "birthDate": "Date de naissance",
+        "maritalStatus": "Situation familiale",
+        "address": "Adresse",
+        "estimatedLevel": "Niveau souhaité",
+        "notes": "Remarques sur l'enfant",
+        "accountHolder": "Titulaire du compte",
+        "bank": "Banque"
+      },
+      "guardian": {
+        "title": "Personne responsable",
+        "description": "La personne qui dépose la demande et qui est autorisée à récupérer les enfants.",
+        "emailHint": "Nous envoyons la confirmation à cette adresse e-mail.",
+        "relationshipHint": "Ce lien est enregistré dans la base de données.",
+        "addressHint": "Rue, numéro, code postal et ville.",
+        "canPickup": "L'enfant peut-il être récupéré ?",
+        "canPickupHint": "Sans cette autorisation, nous ne remettons votre enfant que pendant les heures d'ouverture."
+      },
+      "membership": {
+        "title": "Adhésion",
+        "description": "Pour les membres, le premier enfant est gratuit.",
+        "checkbox": "Je suis membre de l'AL-SALAM e.V.",
+        "checkboxHint": "Nous vérifions l'adhésion automatiquement.",
+        "memberFeeHint": "Premier enfant gratuit, chaque enfant supplémentaire coûte 10 € par mois.",
+        "guestFeeHint": "Les non-membres paient 20 € par enfant et par mois.",
+        "verifying": "Vérification en cours …",
+        "noticeGuardianExists": "{name} est déjà connu comme utilisateur n° ${id} – les données saisies mettront à jour le compte existant.",
+        "noticeSecondaryExists": "{name} est déjà connu comme utilisateur n° ${id} – aucun second compte ne sera créé.",
+        "noticeMembershipFound": "Une adhésion existante a été trouvée pour la première personne responsable. Le tarif de membre s'applique.",
+        "noticeMembershipNameMismatch": "L'adhésion est enregistrée sous « {stored} ». À l'envoi, le nom sera mis à jour vers « {entered} »."
+      },
+      "secondaryGuardian": {
+        "title": "Deuxième personne responsable",
+        "description": "Facultatif – par exemple l'autre parent ou un tuteur.",
+        "checkbox": "Ajouter une deuxième personne",
+        "checkboxHint": "Nous contactons automatiquement les deux personnes.",
+        "canPickup": "Cette personne peut-elle récupérer les enfants ?",
+        "canPickupHint": "Par exemple l'autre parent ou les grands-parents."
+      },
+      "students": {
+        "title": "Informations sur les enfants",
+        "ageHint": "Notre programme éducatif s'adresse aux enfants de",
+        "ageLabel": "Âge : {age} ans",
+        "childTitle": "Enfant {n}",
+        "remove": "Supprimer",
+        "add": "Ajouter un autre enfant",
+        "levelHint": "Nous déterminons le niveau adapté après un court entretien.",
+        "notesHint": "Visible uniquement par notre équipe – utile pour l'accompagnement.",
+        "notesPlaceholder": "p. ex. allergies, médicaments, appareil auditif, besoins particuliers"
+      },
+      "payment": {
+        "title": "Paiement par prélèvement SEPA",
+        "description": "La cotisation est débitée chaque mois de votre compte.",
+        "ibanHint": "IBAN valide, p. ex. FR00 0000 0000 0000 0000 0000 00.",
+        "bicHint": "Généralement reconnu automatiquement en Allemagne.",
+        "mandateLabel": "J'autorise l'AL-SALAM e.V. à effectuer un prélèvement SEPA.",
+        "mandateText": "L'autorisation s'applique aux cotisations mentionnées ci-dessus et peut être révoquée à tout moment.",
+        "optInLabel": "Prélever la cotisation par prélèvement SEPA.",
+        "optInHint": "Si vous laissez cette case vide, l'inscription est envoyée sans coordonnées bancaires. Nous vous transmettons les détails du paiement avec la confirmation et vous réglez par virement.",
+        "deferredTitle": "Paiement plus tard",
+        "deferredText": "Vous n'avez pas donné d'autorisation SEPA. Les détails du paiement vous seront transmis avec la confirmation d'inscription.",
+        "reviewTitle": "Mode de paiement",
+        "reviewEnabled": "Prélèvement SEPA",
+        "reviewDeferred": "Sera réglé plus tard par virement."
+      },
+      "fee": {
+        "title": "Cotisation mensuelle"
+      },
+      "review": {
+        "title": "Vérifier les informations",
+        "description": "Merci de vérifier vos données avant l'envoi.",
+        "edit": "Modifier",
+        "fixErrors": "Merci de corriger encore {count} champ(s)."
+      },
+      "consents": {
+        "title": "Déclarations de consentement",
+        "description": "Nécessaires pour l'admission et l'accompagnement à l'école associative.",
+        "schoolRulesLabel": "J'ai lu et j'accepte le règlement de l'école.",
+        "schoolRulesHint": "Le règlement décrit les horaires, les vacances et le comportement à l'école.",
+        "readRules": "Lire le règlement",
+        "mediaIntro": "Facultatif : notre équipe peut-elle publier des photos et vidéos de {name} ?",
+        "mediaOnline": "Publication sur le site web et les réseaux sociaux",
+        "mediaPrint": "Utilisation dans les supports imprimés (flyers, brochure)",
+        "mediaStudentTitle": "Autorisations pour {name}",
+        "mediaShortOnline": "Site web & réseaux sociaux",
+        "mediaShortPrint": "Supports imprimés",
+        "mediaShortPromotion": "Presse & événements",
+        "mediaPromotion": "Utilisation pour la presse et les événements",
+        "mediaRights": "Vous pouvez retirer votre consentement à tout moment avec effet pour l'avenir.",
+        "mediaValiditySingle": "Sans consentement, aucune photo de {name} ne sera publiée.",
+        "reviewNoMedia": "Aucun accord média"
+      },
+      "cta": {
+        "title": "Demander une place maintenant",
+        "description": "En quatre étapes courtes – nous confirmons l'inscription par e-mail.",
+        "benefits": [
+          "Inscription en environ 5 minutes",
+          "Confirmation par e-mail",
+          "Aucun paiement préalable nécessaire"
+        ],
+        "feeHint": "Membres : premier enfant gratuit, enfants suivants 10 € par mois. Non-membres : 20 € par enfant.",
+        "button": "Commencer l'inscription",
+        "membershipLink": "Pas encore membre ? Rejoindre maintenant"
+      },
+      "success": {
+        "title": "Inscription envoyée !",
+        "message": "Merci pour votre inscription à notre programme éducatif.",
+        "nextSteps": [
+          "Nous vous avons envoyé un e-mail de confirmation.",
+          "Merci de confirmer votre adresse e-mail via le lien dans l'e-mail.",
+          "Après vérification, vous recevrez la confirmation de la place."
+        ],
+        "registerAnother": "Inscrire un autre enfant"
+      },
+      "errors": {
+        "generic": "Merci de vérifier les champs indiqués et de réessayer.",
+        "serverError": "L'inscription n'a pas pu être enregistrée. Merci de réessayer ou de nous contacter.",
+        "required": "Ce champ est obligatoire.",
+        "tooLong": "La saisie est trop longue.",
+        "invalidEmail": "Merci de saisir une adresse e-mail valide.",
+        "invalidDate": "Merci de saisir une date valide.",
+        "futureDate": "La date ne peut pas être dans le futur.",
+        "ageRange": "L'âge n'est pas dans la plage autorisée.",
+        "invalidPhone": "Merci de saisir un numéro de téléphone valide.",
+        "invalidGender": "Merci de choisir une valeur valide.",
+        "invalidMaritalStatus": "Merci de choisir une situation familiale valide.",
+        "invalidRelationship": "Merci de choisir un lien valide.",
+        "invalidLevel": "Merci de choisir un niveau valide.",
+        "invalidIban": "L'IBAN n'est pas valide. Merci de vérifier.",
+        "invalidBic": "Le BIC n'est pas valide. Merci de vérifier.",
+        "mandateRequired": "L'autorisation SEPA est requise.",
+        "schoolRulesRequired": "Le règlement de l'école doit être accepté.",
+        "atLeastOneStudent": "Merci d'inscrire au moins un enfant.",
+        "tooManyStudents": "Merci de nous contacter directement pour plus de dix enfants.",
+        "duplicateStudent": "Cet enfant est déjà inscrit.",
+        "guardianNameTaken": "Un autre compte existe déjà avec cette combinaison de prénom, nom et date de naissance. Veuillez vérifier vos informations.",
+        "duplicateGuardianEmail": "Cette adresse e-mail est déjà utilisée pour la première personne.",
+        "verificationFailed": "La vérification des données a échoué. Veuillez réessayer.",
+        "membershipSelectionRequired": "Une adhésion a été trouvée pour cette personne. Veuillez cocher l'option « Je suis membre de l'AL-SALAM e.V. » pour continuer.",
+        "membershipNotVerified": "Aucune adhésion n'a été trouvée pour les données saisies (prénom, nom, e-mail). Veuillez corriger les informations ou décocher l'option."
+      }
+    }
   },
   "articles": {
     "title": "Tous les Articles",
@@ -178,17 +363,6 @@
     "article": "Article",
     "publishedOn": "Publié le",
     "allArticles": "Tous les articles"
-  },
-  "home": {
-    "educationTitle": "Éducation",
-    "educationDesc": "Éducation islamique et cours pour tous les âges",
-    "communityTitle": "Communauté",
-    "communityDesc": "Événements et activités communautaires",
-    "prayerTimesTitle": "Horaires de prière",
-    "prayerTimesDesc": "Horaires de prière quotidiens et événements spéciaux",
-    "latestArticles": "Derniers Articles",
-    "latestArticlesDesc": "Découvrez nos derniers aperçus et histoires de la communauté",
-    "viewAll": "Voir tout"
   },
   "signIn": {
     "title": "Se connecter",

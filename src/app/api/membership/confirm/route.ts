@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { getOrCreateLookupId } from "@/lib/db-helpers";
+import { MEMBERSHIP_STATUS_ACTIVE } from "@/lib/enums";
 import type { RowDataPacket } from "mysql2/promise";
 
 interface MembershipTokenRow extends RowDataPacket {
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
     const activeStatusId = await getOrCreateLookupId(
       connection,
       "membership_statuses",
-      "Aktiv",
+      MEMBERSHIP_STATUS_ACTIVE,
     );
 
     // Find the membership for this user and set it to active

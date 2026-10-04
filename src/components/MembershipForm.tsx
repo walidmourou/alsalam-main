@@ -3,7 +3,10 @@
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import StatutesModal from "@/components/StatutesModal";
+import { DateInput } from "@/components/FormField";
 import {
+  DEFAULT_GENDER,
+  DEFAULT_MARITAL_STATUS,
   GENDERS,
   MARITAL_STATUSES,
   GENDER_LABELS,
@@ -25,11 +28,12 @@ export default function MembershipForm({
     firstName: "",
     lastName: "",
     birthDate: "",
-    gender: "Männlich",
+    gender: DEFAULT_GENDER,
     address: "",
     email: "",
     phone: "",
-    maritalStatus: "Ledig",
+    phone2: "",
+    maritalStatus: DEFAULT_MARITAL_STATUS,
     sepaAccountHolder: "",
     sepaIban: "",
     sepaBic: "",
@@ -84,11 +88,12 @@ export default function MembershipForm({
         firstName: "",
         lastName: "",
         birthDate: "",
-        gender: "Männlich",
+        gender: DEFAULT_GENDER,
         address: "",
         email: "",
         phone: "",
-        maritalStatus: "Ledig",
+        phone2: "",
+        maritalStatus: DEFAULT_MARITAL_STATUS,
         sepaAccountHolder: "",
         sepaIban: "",
         sepaBic: "",
@@ -247,12 +252,14 @@ export default function MembershipForm({
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {t.birthDate} <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="date"
+                    <DateInput
+                      id="membership-birth-date"
                       name="birthDate"
                       value={formData.birthDate}
-                      onChange={handleChange}
                       required
+                      onChange={(value) =>
+                        setFormData((current) => ({ ...current, birthDate: value }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
@@ -346,6 +353,22 @@ export default function MembershipForm({
                         value={formData.phone}
                         onChange={handleChange}
                         required
+                        dir="ltr"
+                        lang="de"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"
+                        placeholder="+49 / +33 / +41"
+                      />
+                    </div>
+                  <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t.phone2 || "Second phone"}{" "}
+                        <span className="text-gray-400">({t.optional})</span>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone2"
+                        value={formData.phone2}
+                        onChange={handleChange}
                         dir="ltr"
                         lang="de"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent bg-white text-gray-900"

@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import { formatDateForDisplay } from "@/lib/date";
 
 // Create reusable transporter with lazy initialization
 let transporter: Transporter | null = null;
@@ -201,6 +202,116 @@ export async function sendMagicLink(
         <p>إذا لم تطلب هذا البريد الإلكتروني، يرجى تجاهله.</p>
         <br>
         <p>مع أطيب التحيات،<br>فريق جمعية السلام</p>
+      </div>
+    `,
+    }[lang] || "";
+
+  await sendEmail(email, subject, htmlContent);
+}
+
+export interface EducationRegistrationMailData {
+  email: string;
+  firstName: string;
+  lang: string;
+  confirmationUrl: string;
+  students: { name: string; birthDate: string }[];
+  totalAmount: number;
+}
+
+/**
+ * Confirmation mail for a Vereinsschule registration. The amount is always the
+ * one calculated server-side from the memberships table.
+ */
+export async function sendEducationRegistrationConfirmation({
+  email,
+  firstName,
+  lang,
+  confirmationUrl,
+  students,
+  totalAmount,
+}: EducationRegistrationMailData): Promise<void> {
+  const subject =
+    {
+      de: "Bildungsanmeldung bestätigen - AL-SALAM E.V.",
+      fr: "Confirmer l'inscription à l'école - AL-SALAM E.V.",
+      ar: "تأكيد التسجيل في مدرسة السلام - AL-SALAM E.V.",
+    }[lang] || "Confirm your education registration - AL-SALAM E.V.";
+
+  const studentRows = students
+    .map(
+      (student) =>
+        `<li style="margin: 4px 0;">${student.name} &middot; ${formatDateForDisplay(student.birthDate) || student.birthDate}</li>`,
+    )
+    .join("");
+
+  const studentList = `<ul style="padding-inline-start: 20px; margin: 10px 0;">${studentRows}</ul>`;
+
+  const htmlContent =
+    {
+      de: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #009245;">Bildungsanmeldung bestätigen</h2>
+        <p>Liebe/r ${firstName},</p>
+        <p>vielen Dank für Ihre Anmeldung für das Bildungsprogramm der Al-Salam-Vereinsschule.</p>
+        <p><strong>Eingegangene Anmeldungen:</strong></p>
+        ${studentList}
+        <p><strong>Gesamtbetrag:</strong> ${totalAmount.toFixed(2)} € (monatlich per SEPA-Lastschrift)</p>
+        <p><strong>Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:</strong></p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${confirmationUrl}" style="background-color: #009245; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Anmeldung bestätigen</a>
+        </div>
+        <p>Nach der Bestätigung prüfen wir die Anmeldung und informieren Sie über die Platzvergabe in den Klassen.</p>
+        <p>Bei Fragen können Sie uns jederzeit unter <a href="mailto:info@alsalam-loerrach.org">info@alsalam-loerrach.org</a> kontaktieren.</p>
+        <br>
+        <p>Mit freundlichen Grüßen,<br>AL-SALAM E.V. Team</p>
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">Islamisches Zentrum Brombach-Lörrach<br>
+        Schopfheimer Str. 25 (2 OG)<br>
+        79541 Lörrach (Brombach), Deutschland</p>
+      </div>
+    `,
+      fr: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #009245;">Confirmer l'inscription à l'école</h2>
+        <p>Cher/Chère ${firstName},</p>
+        <p>merci pour votre inscription au programme éducatif de l'école Al-Salam.</p>
+        <p><strong>Inscriptions reçues:</strong></p>
+        ${studentList}
+        <p><strong>Montant total:</strong> ${totalAmount.toFixed(2)} € (par prélèvement SEPA mensuel)</p>
+        <p><strong>Veuillez confirmer votre adresse e-mail en cliquant sur le lien suivant:</strong></p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${confirmationUrl}" style="background-color: #009245; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Confirmer l'inscription</a>
+        </div>
+        <p>Après confirmation, nous examinons votre demande et vous informons de la répartition dans les classes.</p>
+        <p>Pour toute question, n'hésitez pas à nous contacter à <a href="mailto:info@alsalam-loerrach.org">info@alsalam-loerrach.org</a>.</p>
+        <br>
+        <p>Cordialement,<br>L'équipe AL-SALAM E.V.</p>
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">Centre Islamique de Brombach-Lörrach<br>
+        Schopfheimer Str. 25 (2 OG)<br>
+        79541 Lörrach (Brombach), Allemagne</p>
+      </div>
+    `,
+      ar: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; direction: rtl;">
+        <h2 style="color: #009245;">تأكيد التسجيل في مدرسة السلام</h2>
+        <p>عزيزي ${firstName}،</p>
+        <p>شكراً لتسجيلكم في البرنامج التعليمي لمدرسة السلام الجمعية.</p>
+        <p><strong>التسجيلات المستلمة:</strong></p>
+        ${studentList}
+        <p><strong>المبلغ الإجمالي:</strong> ${totalAmount.toFixed(2)} يورو (شهرياً عبر الخصم المباشر SEPA)</p>
+        <p><strong>يرجى تأكيد بريدكم الإلكتروني بالنقر على الرابط التالي:</strong></p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${confirmationUrl}" style="background-color: #009245; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">تأكيد التسجيل</a>
+        </div>
+        <p>بعد التأكيد سنراجع الطلب ونبلغكم عن توزيع الأطفال على الفصول.</p>
+        <p>لأي استفسار، يمكنك التواصل معنا على <a href="mailto:info@alsalam-loerrach.org">info@alsalam-loerrach.org</a>.</p>
+        <br>
+        <p>مع أطيب التحيات،<br>فريق جمعية السلام</p>
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">المركز الإسلامي برمباخ - لوراخ<br>
+        Schopfheimer Str. 25 (2 OG)<br>
+        79541 Lörrach (Brombach)، ألمانيا</p>
       </div>
     `,
     }[lang] || "";

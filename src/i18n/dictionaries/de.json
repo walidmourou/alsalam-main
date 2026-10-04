@@ -18,8 +18,15 @@
     "cookiePolicy": "Cookie-Richtlinie"
   },
   "home": {
-    "welcome": "Willkommen",
-    "description": "Willkommen im Islamischen Zentrum Brombach-Lörrach. Wir sind eine Gemeinschaft, die sich der Förderung von Frieden, Verständnis und spirituellem Wachstum widmet."
+    "educationTitle": "Bildung",
+    "educationDesc": "Islamische Bildung und Kurse für alle Altersgruppen",
+    "communityTitle": "Gemeinschaft",
+    "communityDesc": "Veranstaltungen und Aktivitäten für die Gemeinschaft",
+    "prayerTimesTitle": "Gebetszeiten",
+    "prayerTimesDesc": "Tägliche Gebetszeiten und besondere Veranstaltungen",
+    "latestArticles": "Neueste Artikel",
+    "latestArticlesDesc": "Entdecken Sie unsere neuesten Einblicke und Geschichten aus der Gemeinschaft",
+    "viewAll": "Alle anzeigen"
   },
   "main_hero": {
     "heroTitle": "Ein Ort des Friedens und der Gemeinschaft",
@@ -117,6 +124,7 @@
     "addressPlaceholder": "Straße, Hausnummer, PLZ, Stadt",
     "email": "E-Mail",
     "phone": "Telefonnummer",
+    "phone2": "Zweite Telefonnummer",
     "sepaMandate": "SEPA-Lastschriftmandat",
     "sepaAccountHolder": "Kontoinhaber",
     "bankName": "Bankname",
@@ -157,7 +165,184 @@
     "freeForMembers": "Kostenlose Teilnahme für das erste Kind der Mitglieder",
     "registrationRequired": "Anmeldung erforderlich",
     "contactTitle": "Kontakt für Anmeldung",
-    "contactText": "Für weitere Informationen und Anmeldung kontaktieren Sie uns bitte per E-Mail: info@alsalam-loerrach.org"
+    "contactText": "Für weitere Informationen und Anmeldung kontaktieren Sie uns bitte per E-Mail: info@alsalam-loerrach.org",
+    "page": {
+      "confirmedTitle": "Bildungsanmeldung bestätigt!",
+      "confirmedText": "Vielen Dank! Ihre Anmeldung wurde bestätigt. Wir melden uns in Kürze mit den nächsten Schritten bei Ihnen.",
+      "alreadyTitle": "Bereits bestätigt",
+      "alreadyText": "Diese Anmeldung wurde bereits bestätigt.",
+      "contactCta": "Fragen zur Anmeldung?"
+    },
+    "form": {
+      "title": "Anmeldung Bildungsprogramm",
+      "requiredHint": "Pflichtfelder",
+      "optional": "optional",
+      "close": "Schließen",
+      "selectPlaceholder": "Bitte wählen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "submit": "Anmeldung absenden",
+      "submitting": "Wird gesendet ...",
+      "draftRestored": "Ihre unterbrochene Anmeldung wurde wiederhergestellt. Bitte prüfen Sie die Angaben.",
+      "steps": {
+        "guardian": "Eltern & Kontakt",
+        "guardianShort": "Eltern",
+        "students": "Kinder",
+        "studentsShort": "Kinder",
+        "payment": "Zahlung",
+        "paymentShort": "Zahlung",
+        "review": "Prüfen & absenden",
+        "reviewShort": "Prüfen"
+      },
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail-Adresse",
+        "phone": "Telefon",
+        "phone2": "Weitere Telefonnummer",
+        "gender": "Geschlecht",
+        "relationship": "Verhältnis zum Kind",
+        "birthDate": "Geburtsdatum",
+        "maritalStatus": "Familienstand",
+        "address": "Adresse",
+        "estimatedLevel": "Gewünschte Bildungsstufe",
+        "notes": "Hinweise zum Kind",
+        "accountHolder": "Kontoinhaber",
+        "bank": "Bank"
+      },
+      "guardian": {
+        "title": "Erziehungsberechtigte Person",
+        "description": "Wer den Antrag stellt und für die Abholung der Kinder zuständig ist.",
+        "emailHint": "An diese E-Mail-Adresse senden wir die Bestätigung.",
+        "relationshipHint": "Wird als Beziehung in der Datenbank gespeichert.",
+        "addressHint": "Straße, Hausnummer, PLZ und Ort.",
+        "canPickup": "Darf die Kinder abgeholt werden?",
+        "canPickupHint": "Ohne diese Berechtigung holen wir Ihr Kind nur während der Öffnungszeiten ab."
+      },
+      "membership": {
+        "title": "Mitgliedschaft",
+        "description": "Für Mitglieder ist das erste Kind kostenfrei.",
+        "checkbox": "Ich bin Mitglied im AL-SALAM e.V.",
+        "checkboxHint": "Wir prüfen die Mitgliedschaft automatisch.",
+        "memberFeeHint": "Erstes Kind kostenfrei, jedes weitere Kind kostet 10 € monatlich.",
+        "guestFeeHint": "Nicht-Mitglieder zahlen 20 € pro Kind und Monat.",
+        "verifying": "Wird geprüft …",
+        "noticeGuardianExists": "{name} ist bereits als Nutzer #${id} bekannt – die eingegebenen Daten werden das bestehende Konto aktualisieren.",
+        "noticeSecondaryExists": "{name} ist bereits als Nutzer #${id} bekannt – es wird kein zweites Konto angelegt.",
+        "noticeMembershipFound": "Für die erste verantwortliche Person wurde eine bestehende Mitgliedschaft gefunden. Es gilt der Mitgliederbeitrag.",
+        "noticeMembershipNameMismatch": "Die Mitgliedschaft ist unter \"{stored}\" gespeichert. Mit dem Absenden wird der Name auf \"{entered}\" aktualisiert."
+      },
+      "secondaryGuardian": {
+        "title": "Zweite erziehungsberechtigte Person",
+        "description": "Optional – z. B. der andere Elternteil oder ein Vormund.",
+        "checkbox": "Zweite Person hinzufügen",
+        "checkboxHint": "Wir kontaktieren beide Personen automatisch.",
+        "canPickup": "Darf diese Person die Kinder abholen?",
+        "canPickupHint": "Zum Beispiel der andere Elternteil oder Großeltern."
+      },
+      "students": {
+        "title": "Angaben zu den Kindern",
+        "ageHint": "Unser Bildungsprogramm richtet sich an Kinder von",
+        "ageLabel": "Alter: {age} Jahre",
+        "childTitle": "Kind {n}",
+        "remove": "Entfernen",
+        "add": "Weiteres Kind hinzufügen",
+        "levelHint": "Wir prüfen die passende Stufe nach einem kurzen Kennenlernen.",
+        "notesHint": "Nur für unser Team sichtbar – hilft uns bei der Betreuung.",
+        "notesPlaceholder": "z. B. Allergien, Medikamente, Hörgerät, besondere Lernbedürfnisse"
+      },
+      "payment": {
+        "title": "Zahlung per SEPA",
+        "description": "Der Beitrag wird monatlich von Ihrem Konto abgebucht.",
+        "ibanHint": "Gültige IBAN, z. B. DE00 0000 0000 0000 0000 00.",
+        "bicHint": "Wird in Deutschland meist automatisch erkannt.",
+        "mandateLabel": "Ich ermächtige den AL-SALAM e.V. zur SEPA-Lastschrift.",
+        "mandateText": "Die Ermächtigung gilt für die oben genannten Beiträge und kann jederzeit widerrufen werden.",
+        "optInLabel": "Beitrag per SEPA-Lastschrift abbuchen lassen.",
+        "optInHint": "Bleibt das Feld frei, senden Sie die Anmeldung ohne Bankdaten. Wir übermitteln Ihnen die Zahlungsdetails zusammen mit der Bestätigung und Sie überweisen den Beitrag.",
+        "deferredTitle": "Zahlung später",
+        "deferredText": "Sie haben keine SEPA-Ermächtigung erteilt. Die Zahlungsdetails erhalten Sie zusammen mit der Anmeldebestätigung.",
+        "reviewTitle": "Zahlungsart",
+        "reviewEnabled": "SEPA-Lastschrift",
+        "reviewDeferred": "Wird später per Überweisung bezahlt."
+      },
+      "fee": {
+        "title": "Monatlicher Beitrag"
+      },
+      "review": {
+        "title": "Angaben prüfen",
+        "description": "Bitte prüfen Sie Ihre Daten vor dem Absenden.",
+        "edit": "Bearbeiten",
+        "fixErrors": "Bitte korrigieren Sie noch {count} Feld(er)."
+      },
+      "consents": {
+        "title": "Einverständniserklärungen",
+        "description": "Für die Aufnahme und Betreuung in der Vereinsschule erforderlich.",
+        "schoolRulesLabel": "Ich habe die Schulordnung gelesen und akzeptiere sie.",
+        "schoolRulesHint": "Die Schulordnung beschreibt Unterrichtszeiten, Ferienregelung und Verhalten in der Schule.",
+        "readRules": "Schulordnung lesen",
+        "mediaIntro": "Optional: Darf unser Team Fotos und Videos von {name} veröffentlichen?",
+        "mediaOnline": "Veröffentlichung auf Website und Social Media",
+        "mediaPrint": "Verwendung in Printmedien (Flyer, Broschüre)",
+        "mediaStudentTitle": "Einwilligungen für {name}",
+        "mediaShortOnline": "Website & Social Media",
+        "mediaShortPrint": "Printmedien",
+        "mediaShortPromotion": "Presse & Veranstaltungen",
+        "mediaPromotion": "Verwendung für Pressearbeit und Veranstaltungen",
+        "mediaRights": "Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.",
+        "mediaValiditySingle": "Ohne Einwilligung wird kein Foto von {name} veröffentlicht.",
+        "reviewNoMedia": "Keine Medieneinwilligung"
+      },
+      "cta": {
+        "title": "Jetzt Bildungsplatz anfragen",
+        "description": "In vier kurzen Schritten zur Anmeldung – wir bestätigen die Anmeldung per E-Mail.",
+        "benefits": [
+          "Anmeldung in ca. 5 Minuten",
+          "Bestätigung per E-Mail",
+          "Keine Vorauszahlung nötig"
+        ],
+        "feeHint": "Mitglieder: erstes Kind kostenfrei, weitere Kinder 10 € monatlich. Nicht-Mitglieder: 20 € je Kind.",
+        "button": "Anmeldung starten",
+        "membershipLink": "Noch kein Mitglied? Jetzt beitreten"
+      },
+      "success": {
+        "title": "Anmeldung erfolgreich versendet!",
+        "message": "Vielen Dank für Ihre Anmeldung in unserem Bildungsprogramm.",
+        "nextSteps": [
+          "Wir haben Ihnen eine Bestätigungs-E-Mail geschickt.",
+          "Bitte bestätigen Sie Ihre E-Mail-Adresse über den Link in der E-Mail.",
+          "Nach der Prüfung erhalten Sie die Zusage für den Klassenplatz."
+        ],
+        "registerAnother": "Weiteres Kind anmelden"
+      },
+      "errors": {
+        "generic": "Bitte prüfen Sie die markierten Felder und versuchen Sie es erneut.",
+        "serverError": "Die Anmeldung konnte gespeichert werden. Bitte versuchen Sie es erneut oder kontaktieren Sie uns.",
+        "required": "Dieses Feld ist erforderlich.",
+        "tooLong": "Die Eingabe ist zu lang.",
+        "invalidEmail": "Bitte eine gültige E-Mail-Adresse eingeben.",
+        "invalidDate": "Bitte ein gültiges Datum eingeben.",
+        "futureDate": "Das Datum darf nicht in der Zukunft liegen.",
+        "ageRange": "Das Alter liegt nicht im zulässigen Bereich.",
+        "invalidPhone": "Bitte eine gültige Telefonnummer eingeben.",
+        "invalidGender": "Bitte eine gültige Angabe wählen.",
+        "invalidMaritalStatus": "Bitte einen gültigen Familienstand wählen.",
+        "invalidRelationship": "Bitte eine gültige Beziehung wählen.",
+        "invalidLevel": "Bitte eine gültige Bildungsstufe wählen.",
+        "invalidIban": "Die IBAN ist ungültig. Bitte erneut prüfen.",
+        "invalidBic": "Der BIC ist ungültig. Bitte erneut prüfen.",
+        "mandateRequired": "Die SEPA-Ermächtigung ist erforderlich.",
+        "schoolRulesRequired": "Die Schulordnung muss akzeptiert werden.",
+        "atLeastOneStudent": "Bitte mindestens ein Kind anmelden.",
+        "tooManyStudents": "Bitte teilen Sie uns bei mehr Kindern persönlich Bescheid.",
+        "duplicateStudent": "Dieses Kind ist bereits angemeldet.",
+        "guardianNameTaken": "Für diese Kombination aus Vorname, Nachname und Geburtsdatum existiert bereits ein anderes Konto. Bitte prüfen Sie Ihre Angaben.",
+        "duplicateGuardianEmail": "Diese E-Mail-Adresse wird bereits als erste Person verwendet.",
+        "verificationFailed": "Die Prüfung der Daten ist fehlgeschlagen. Bitte erneut versuchen.",
+        "membershipSelectionRequired": "Es wurde eine Mitgliedschaft für diese Person gefunden. Bitte aktivieren Sie die Option \"Ich bin Mitglied der AL-SALAM e.V.\", um fortzufahren.",
+        "membershipNotVerified": "Für die eingegebenen Daten (Vorname, Nachname, E-Mail) wurde keine Mitgliedschaft gefunden. Bitte korrigieren Sie die Angaben oder deaktivieren Sie die Option."
+      }
+    }
   },
   "articles": {
     "title": "Alle Artikel",
@@ -178,17 +363,6 @@
     "article": "Artikel",
     "publishedOn": "Veröffentlicht am",
     "allArticles": "Alle Artikel"
-  },
-  "home": {
-    "educationTitle": "Bildung",
-    "educationDesc": "Islamische Bildung und Kurse für alle Altersgruppen",
-    "communityTitle": "Gemeinschaft",
-    "communityDesc": "Veranstaltungen und Aktivitäten für die Gemeinschaft",
-    "prayerTimesTitle": "Gebetszeiten",
-    "prayerTimesDesc": "Tägliche Gebetszeiten und besondere Veranstaltungen",
-    "latestArticles": "Neueste Artikel",
-    "latestArticlesDesc": "Entdecken Sie unsere neuesten Einblicke und Geschichten aus der Gemeinschaft",
-    "viewAll": "Alle anzeigen"
   },
   "signIn": {
     "title": "Anmelden",

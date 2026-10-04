@@ -3,7 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
+import { DateInput } from "@/components/FormField";
 import {
+  DEFAULT_GENDER,
   GENDERS,
   MARITAL_STATUSES,
   GENDER_LABELS,
@@ -19,6 +21,7 @@ interface MembershipData {
   address: string;
   email: string;
   phone: string;
+  phone2: string;
   marital_status: string;
   sepa_account_holder: string;
   sepa_iban: string;
@@ -48,6 +51,39 @@ interface EducationRequesterData {
   sepa_bic?: string;
   sepa_bank: string;
   status: string;
+}
+
+/** `gender` is a plain string here: the `<select>` value is validated against
+ *  GENDERS by the API before it is written to the database. */
+interface NewChildForm {
+  first_name: string;
+  last_name: string;
+  birth_date: string;
+  gender: string;
+  estimated_level: string;
+}
+
+/**
+ * The education endpoint answers with machine codes; the profile page is not
+ * part of the wizard and therefore cannot map them to dictionary labels.
+ */
+function describeEducationError(response: {
+  error?: string;
+  fieldErrors?: Record<string, string>;
+}): string | null {
+  if (response.error === "serverError") {
+    return "The registration could not be saved. Please try again or contact us.";
+  }
+
+  if (response.fieldErrors && Object.keys(response.fieldErrors).length > 0) {
+    const codes = Object.values(response.fieldErrors);
+    if (codes.includes("invalidIban") || codes.includes("required")) {
+      return "Please complete your SEPA data (IBAN, account holder) before registering the children.";
+    }
+    return "Some data is missing or invalid. Please check your profile data and try again.";
+  }
+
+  return null;
 }
 
 interface StudentData {
@@ -187,6 +223,12 @@ export default function ProfilePage() {
           : locale === "ar"
             ? "رقم الهاتف"
             : "Numéro de téléphone",
+      phone2:
+        locale === "de"
+          ? "Zweite Telefonnummer"
+          : locale === "ar"
+            ? "رقم الهاتف الثاني"
+            : "Deuxième numéro de téléphone",
       maritalStatus:
         locale === "de"
           ? "Familienstand"
@@ -426,11 +468,11 @@ export default function ProfilePage() {
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [activeTab, setActiveTab] = useState("personal");
   const [showAddChildForm, setShowAddChildForm] = useState(false);
-  const [newChild, setNewChild] = useState({
+  const [newChild, setNewChild] = useState<NewChildForm>({
     first_name: "",
     last_name: "",
     birth_date: "",
-    gender: "Männlich",
+    gender: DEFAULT_GENDER,
     estimated_level: "preparatory",
   });
   const [cancelStudentId, setCancelStudentId] = useState<number | null>(null);
@@ -574,7 +616,7 @@ export default function ProfilePage() {
         first_name: "",
         last_name: "",
         birth_date: "",
-        gender: "Männlich",
+        gender: DEFAULT_GENDER,
         estimated_level: "preparatory",
       },
     ]);
@@ -620,9 +662,12 @@ export default function ProfilePage() {
           estimatedLevel: student.estimated_level,
         })),
         totalAmount: students.length * 50, // Assuming 50€ per child
-        consentMediaOnline: true,
-        consentMediaPrint: true,
-        consentMediaPromotion: true,
+        // This shortcut never asks for the photo/video permissions, so none are
+        // granted: they are stored per child on `students` and can only be
+        // declared where the guardian is actually asked.
+        consentMediaOnline: false,
+        consentMediaPrint: false,
+        consentMediaPromotion: false,
         schoolRulesAccepted: true,
         sepaAccountHolder: membership.sepa_account_holder,
         sepaIban: membership.sepa_iban,
@@ -647,7 +692,10 @@ export default function ProfilePage() {
         setStudents([]);
       } else {
         const error = await response.json();
-        setMessage(error.error || "Error registering children");
+        setMessage(
+          describeEducationError(error) ||
+            "Error registering children",
+        );
       }
     } catch {
       setMessage("Error registering children");
@@ -732,7 +780,7 @@ export default function ProfilePage() {
           first_name: "",
           last_name: "",
           birth_date: "",
-          gender: "Männlich",
+          gender: DEFAULT_GENDER,
           estimated_level: "preparatory",
         });
         setShowAddChildForm(false);
@@ -969,17 +1017,17 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="membership-birth-date"
+                        className="block text-sm font-medium text-gray-700"
+                      >
                         {dictionary.support?.birthDate || "Birth Date"}
                       </label>
-                      <input
-                        type="date"
-                        value={membership.birth_date.split("T")[0]}
-                        onChange={(e) =>
-                          setMembership({
-                            ...membership,
-                            birth_date: e.target.value,
-                          })
+                      <DateInput
+                        id="membership-birth-date"
+                        value={membership.birth_date}
+                        onChange={(value) =>
+                          setMembership({ ...membership, birth_date: value })
                         }
                         disabled={!isEditing}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
@@ -1032,6 +1080,24 @@ export default function ProfilePage() {
                           setMembership({
                             ...membership,
                             phone: e.target.value,
+                          })
+                        }
+                        disabled={!isEditing}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        {dictionary.support?.phone2 || "Second phone"}
+                      </label>
+                      <input
+                        type="tel"
+                        value={membership.phone2 || ""}
+                        onChange={(e) =>
+                          setMembership({
+                            ...membership,
+                            phone2: e.target.value,
                           })
                         }
                         disabled={!isEditing}
@@ -1641,18 +1707,17 @@ export default function ProfilePage() {
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700">
+                              <label
+                                htmlFor={`student-birth-date-${index}`}
+                                className="block text-sm font-medium text-gray-700"
+                              >
                                 {dictionary.support?.birthDate || "Birth Date"}
                               </label>
-                              <input
-                                type="date"
+                              <DateInput
+                                id={`student-birth-date-${index}`}
                                 value={student.birth_date}
-                                onChange={(e) =>
-                                  updateStudent(
-                                    index,
-                                    "birth_date",
-                                    e.target.value,
-                                  )
+                                onChange={(value) =>
+                                  updateStudent(index, "birth_date", value)
                                 }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green"
                               />
@@ -1813,19 +1878,19 @@ export default function ProfilePage() {
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label
+                              htmlFor="new-child-birth-date"
+                              className="block text-sm font-medium text-gray-700"
+                            >
                               {dictionary.support?.birthDate ||
                                 "Date de naissance"}{" "}
                               <span className="text-red-500">*</span>
                             </label>
-                            <input
-                              type="date"
+                            <DateInput
+                              id="new-child-birth-date"
                               value={newChild.birth_date}
-                              onChange={(e) =>
-                                setNewChild({
-                                  ...newChild,
-                                  birth_date: e.target.value,
-                                })
+                              onChange={(value) =>
+                                setNewChild({ ...newChild, birth_date: value })
                               }
                               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                             />
@@ -1978,25 +2043,24 @@ export default function ProfilePage() {
                             />
                           </div>
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              {dictionary.support?.birthDate ||
-                                "Date de naissance"}
-                            </label>
-                            <input
-                              type="date"
-                              value={student.birth_date.split("T")[0]}
-                              onChange={(e) =>
-                                updateStudent(
-                                  index,
-                                  "birth_date",
-                                  e.target.value,
-                                )
-                              }
-                              disabled={!isEditing}
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
-                            />
-                          </div>
+                            <div>
+                              <label
+                                htmlFor={`managed-student-birth-date-${index}`}
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                {dictionary.support?.birthDate ||
+                                  "Date de naissance"}
+                              </label>
+                              <DateInput
+                                id={`managed-student-birth-date-${index}`}
+                                value={student.birth_date}
+                                onChange={(value) =>
+                                  updateStudent(index, "birth_date", value)
+                                }
+                                disabled={!isEditing}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-green focus:border-primary-green disabled:bg-gray-50"
+                              />
+                            </div>
 
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
