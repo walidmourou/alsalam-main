@@ -624,29 +624,28 @@ export const articles = mysqlTable(
     id: bigint("id", { mode: "number", unsigned: true })
       .primaryKey()
       .autoincrement(),
-    title: varchar("title", { length: 255 }),
-    content: text("content"),
-    isPublished: boolean("is_published").notNull().default(true),
-    publishedDate: date("published_date"),
-    createdByUserId: bigint("created_by_user_id", {
-      mode: "number",
-      unsigned: true,
-    })
+    titleDe: varchar("title_de", { length: 255 }).notNull(),
+    titleFr: varchar("title_fr", { length: 255 }).notNull(),
+    titleAr: varchar("title_ar", { length: 255 }).notNull(),
+    contentDe: text("content_de").notNull(),
+    contentFr: text("content_fr").notNull(),
+    contentAr: text("content_ar").notNull(),
+    imageUrl: varchar("image_url", { length: 500 }),
+    status: mysqlEnum("status", ["draft", "published", "archived"])
       .notNull()
-      .references(() => users.id),
-    updatedByUserId: bigint("updated_by_user_id", {
-      mode: "number",
-      unsigned: true,
-    })
+      .default("draft"),
+    authorId: bigint("author_id", { mode: "number", unsigned: true })
       .notNull()
       .references(() => users.id),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    publishedAt: timestamp("published_at"),
     deletedAt: timestamp("deleted_at"),
   },
   (table) => ({
-    isPublishedIdx: index("articles_published_idx").on(table.isPublished),
-    createdByIdx: index("articles_created_by_idx").on(table.createdByUserId),
+    statusIdx: index("articles_status_idx").on(table.status),
+    authorIdx: index("articles_author_idx").on(table.authorId),
+    publishedAtIdx: index("articles_published_at_idx").on(table.publishedAt),
   }),
 );
 
@@ -674,8 +673,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   incomingTransactions: many(incomingTransactions),
   purchases: many(purchases),
   financeImports: many(financeImports),
-  createdArticles: many(articles, { relationName: "createdBy" }),
-  updatedArticles: many(articles, { relationName: "updatedBy" }),
+  authoredArticles: many(articles, { relationName: "author" }),
   authTokens: many(authTokens),
 }));
 
@@ -856,15 +854,10 @@ export const financeImportsRelations = relations(
 );
 
 export const articlesRelations = relations(articles, ({ one }) => ({
-  createdBy: one(users, {
-    fields: [articles.createdByUserId],
+  author: one(users, {
+    fields: [articles.authorId],
     references: [users.id],
-    relationName: "createdBy",
-  }),
-  updatedBy: one(users, {
-    fields: [articles.updatedByUserId],
-    references: [users.id],
-    relationName: "updatedBy",
+    relationName: "author",
   }),
 }));
 
