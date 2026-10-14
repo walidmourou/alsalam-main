@@ -41,6 +41,7 @@ async function findGuardian(
   lastName: string,
   email: string,
 ): Promise<{ check: GuardianCheck; hasMembership: boolean; userId?: number; storedName?: string; nameMatches?: boolean }> {
+  console.log("[findGuardian] Looking up:", { firstName, lastName, email });
   const [rows] = await pool.query<GuardianRow[]>(
     `SELECT u.id,
             u.first_name,
@@ -55,18 +56,24 @@ async function findGuardian(
      LIMIT 1`,
     [email.trim()],
   );
+  console.log("[findGuardian] Query result rows:", rows.length);
 
   if (rows.length === 0) {
+    console.log("[findGuardian] No user found");
     return { check: { exists: false }, hasMembership: false };
   }
 
   const row = rows[0];
+  console.log("[findGuardian] Found user:", { id: row.id, email: row.email, has_membership: row.has_membership });
   const storedName = `${row.first_name} ${row.last_name}`.trim();
   const nameMatches = namesMatch(row, firstName, lastName);
 
+  // Ensure has_membership is treated as boolean (MySQL EXISTS returns 1/0)
+  const hasMembership = Boolean(row.has_membership);
+
   return {
     check: { exists: true, userId: row.id, storedName, nameMatches },
-    hasMembership: row.has_membership === 1,
+    hasMembership,
     userId: row.id,
     storedName,
     nameMatches,
@@ -76,9 +83,11 @@ async function findGuardian(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => null);
+    console.log("[verify] Request body:", JSON.stringify(body));
     const parsed = guardianVerificationSchema.safeParse(body);
 
     if (!parsed.success) {
+      console.log("[verify] Validation failed:", parsed.error.flatten());
       return NextResponse.json(
         { error: "generic", fieldErrors: collectFieldErrors(parsed.error) },
         { status: 400 },
@@ -86,12 +95,14 @@ export async function POST(request: NextRequest) {
     }
 
     const { guardian, secondaryGuardian, isMember } = parsed.data;
+    console.log("[verify] Parsed data:", { guardian, secondaryGuardian, isMember });
 
     const primary = await findGuardian(
       guardian.firstName,
       guardian.lastName,
       guardian.email,
     );
+    console.log("[verify] Primary result:", primary);
 
     const secondary = secondaryGuardian
       ? await findGuardian(
@@ -100,6 +111,7 @@ export async function POST(request: NextRequest) {
           secondaryGuardian.email,
         )
       : null;
+    console.log("[verify] Secondary result:", secondary);
 
     const result: GuardianVerificationResult = {
       guardian: primary.check,
@@ -126,7 +138,24 @@ export async function POST(request: NextRequest) {
       membershipSelectionMismatch,
     });
   } catch (error) {
-    console.error("Education registration verification error:", error);
-    return NextResponse.json({ error: "serverError" }, { status: 500 });
+    // Log full error details for debugging
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Education registration verification error:", {
+      message: errorMessage,
+      stack: errorStack,
+      // Include request info for debugging (without sensitive data)
+      timestamp: new Date().toISOString(),
+    });
+
+    // In development, include error details in response for easier debugging
+    const isDevelopment = process.env.NODE_ENV === "development";
+    return NextResponse.json(
+      {
+        error: "serverError",
+        ...(isDevelopment ? { details: errorMessage, stack: errorStack } : {}),
+      },
+      { status: 500 },
+    );
   }
 }
