@@ -256,6 +256,7 @@ export default function MembershipForm({
                       id="membership-birth-date"
                       name="birthDate"
                       value={formData.birthDate}
+                      locale={locale}
                       required
                       onChange={(value) =>
                         setFormData((current) => ({ ...current, birthDate: value }))

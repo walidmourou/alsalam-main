@@ -1026,6 +1026,7 @@ export default function ProfilePage() {
                       <DateInput
                         id="membership-birth-date"
                         value={membership.birth_date}
+                        locale={locale}
                         onChange={(value) =>
                           setMembership({ ...membership, birth_date: value })
                         }
@@ -1716,6 +1717,7 @@ export default function ProfilePage() {
                               <DateInput
                                 id={`student-birth-date-${index}`}
                                 value={student.birth_date}
+                                locale={locale}
                                 onChange={(value) =>
                                   updateStudent(index, "birth_date", value)
                                 }
@@ -1889,6 +1891,7 @@ export default function ProfilePage() {
                             <DateInput
                               id="new-child-birth-date"
                               value={newChild.birth_date}
+                              locale={locale}
                               onChange={(value) =>
                                 setNewChild({ ...newChild, birth_date: value })
                               }
@@ -2054,6 +2057,7 @@ export default function ProfilePage() {
                               <DateInput
                                 id={`managed-student-birth-date-${index}`}
                                 value={student.birth_date}
+                                locale={locale}
                                 onChange={(value) =>
                                   updateStudent(index, "birth_date", value)
                                 }

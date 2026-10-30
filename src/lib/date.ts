@@ -51,6 +51,11 @@ export function formatDateForDisplay(value: DateLike): string {
   return `${day}${DISPLAY_SEPARATOR}${month}${DISPLAY_SEPARATOR}${date.getFullYear()}`;
 }
 
+/** Number of days in the given month (month is zero based). */
+export function daysInMonth(year: number, monthIndex: number): number {
+  return new Date(year, monthIndex + 1, 0).getDate();
+}
+
 /** `Date` -> `YYYY-MM-DD` in local time. */
 export function toIsoDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, "0");

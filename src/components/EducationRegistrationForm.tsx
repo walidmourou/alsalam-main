@@ -1217,6 +1217,7 @@ function EducationWizard({
                   <DateInput
                     id={fieldId("guardian.birthDate")}
                     value={form.guardian.birthDate}
+                    locale={locale}
                     onChange={(value) =>
                       updateGuardianField("guardian", "birthDate")(value)
                     }
@@ -1619,6 +1620,7 @@ function EducationWizard({
                       <DateInput
                         id={fieldId(`${path}.birthDate`)}
                         value={student.birthDate}
+                        locale={locale}
                         onChange={(value) =>
                           updateStudent(student.id, "birthDate", value)
                         }
